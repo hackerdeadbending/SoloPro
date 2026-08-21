@@ -8,7 +8,7 @@ import AccountModal from './AccountModal';
 export default function Layout({children}){
   const app=useApp();
   const [mobileMenu,setMobileMenu]=useState(false);const [accountOpen,setAccountOpen]=useState(false);
-  const t=createTranslator(app.language);
+  const t=createTranslator(app?.language);
   const nav=[['/','dashboard','grid'],['/earnings','earnings','dollar'],['/clients','clients','users'],['/tax','tax','file'],['/referral','referral','gift'],['/premium','premium','crown'],['/settings','settings','settings']];
   if(app.isAdmin) nav.push(['/admin','Admin','settings']);
   const renderNav=()=>nav.map(([to,key,icon])=><NavLink key={to} to={to} end={to==='/' } onClick={()=>setMobileMenu(false)} className={({isActive})=>isActive?'nav-link active':'nav-link'}><Icon name={icon} size={19}/><span>{key==='Admin'?'Admin':t(key)}</span></NavLink>);
@@ -25,6 +25,7 @@ export default function Layout({children}){
     </div>
   </div>;
 }
+
 
 
 

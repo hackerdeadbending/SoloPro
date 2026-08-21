@@ -5,7 +5,7 @@ import Modal from '../components/Modal';
 
 export default function Earnings(){
  const app=useApp(); const [open,setOpen]=useState(false); const [templateOpen,setTemplateOpen]=useState(false); const [form,setForm]=useState({service:'',amount:'',materialCost:'',extraExpense:'',clientId:'',recurring:false});
- const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);
+ const money=n=>new Intl.NumberFormat(app.country?.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);
  const list=[...app.services].sort((a,b)=>new Date(b.date)-new Date(a.date));
  const submit=e=>{e.preventDefault();const c=app.clients.find(x=>x?.id===form.clientId);app.addService({...form,clientName:c?.name||'',amount:Number(form.amount)||0,materialCost:Number(form.materialCost)||0,extraExpense:Number(form.extraExpense)||0});if(form.recurring){const templates=JSON.parse(localStorage.getItem('solopro_templates')||'[]');templates.unshift({service:form.service,amount:Number(form.amount)||0,materialCost:Number(form.materialCost)||0,extraExpense:Number(form.extraExpense)||0,clientId:form.clientId,clientName:c?.name||''});localStorage.setItem('solopro_templates',JSON.stringify(templates.slice(0,20)));}setOpen(false);setForm({service:'',amount:'',materialCost:'',extraExpense:'',clientId:'',recurring:false});};
  return <div className="page"><div className="page-top"><div><div className="eyebrow">EARNINGS</div><h1>Money, without the spreadsheet.</h1><p className="sub">Record each income item once. SoloPro immediately reserves estimated tax and calculates your estimated margin.</p></div><button className="primary" onClick={()=>setOpen(true)}><Icon name="plus"/>Add service</button></div>
@@ -16,6 +16,7 @@ export default function Earnings(){
  </div>
 }
 function Stat({label,value,green}){return <div className="stat-card"><span>{label}</span><strong className={green?'green':''}>{value}</strong></div>}
+
 
 
 

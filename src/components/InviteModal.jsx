@@ -7,7 +7,7 @@ import {createTranslator} from '../i18n';
 
 export default function InviteModal({open,onClose,clientName=''}){
   const app=useApp();
-  const t=createTranslator(app.language);
+  const t=createTranslator(app?.language);
   const [identifier,setIdentifier]=useState('');
   const {referralLink,recordReferral,recordInvite,count,invited,next}=useReferral();
   const text=`${t('genericInvite')} ${referralLink}`;const rewardPrice=app.formatUsdPrice(2.99);
@@ -65,4 +65,5 @@ export default function InviteModal({open,onClose,clientName=''}){
     </div>}
   </Modal>;
 }
+
 
