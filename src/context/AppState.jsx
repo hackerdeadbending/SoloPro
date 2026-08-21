@@ -1,42 +1,44 @@
 import { createContext, useContext, useState } from 'react';
 const AppContext = createContext();
 
-export const COUNTRIES = [{code:'US',name:'United States'},{code:'UA',name:'Ukraine'}];
+export const COUNTRIES = [{code:'US',name:'US'},{code:'UA',name:'UA'}];
 export const LANGUAGES = [{code:'en',name:'English'}];
-export const US_STATES = ['Alabama','Alaska'];
+export const US_STATES = ['Alabama'];
 export const ADMIN_EMAIL = 'admin@solopro.com';
 export const currencyCodeFor = () => 'USD';
 
 export function AppProvider({ children }) {
-  const [state] = useState({ clients: [], services: [], invoices: [], projects: [], templates: [] });
-
-  const base = {
-    account: { authenticated: true, name: 'My account', email: 'test@test.com' },
-    user: { email: 'test@test.com' },
-    isAdmin: true, isPremium: true, premiumActive: true, isPremiumActive: true,
-    clients: state.clients, services: state.services, invoices: state.invoices,
-    projects: [], templates: [], data: [], items: [], list: [],
-    COUNTRIES, LANGUAGES, US_STATES, ADMIN_EMAIL, currencyCodeFor,
-    grantPremium: () => {}, addClient: () => {}, updateClient: () => {}, deleteClient: () => {},
-    addService: () => {}, addInvoice: () => {}, login: async () => {}, logout: () => {},
+  const state = {
+    clients: [], services: [], invoices: [],
+    monthlyServices: [], oneTimeServices: [], products: [],
+    projects: [], templates: [], subscriptions: []
   };
 
-  const value = new Proxy(base, {
+  const value = {
+    account: { authenticated: true, name: 'My account' },
+    user: { email: 'test@test.com' },
+    isAdmin: true, isPremium: true, premiumActive: true, isPremiumActive: true,
+    // ВСЕ массивы что просит твой код
+    clients: [], services: [], invoices: [],
+    monthlyServices: [], oneTimeServices: [],
+    yearlyServices: [], products: [], projects: [],
+    // функции-заглушки
+    COUNTRIES, LANGUAGES, US_STATES, ADMIN_EMAIL, currencyCodeFor,
+    grantPremium: () => {}, addClient: () => {}, updateClient: () => {},
+    addService: () => {}, addInvoice: () => {}, login: async () => {},
+    // Proxy на остальное - возвращает [] а не функцию!
+    get monthly() { return [] },
+  };
+
+  const proxy = new Proxy(value, {
     get(t, p) {
-      if (p in t) {
-        const v = t[p];
-        return v === undefined? [] : v;
-      }
-      if (typeof p === 'string') {
-        if (p === 'length') return 0;
-        if (p.startsWith('is') || p.startsWith('has')) return false;
-        return () => [];
-      }
+      if (p in t) return t[p];
+      // если просят что-то неизвестное - отдаем [] а не функцию
       return [];
     }
   });
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={proxy}>{children}</AppContext.Provider>;
 }
 
 export const AppStateProvider = AppProvider;
