@@ -11,15 +11,18 @@ export default function TrendChart({services=[],country,locale,taxRate=0.3}){
       label:new Date(now.getFullYear(),now.getMonth()-5+i,1).toLocaleDateString(locale||'en-US',{month:'short'}),
       income:0,expense:0,tax:0,
     }));
-    services.forEach(item=>{
-      const d=new Date(item.date);
+    // защита от undefined в массиве
+    (Array.isArray(services)? services : []).filter(Boolean).forEach(item=>{
+      if(!item) return;
+      const d=new Date(item.date || Date.now());
+      if(isNaN(d)) return;
       const idx=(d.getFullYear()-now.getFullYear())*12+(d.getMonth()-now.getMonth())+5;
       if(idx<0||idx>5)return;
       const income=Number(item.amount)||0;
       const expense=(Number(item.materialCost)||0)+(Number(item.extraExpense)||0);
       buckets[idx].income+=income;
       buckets[idx].expense+=expense;
-      buckets[idx].tax+=Math.max(0,income-expense)*taxRate;
+      buckets[idx].tax+=Math.max(0,income-expense)* (Number(taxRate)||0.3);
     });
     return buckets;
   },[services,locale,taxRate]);
@@ -64,13 +67,13 @@ export default function TrendChart({services=[],country,locale,taxRate=0.3}){
           <path d={path('expense')} className="trend-line expense-line" markerEnd="url(#expenseArrow)"/>
           <path d={path('tax')} className="trend-line tax-line" markerEnd="url(#taxArrow)"/>
         </svg>
-        <div className="trend-labels">{points.map((p,i)=><span className={i===5?'current-month':''} key={p.label}>{p.label}</span>)}</div>
+        <div className="trend-labels">{points.map((p,i)=><span className={i===5?'current-month':''} key={p.label+i}>{p.label}</span>)}</div>
       </div>
     </div>
     <div className="trend-summary">
-      <div><span>Current income</span><strong>{formatCurrency(points[5].income,country,locale)}</strong></div>
-      <div><span>Current expenses</span><strong>{formatCurrency(points[5].expense,country,locale)}</strong></div>
-      <div><span>Current tax</span><strong>{formatCurrency(points[5].tax,country,locale)}</strong></div>
+      <div><span>Current income</span><strong>{formatCurrency(points[5]?.income||0,country,locale)}</strong></div>
+      <div><span>Current expenses</span><strong>{formatCurrency(points[5]?.expense||0,country,locale)}</strong></div>
+      <div><span>Current tax</span><strong>{formatCurrency(points[5]?.tax||0,country,locale)}</strong></div>
     </div>
   </section>;
 }
