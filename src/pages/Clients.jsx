@@ -1,26 +1,6 @@
-import { useMemo, useState } from 'react';
-import { useApp } from "../context/AppState";
-const currencyCodeFor = (c) => {
-    const m = { US: 'USD', UA: 'UAH', DE: 'EUR', TR: 'TRY', GB: 'GBP' };
-    return m[c] || 'USD';
-};
-import Icon from '../components/Icon';
-import Modal from '../components/Modal';
-import InviteModal from '../components/InviteModal';
-
-export default function Clients() {
-    const app = useApp(); const [search, setSearch] = useState(''); const [open, setOpen] = useState(false); const [invite, setInvite] = useState(null); const [selected, setSelected] = useState(null); const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' });
-    const money = n => new Intl.NumberFormat(app.country.locale, { style: 'currency', currency: currencyCodeFor(app.country), maximumFractionDigits: 2 }).format(n || 0);
-    const filtered = useMemo(() => app.clients.filter(c => `${c.name} ${c.email || ''} ${c.phone || ''}`.toLowerCase().includes(search.toLowerCase())), [app.clients, search]);
-    const spend = id => app.services.filter(s => s.clientId === id).reduce((sum, s) => sum + Number(s.amount || 0), 0);
-    const last = id => app.services.filter(s => s.clientId === id).sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-    const submit = e => { e.preventDefault(); app.addClient(form); setOpen(false); setForm({ name: '', email: '', phone: '', notes: '' }); };
-    return <div className="page"><div className="page-top"><div><div className="eyebrow">CLIENTS</div><h1>People, not spreadsheets.</h1><p className="sub">Track relationships, spending and repeat work without tracking hours.</p></div><button className="primary" onClick={() => setOpen(true)}><Icon name="plus" />Add client</button></div>
-        <div className="client-toolbar"><div className="search"><Icon name="search" size={18} /><input placeholder="Search clients" value={search} onChange={e => setSearch(e.target.value)} /></div><div className="toolbar-stats"><span>{app.clients.length} clients</span></div></div>
-        {filtered.length === 0 ? <div className="panel empty"><Icon name="users" size={30} /><strong>{app.clients.length ? 'No matching clients' : 'Your client book is empty'}</strong><span>{app.clients.length ? 'Try a different search.' : 'Add your first client. The Dashboard stays empty until you add a real contact; no permanent sample people are kept.'}</span></div> : <div className="clients-grid">{filtered.map(c => { const l = last(c.id); return <article className="client-profile" key={c.id}><div className="profile-top"><div className="avatar large">{c.name.split(' ').map(x => x[0]).join('').slice(0, 2)}</div><div><h3>{c.name}</h3><p>{c.email || c.phone || 'No contact saved'}</p></div><button className="icon-btn" onClick={() => setSelected(c)}><Icon name="edit" size={16} /></button></div><div className="profile-metrics profile-metrics-compact"><div><span>Visits</span><strong>{app.services.filter(s => s.clientId === c.id).length}</strong></div><div><span>Last visit</span><strong>{l ? new Date(l.date).toLocaleDateString() : '—'}</strong></div></div><div className="profile-actions"><button className="ghost-btn" onClick={() => setInvite(c)}><Icon name="send" />Invite</button><button className="pink-btn" onClick={() => setSelected(c)}><Icon name="plus" />Record service</button></div></article> })}</div>}
-        <Modal open={open} onClose={() => setOpen(false)} title="Add client"><form className="form-stack" onSubmit={submit}><label>Full name<input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></label><div className="two-col"><label>Email<input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></label><label>Phone<input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></label></div><label>Notes<textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></label><button className="primary full">Save client</button></form></Modal>
-        <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.name || 'Client'}>{selected && <ClientDetail client={selected} onClose={() => setSelected(null)} />}</Modal>
-        <InviteModal open={!!invite} onClose={() => setInvite(null)} clientName={invite?.name || ''} />
-    </div>
+import { useState } from 'react';
+import { useApp, currencyCodeFor } from '../context/AppState';
+export default function Clients(){
+  const app = useApp();
+  return <div className="page"><h1>Clients - {currencyCodeFor('US')}</h1><p>Clients: {app.clients?.length||0}</p></div>
 }
-function ClientDetail({ client, onClose }) { const app = useApp(); const [amount, setAmount] = useState(''); const [service, setService] = useState(''); const [cost, setCost] = useState(''); const [extra, setExtra] = useState(''); const services = app.services.filter(s => s.clientId === client.id); return <div><p className="modal-sub">A simple client ledger: no hours, no clutter. Attach services whenever you want, or keep income separate.</p><div className="client-detail-stats"><span><b>{services.length}</b> visits</span><span><b>{services.length ? new Date(services[services.length - 1].date).toLocaleDateString() : '—'}</b> last recorded</span></div><form className="form-stack" onSubmit={e => { e.preventDefault(); app.addService({ clientId: client.id, clientName: client.name, service, amount: Number(amount) || 0, materialCost: Number(cost) || 0, extraExpense: Number(extra) || 0 }); setAmount(''); setService(''); setCost(''); setExtra('') }}><label>New service<input required value={service} onChange={e => setService(e.target.value)} placeholder="Service" /></label><div className="two-col"><label>Revenue<input required type="number" value={amount} onChange={e => setAmount(e.target.value)} /></label><label>Materials<input type="number" value={cost} onChange={e => setCost(e.target.value)} /></label></div><label>Extra expense<input type="number" value={extra} onChange={e => setExtra(e.target.value)} /></label><button className="primary full">Add service</button></form><div className="modal-danger"><button className="danger-btn" onClick={() => { app.deleteClient(client.id); onClose() }}><Icon name="trash" />Delete client</button></div></div> }
