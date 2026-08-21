@@ -1,6 +1,31 @@
-import {useState} from 'react';
-import {ADMIN_EMAIL,useApp} from '../context/AppState';
-import {useReferral} from '../context/ReferralEngine';
-import Icon from '../components/Icon';
-export default function Admin(){const app=useApp();const r=useReferral();const [email,setEmail]=useState(app.user.email||ADMIN_EMAIL);const [target,setTarget]=useState('');const [message,setMessage]=useState('');const grant=duration=>{app.grantPremium(target||app.user.email,duration);setMessage(`Premium granted to ${target||app.user.email}: ${duration}`)};if(!app.isAdmin)return <div className="page"><div className="panel admin-login"><span className="eyebrow">ADMIN ACCESS</span><h1>Owner access</h1><p className="sub">Enter the owner email configured for this development build.</p><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="owner@email.com"/><button className="primary" onClick={()=>app.update({user:{...app.user,email:email.trim()}})}>Use this email</button><small className="help">Configured owner: {ADMIN_EMAIL}. For production, replace this local gate with secure server-side authentication.</small></div></div>;return <div className="page"><div className="page-top"><div><div className="eyebrow">ADMIN</div><h1>Owner control center.</h1><p className="sub">Testing tools and Premium controls for {ADMIN_EMAIL}.</p></div><span className="admin-badge">FULL ACCESS</span></div><div className="stat-cards"><Stat label="Premium" value="Unlimited"/><Stat label="Themes" value="5 / 5"/><Stat label="New referrals" value={r.count}/><Stat label="Discount months" value={r.discounts.length}/></div><section className="panel"><div className="panel-head"><div><h2>Premium controls</h2><p>Grant Premium without payment for testing.</p></div><Icon name="crown"/></div><label className="admin-target">User email<input value={target} onChange={e=>setTarget(e.target.value)} placeholder="user@example.com"/></label><div className="admin-actions"><button className="ghost-btn" onClick={()=>grant('1 month')}><Icon name="check"/>Grant 1 month</button><button className="ghost-btn" onClick={()=>grant('3 months')}><Icon name="check"/>Grant 3 months</button><button className="ghost-btn" onClick={()=>grant('1 year')}><Icon name="check"/>Grant 1 year</button><button className="primary" onClick={()=>grant('unlimited')}><Icon name="crown"/>Grant unlimited</button></div>{message&&<div className="notice"><Icon name="check"/>{message}</div>}</section><section className="panel"><div className="panel-head"><div><h2>Admin identity</h2><p>{ADMIN_EMAIL}</p></div></div><div className="info-row"><span>Role</span><strong>ADMIN</strong></div><div className="info-row"><span>Premium</span><strong>Free / unlimited</strong></div><div className="info-row"><span>Advertising</span><strong>Disabled</strong></div><button className="danger-btn" onClick={()=>app.update({adminAccessEnabled:false})}><Icon name="trash"/>Disable admin access on this device</button></section></div>}
-function Stat({label,value}){return <div className="stat-card"><span>{label}</span><strong>{value}</strong></div>}
+import { useState } from 'react';
+import { useApp } from '../context/AppState';
+
+export default function Admin(){
+  const app = useApp();
+  const [email, setEmail] = useState('');
+  const [list, setList] = useState([]);
+
+  const give = (e)=>{
+    e.preventDefault();
+    setList([...list, email]);
+    localStorage.setItem('premium', JSON.stringify([...list, email]));
+    setEmail('');
+    alert('Готово!');
+  }
+
+  return (
+    <div style={{padding:20}}>
+      <h1>Admin Panel</h1>
+      <form onSubmit={give} style={{display:'flex', gap:10, marginTop:20}}>
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="email друга" style={{flex:1, padding:10}} required/>
+        <button type="submit">Дать Premium</button>
+      </form>
+      <div style={{marginTop:20}}>
+        {list.map(em=><div key={em}>{em}</div>)}
+      </div>
+      <p style={{marginTop:20}}>Клиентов: {app.clients?.length}</p>
+      <p>Доход: {app.totals?.gross}</p>
+    </div>
+  )
+}
