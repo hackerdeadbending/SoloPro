@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+﻿import {useMemo} from 'react';
 import {formatCurrency} from '../utils/currency';
 import Icon from './Icon';
 
@@ -67,7 +67,7 @@ export default function TrendChart({services=[],country,locale,taxRate=0.3}){
           <path d={path('expense')} className="trend-line expense-line" markerEnd="url(#expenseArrow)"/>
           <path d={path('tax')} className="trend-line tax-line" markerEnd="url(#taxArrow)"/>
         </svg>
-        <div className="trend-labels">{points.map((p,i)=><span className={i===5?'current-month':''} key={p.label+i}>{p.label}</span>)}</div>
+        <div className="trend-labels">{points.map((p,i)=><span className={i===5?'current-month':''} key={p?.label+i}>{p?.label}</span>)}</div>
       </div>
     </div>
     <div className="trend-summary">

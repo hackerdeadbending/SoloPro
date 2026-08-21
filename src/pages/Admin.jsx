@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useApp } from '../context/AppState';
 
 export default function Admin(){
@@ -18,7 +18,7 @@ export default function Admin(){
     <div style={{padding:20}}>
       <h1>Admin Panel</h1>
       <form onSubmit={give} style={{display:'flex', gap:10, marginTop:20}}>
-        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="email друга" style={{flex:1, padding:10}} required/>
+        <input value={email} onChange={e=>setEmail(e.target?.value)} placeholder="email друга" style={{flex:1, padding:10}} required/>
         <button type="submit">Дать Premium</button>
       </form>
       <div style={{marginTop:20}}>
