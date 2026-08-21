@@ -1,4 +1,4 @@
-import Flag from './Flag';
+﻿import Flag from './Flag';
 
 const COUNTRY_STYLES = {
   AT:['#8b1320','#171b24'], BE:['#e1b71b','#11141a'], CA:['#b51f2e','#101722'], CH:['#d51f35','#12161e'],
@@ -52,3 +52,5 @@ export default function ThemeCard({theme='default',country,showCountryName=true,
 
   return <div className={cls}><div className="standard-halo halo-a"/><div className="standard-halo halo-b"/><div className="standard-grid"/><div className="standard-star">✦</div></div>;
 }
+
+
