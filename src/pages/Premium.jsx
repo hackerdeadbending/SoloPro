@@ -3,20 +3,20 @@ import {useReferral} from '../context/ReferralEngine';
 import {createTranslator} from '../i18n';
 import Icon from '../components/Icon';
 
-const STRIPE_LINK = "https://buy.stripe.com/28E28s3mK59og55bRHbV600";
+const STRIPE_FULL = "https://buy.stripe.com/28E28s3mK59og55bRHbV600";
+const STRIPE_DISCOUNT = "https://buy.stripe.com/5kQeVe3mKatI6uv4pfbV601";
 
 export default function Premium(){
 const app=useApp();
 const r=useReferral();
 const t=createTranslator(app.language);
 
-const goStripe = () => {
-  window.location.href = STRIPE_LINK;
-}
+const goFull = () => { window.location.href = STRIPE_FULL; }
+const goDiscount = () => { window.location.href = STRIPE_DISCOUNT; }
 
 return <div className="page"><div className="page-top"><div><div className="eyebrow">SOLOPRO PREMIUM</div><h1>{t('moreClarity')}</h1><p className="sub">A focused monthly plan with deeper business insight, declaration support, client intelligence and no ads.</p></div><div className="premium-price"><strong>{app.formatUsdPrice(8.99)}</strong><span>{t('monthlyOnly')}</span></div></div>
- <section className="premium-hero premium-hero-single"><div><span className="eyebrow">SOLOPRO PREMIUM</span><h2>More control over the numbers that matter.</h2><p>Everything important stays in one place: income, costs, tax reserves, clients, reports and repeatable workflows.</p><div className="feature-row"><span><Icon name="check"/>{t('advancedAnalytics')}</span><span><Icon name="check"/>{t('unlimitedClients')}</span><span><Icon name="check"/>{t('taxHelper')}</span><span><Icon name="check"/>{t('noAds')}</span></div><button className="primary" onClick={app.premiumActive ? undefined : goStripe}>{app.isAdmin?'Admin Premium — active':app.premiumActive?'Premium active':`${app.formatUsdPrice(8.99)} / month - Subscribe`}</button></div></section>
+ <section className="premium-hero premium-hero-single"><div><span className="eyebrow">SOLOPRO PREMIUM</span><h2>More control over the numbers that matter.</h2><p>Everything important stays in one place: income, costs, tax reserves, clients, reports and repeatable workflows.</p><div className="feature-row"><span><Icon name="check"/>{t('advancedAnalytics')}</span><span><Icon name="check"/>{t('unlimitedClients')}</span><span><Icon name="check"/>{t('taxHelper')}</span><span><Icon name="check"/>{t('noAds')}</span></div><button className="primary" onClick={app.premiumActive ? undefined : goFull}>{app.isAdmin?'Admin Premium — active':app.premiumActive?'Premium active':`${app.formatUsdPrice(8.99)} / month - Subscribe`}</button></div></section>
  <div className="premium-grid"><Feature icon="chart" title={t('deeperAnalytics')} text="Understand revenue, costs, tax reserve and estimated net result with a clean monthly view."/><Feature icon="file" title={t('declarationHelper')} text="Keep declaration notes, checklists and a printable financial report ready for an accountant or your own filing workflow."/><Feature icon="users" title={t('clientIntelligence')} text="Keep client history and service records connected without tracking hours or adding unnecessary clutter."/><Feature icon="spark" title={t('animatedThemes')} text="Premium unlocks the current-country animated flag style. Referral milestones unlock three additional themes."/></div>
- <section className="referral-offer compact-offer"><div className="offer-copy"><span className="eyebrow">REFERRAL REWARD</span><h2>{t('unlock')}</h2><p>{app.localizePrices(t('referralOffer'))}</p><small>{r.count} verified new users recorded.</small></div><div className="offer-action"><span className="old-price">{app.formatUsdPrice(8.99)} / month</span><strong>{app.formatUsdPrice(2.99)}</strong><button className="primary" onClick={goStripe}>{app.localizePrices(t('activate'))}</button></div></section>
+ <section className="referral-offer compact-offer"><div className="offer-copy"><span className="eyebrow">REFERRAL REWARD</span><h2>{t('unlock')}</h2><p>{app.localizePrices(t('referralOffer'))}</p><small>{r.count} verified new users recorded.</small></div><div className="offer-action"><span className="old-price">{app.formatUsdPrice(8.99)} / month</span><strong>{app.formatUsdPrice(2.99)}</strong><button className="primary" onClick={goDiscount}>{app.localizePrices(t('activate'))} - $2.99</button></div></section>
  </div>}
 function Feature({icon,title,text}){return <article className="feature-card"><div className="feature-icon"><Icon name={icon} size={20}/></div><h3>{title}</h3><p>{text}</p></article>}
