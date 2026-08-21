@@ -1,5 +1,9 @@
 import {useMemo,useState} from 'react';
-import {useApp,currencyCodeFor} from '../context/AppState';
+import { useApp } from "../context/AppState";
+const currencyCodeFor = (c) => {
+  const m = {US:'USD', UA:'UAH', DE:'EUR', TR:'TRY', GB:'GBP'};
+  return m[c] || 'USD';
+};
 import Icon from '../components/Icon';
 import Modal from '../components/Modal';
 import InviteModal from '../components/InviteModal';
