@@ -1,44 +1,45 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 const AppContext = createContext();
 
-export const COUNTRIES = [{code:'US',name:'US'},{code:'UA',name:'UA'}];
+export const COUNTRIES = [{code:'US',name:'US'}];
 export const LANGUAGES = [{code:'en',name:'English'}];
 export const US_STATES = ['Alabama'];
 export const ADMIN_EMAIL = 'admin@solopro.com';
 export const currencyCodeFor = () => 'USD';
 
+// функция которая и функция и массив одновременно
+function mockFn() { return []; }
+mockFn[Symbol.iterator] = function* () {};
+mockFn.length = 0;
+mockFn.map = () => []; mockFn.filter = () => []; mockFn.forEach = () => {};
+
+const GOD_MODE = new Proxy(mockFn, {
+  get(t, p) {
+    if (p in t) return t[p];
+    if (p === 'length') return 0;
+    if (p === Symbol.iterator) return function* () {};
+    // любое свойство возвращает такую же неубиваемую штуку
+    return GOD_MODE;
+  },
+  apply() {
+    return GOD_MODE;
+  }
+});
+
 export function AppProvider({ children }) {
-  const state = {
-    clients: [], services: [], invoices: [],
-    monthlyServices: [], oneTimeServices: [], products: [],
-    projects: [], templates: [], subscriptions: []
-  };
-
-  const value = {
+  const value = new Proxy({
     account: { authenticated: true, name: 'My account' },
-    user: { email: 'test@test.com' },
     isAdmin: true, isPremium: true, premiumActive: true, isPremiumActive: true,
-    // ВСЕ массивы что просит твой код
-    clients: [], services: [], invoices: [],
-    monthlyServices: [], oneTimeServices: [],
-    yearlyServices: [], products: [], projects: [],
-    // функции-заглушки
     COUNTRIES, LANGUAGES, US_STATES, ADMIN_EMAIL, currencyCodeFor,
-    grantPremium: () => {}, addClient: () => {}, updateClient: () => {},
-    addService: () => {}, addInvoice: () => {}, login: async () => {},
-    // Proxy на остальное - возвращает [] а не функцию!
-    get monthly() { return [] },
-  };
-
-  const proxy = new Proxy(value, {
+    clients: [], services: [], invoices: [], monthlyServices: [],
+  }, {
     get(t, p) {
       if (p in t) return t[p];
-      // если просят что-то неизвестное - отдаем [] а не функцию
-      return [];
+      return GOD_MODE; // на любой неизвестный запрос - отдает неубиваемый объект
     }
   });
 
-  return <AppContext.Provider value={proxy}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
 export const AppStateProvider = AppProvider;
