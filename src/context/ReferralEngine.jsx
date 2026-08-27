@@ -1,45 +1,23 @@
-import { createContext, useContext, useMemo } from 'react';
-import { useApp } from './AppState';
-
-export const ReferralContext = createContext(null);
-
+import {createContext,useContext,useMemo} from 'react';
+import {useApp} from './AppState';
+export const ReferralContext=createContext(null);
 export function ReferralProvider({children}){
-  const app = useApp() || {};
-  
-  // Защита от function.length
-  const verified = Array.isArray(app.referralVerified) ? app.referralVerified : [];
-  const count = verified.length;
-  const invited = Number(app.referralInvites || 0);
-  const next = count % 7 === 0 ? 7 : 7 - (count % 7);
-  const milestones = Math.floor(count / 7);
-
-  const referralLink = useMemo(() => {
-    try {
-      const key = 'solopro-referral-code';
-      let code = localStorage.getItem(key);
-      if(!code){
-        code = window.crypto?.randomUUID ? window.crypto.randomUUID().slice(0,8) : Math.random().toString(36).slice(2,10);
-        localStorage.setItem(key, code);
-      }
-      return window.location.origin + '/?ref=' + code;
-    } catch { return '/?ref=demo' }
-  },[]);
-
-  const value = {
-    count,
-    invited,
-    milestones,
-    next,
-    unlockedThemes: ['skulls','ships','money'].slice(0, Math.min(milestones, 3)),
-    discounts: Array.isArray(app.monthlyDiscounts) ? app.monthlyDiscounts : [],
-    recordInvite: app.recordInvite || (() => {}),
-    recordReferral: app.recordReferral || (() => {}),
-    referralLink
-  };
-
-  return <ReferralContext.Provider value={value}>{children}</ReferralContext.Provider>
+ const app=useApp();
+ const count=Number(app.securityProfile?.referral_verified_count ?? 0);
+ const invited=Number(app.referralInvites||0);
+ const next=count%7===0?7:7-(count%7);
+ const milestones=Math.floor(count/7);
+ const referralLink=useMemo(()=>{
+   const serverCode=String(app.securityProfile?.referral_code||'').trim();
+   if(serverCode) return `${window.location.origin}/?ref=${encodeURIComponent(serverCode)}`;
+   let code=localStorage.getItem('solopro-referral-code');
+   if(!code){code=globalThis.crypto?.randomUUID?.().replaceAll('-','').slice(0,12)||`${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}`;localStorage.setItem('solopro-referral-code',code);}
+   return `${window.location.origin}/?ref=${encodeURIComponent(code)}`;
+ },[app.securityProfile?.referral_code]);
+ const unlockedThemes=useMemo(()=>['skulls','ships','money'].slice(0,Math.min(milestones,3)),[milestones]);
+ const used=Number(app.securityProfile?.discount_rewards_used ?? 0);
+ const monthlyDiscounts=useMemo(()=>Array.from({length:milestones},(_,i)=>({monthIndex:i,price:2.99,used:i<used})),[milestones,used]);
+ const referral={count,invited,milestones,next,unlockedThemes,discounts:monthlyDiscounts,monthlyDiscounts,premiumActive:app.premiumActive,isAdmin:app.isAdmin,recordInvite:app.recordInvite,recordReferral:app.recordReferral,referralLink};
+ return <ReferralContext.Provider value={referral}>{children}</ReferralContext.Provider>
 }
-
-export function useReferral(){
-  return useContext(ReferralContext) || {count:0,invited:0,milestones:0,next:7,unlockedThemes:[],discounts:[],referralLink:'/'}
-}
+export function useReferral(){return useContext(ReferralContext)}

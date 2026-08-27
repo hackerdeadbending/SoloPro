@@ -16,10 +16,13 @@ export const FALLBACK_USD_RATES = {
   KRW: 1390,
   SGD: 1.28,
   AED: 3.6725,
+  HKD: 7.85,
+  TWD: 31.8,
+  QAR: 3.64,
 };
 
 export function currencyCodeFor(country) {
-  const map = { IT:'EUR',FR:'EUR',DE:'EUR',ES:'EUR',PT:'EUR',NL:'EUR',BE:'EUR',AT:'EUR',IE:'EUR',LU:'EUR',FI:'EUR',GB:'GBP',US:'USD',CA:'CAD',AU:'AUD',NZ:'NZD',CH:'CHF',PL:'PLN',CZ:'CZK',SE:'SEK',DK:'DKK',NO:'NOK',IS:'ISK',JP:'JPY',KR:'KRW',SG:'SGD',AE:'AED' };
+  const map = { IT:'EUR',FR:'EUR',DE:'EUR',ES:'EUR',PT:'EUR',NL:'EUR',BE:'EUR',AT:'EUR',IE:'EUR',LU:'EUR',FI:'EUR',GB:'GBP',US:'USD',CA:'CAD',AU:'AUD',NZ:'NZD',CH:'CHF',PL:'PLN',CZ:'CZK',SE:'SEK',DK:'DKK',NO:'NOK',IS:'ISK',JP:'JPY',KR:'KRW',SG:'SGD',AE:'AED',HK:'HKD',TW:'TWD',QA:'QAR' };
   return map[country?.code] || 'USD';
 }
 

@@ -1,12 +1,34 @@
-export default function Icon({ name, size = 20,...props }) {
-  const map = {
-    chart: "[chart]",
-    clients: "[clients]",
-    money: "[money]"
+export default function Icon({name,size=20,strokeWidth=1.8}) {
+  const p={width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth,strokeLinecap:'round',strokeLinejoin:'round'};
+  const paths={
+    grid:<><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></>,
+    menu:<><path d="M4 7h16M4 12h16M4 17h16"/></>,
+    dollar:<><path d="M12 2v20"/><path d="M17 6.5c-1-1.3-2.6-2-4.7-2-2.8 0-4.8 1.5-4.8 3.7 0 2.5 2.1 3.3 5.1 4.1 2.7.7 4.7 1.4 4.7 3.8 0 2.5-2.2 4.2-5.2 4.2-2.5 0-4.5-.9-5.6-2.6"/></>,
+    user:<><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></>,
+    users:<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+    settings:<><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.8 1.8-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1 1.55V20h-2.55v-.1a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-1.8-1.8.06-.06A1.7 1.7 0 0 0 8.2 15a1.7 1.7 0 0 0-1.55-1H6.5v-2.55h.1a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.8-1.8.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1-1.55V5h2.55v.1a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.8 1.8-.06.06A1.7 1.7 0 0 0 19.4 10c.24.61.83 1 1.5 1h.1v2.55h-.1c-.67 0-1.26.39-1.5 1Z"/></>,
+    crown:<><path d="m3 7 4 4 5-7 5 7 4-4-2 13H5L3 7Z"/><path d="M5 17h14"/></>,
+    gift:<><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8H7.5a2.5 2.5 0 1 1 0-5C10 3 12 8 12 8Zm0 0h4.5a2.5 2.5 0 1 0 0-5C14 3 12 8 12 8Z"/></>,
+    plus:<><path d="M12 5v14M5 12h14"/></>,
+    arrow:<><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>,
+    copy:<><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></>,
+    trash:<><path d="M3 6h18M8 6V3h8v3M19 6l-1 15H6L5 6M10 11v6M14 11v6"/></>,
+    edit:<><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"/></>,
+    link:<><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></>,
+    send:<><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></>,
+    share:<><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.6 6.8-4"/><path d="m8.6 13.4 6.8 4"/></>,
+    message:<><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 9.7 9.7 0 0 1-4-.8L4 20l1.2-3.3A7.3 7.3 0 0 1 4 12.1 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/></>,
+    mail:<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></>,
+    whatsapp:<><path d="M20 11.8a8 8 0 0 1-11.8 7L4 20l1.3-4A8 8 0 1 1 20 11.8Z"/><path d="M9 8.5c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.6.7c.7 1.2 1.6 2 2.8 2.6l.7-.7c.2-.2.4-.2.6-.1l1.6.7c.3.1.4.3.4.5v.5c0 .3 0 .6-.5.8-.5.2-1.7.1-3.2-.8-1.6-.9-2.8-2-3.7-3.5-.9-1.5-1.1-2.7-.9-3.3Z"/></>,
+    telegram:<><path d="m21 4-3 16-5.2-5.2-3.2 3.1-.1-4.5L21 4Z"/><path d="m9.5 13.4 8.2-7.1"/></>,
+    facebook:<><path d="M14 8h3V4h-3a5 5 0 0 0-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9a1 1 0 0 1 1-1Z"/></>,
+    x:<><path d="M5 4 19 20"/><path d="m19 4-6 7 7 9"/><path d="M5 20 11 13"/></>,
+    chart:<><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-7"/></>,
+    file:<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></>,
+    search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,
+    check:<path d="m5 12 4 4L19 6"/>,
+    clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+    spark:<><path d="m12 2 1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5Z"/><path d="m19 16 .7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7Z"/></>,
   };
-  return (
-    <span style={{ fontSize: size, display: 'inline-flex' }} aria-label={name} {...props}>
-      {map[name] || "•"}
-    </span>
-  );
+  return <svg {...p}>{paths[name] || paths.spark}</svg>;
 }

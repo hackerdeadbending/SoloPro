@@ -1,4 +1,4 @@
-﻿import {useState} from 'react';
+import {useState} from 'react';
 import Modal from './Modal';
 import Icon from './Icon';
 import {useReferral} from '../context/ReferralEngine';
@@ -7,7 +7,7 @@ import {createTranslator} from '../i18n';
 
 export default function InviteModal({open,onClose,clientName=''}){
   const app=useApp();
-  const t=createTranslator(app?.language);
+  const t=createTranslator(app.language);
   const [identifier,setIdentifier]=useState('');
   const {referralLink,recordReferral,recordInvite,count,invited,next}=useReferral();
   const text=`${t('genericInvite')} ${referralLink}`;const rewardPrice=app.formatUsdPrice(2.99);
@@ -49,21 +49,19 @@ export default function InviteModal({open,onClose,clientName=''}){
     </div>
     <p className="modal-sub">{t('referralOnlyNew')}</p>
     <div className="referral-steps">
-      <div><b>1</b><span>{t('stepShare')}</span></div>
-      <div><b>2</b><span>{t('stepJoin')}</span></div>
-      <div><b>3</b><span>{app.localizePrices(t('stepReward'))}</span></div>
+      <div><span className="step-icon"><Icon name="share" size={15}/></span><span>{t('stepShare')}</span></div>
+      <div><span className="step-icon"><Icon name="users" size={15}/></span><span>{t('stepJoin')}</span></div>
+      <div><span className="step-icon"><Icon name="gift" size={15}/></span><span>{app.localizePrices(t('stepReward'))}</span></div>
     </div>
     <div className="invite-grid">
-      {actions.map(action=><button key={action?.label} className={action.primary?'invite-primary':''} onClick={action.onClick}><Icon name={action?.icon} size={16}/><span>{action?.label}</span></button>)}
+      {actions.map(action=><button key={action.label} className={action.primary?'invite-primary':''} onClick={action.onClick}><Icon name={action.icon} size={16}/><span>{action.label}</span></button>)}
     </div>
     <div className="copy-row"><input value={referralLink} readOnly/><button onClick={copy}><Icon name="copy" size={13}/><span>Copy</span></button></div>
     {!clientName&&app.isAdmin&&<div className="ref-verify">
       <label>New-user verification</label>
-      <input value={identifier} onChange={e=>setIdentifier(e.target?.value)} placeholder="Email or unique identifier"/>
+      <input value={identifier} onChange={e=>setIdentifier(e.target.value)} placeholder="Email or unique identifier"/>
       <small>Only genuinely new sign-ups should be verified here.</small>
       <button className="primary full" disabled={!identifier.trim()} onClick={()=>{recordReferral(identifier.trim());setIdentifier('');onClose()}}>Mark new signup</button>
     </div>}
   </Modal>;
 }
-
-
