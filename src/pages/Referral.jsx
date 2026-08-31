@@ -76,9 +76,7 @@ export default function Referral(){
     </section>
 
     <section className="panel referral-how referral-how-new">
-      <div className="panel-head">
-        <div><span className="eyebrow">HOW IT WORKS</span><h2>Simple for you. Clear for everyone.</h2></div>
-      </div>
+      <div className="panel-head"><div><span className="eyebrow">HOW IT WORKS</span><h2>Simple for you. Clear for everyone.</h2></div></div>
       <div className="referral-flow">
         <Flow n="01" icon="link" title="Share your link" text="Send your personal SoloPro link through messages, email or social apps."/>
         <Flow n="02" icon="user" title="They join SoloPro" text="The person creates a new account and confirms their email."/>
@@ -89,7 +87,7 @@ export default function Referral(){
 
     <section className="panel referral-rewards-panel">
       <div className="panel-head">
-        <div><span className="eyebrow">REWARD TRACKER</span><h2>Your milestones</h2><p>Rewards are earned for every completed group of seven. Nothing here requires changing your dashboard style.</p></div>
+        <div><span className="eyebrow">REWARD TRACKER</span><h2>Your milestones</h2><p>Rewards are earned for every completed group of seven. Nothing here changes your dashboard or settings.</p></div>
         <div className="discount-price">{app.formatUsdPrice(2.99)}</div>
       </div>
       <div className="milestone-list">
