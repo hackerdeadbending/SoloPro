@@ -91,7 +91,7 @@ export default function Referral(){
     <section className="panel link-panel">
       <div className="link-head">
         <div className="link-copy"><div className="link-icon"><Icon name="link" size={17}/></div><div><div className="eyebrow">YOUR PERSONAL LINK</div><h2>Share your SoloPro link</h2><p>Your unique referral link is ready to share anywhere.</p></div></div>
-        <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'send'} size={15}/><span>{shared?'Shared':'Share'}</span></button></div>
+        <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'share'} size={15}/><span>{shared?'Shared':'Share'}</span></button></div>
       </div>
       <div className="referral-link-box"><code title={referralLink}>{referralLink||'Your referral link will appear here'}</code><button className="copy-icon" onClick={copy} disabled={!referralLink} aria-label="Copy referral link" title={copied?'Copied':'Copy link'}><Icon name={copied?'check':'copy'} size={13}/></button></div>
       <div className="link-note"><Icon name="check" size={11}/><span>Only genuinely new, verified accounts count.</span></div>
