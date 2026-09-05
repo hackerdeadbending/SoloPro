@@ -18,6 +18,19 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* iOS Safari also auto-zooms inputs in regular modals such as Add Client and Add Service. */
+  .modal input:not([type='checkbox']),
+  .modal textarea,
+  .modal select {
+    font-size: 16px !important;
+  }
+
+  .modal input:not([type='checkbox']):focus,
+  .modal textarea:focus,
+  .modal select:focus {
+    font-size: 16px !important;
+  }
+
   .account-modal {
     width: 100%;
   }
