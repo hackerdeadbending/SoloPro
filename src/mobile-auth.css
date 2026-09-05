@@ -1,6 +1,8 @@
-/* Mobile input polish — keeps the existing SoloPro visual design intact. */
-@media (max-width: 640px) {
-  html { -webkit-text-size-adjust: 100%; }
+/* Mobile input polish — prevents iOS Safari input auto-zoom without changing the SoloPro visual design. */
+@media screen and (max-width: 640px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
   .modal-backdrop {
     align-items: flex-start;
@@ -31,11 +33,20 @@
     width: 100%;
   }
 
-  .account-modal input:not([type='checkbox']) {
+  /* iOS Safari zooms when a focused form control computes below 16px. */
+  .account-modal input:not([type='checkbox']),
+  .account-modal textarea,
+  .account-modal select,
+  .account-modal button {
+    font-size: 16px !important;
+  }
+
+  .account-modal input:not([type='checkbox']),
+  .account-modal textarea,
+  .account-modal select {
     width: 100%;
     min-height: 50px;
     padding: 13px 14px;
-    font-size: 16px;
     line-height: 1.25;
     border-radius: 10px;
     -webkit-appearance: none;
@@ -43,10 +54,15 @@
     touch-action: manipulation;
   }
 
+  .account-modal input:not([type='checkbox']):focus,
+  .account-modal textarea:focus,
+  .account-modal select:focus {
+    font-size: 16px !important;
+  }
+
   .account-modal .primary,
   .account-modal .ghost-btn {
     min-height: 50px;
-    font-size: 12px;
   }
 
   .account-modal .account-tabs {
@@ -71,6 +87,7 @@
     height: 20px;
     min-width: 20px;
     margin-top: 1px;
+    font-size: 16px !important;
   }
 
   .account-modal .account-forgot {
@@ -87,7 +104,7 @@
   }
 }
 
-@media (max-width: 380px) {
+@media screen and (max-width: 380px) {
   .modal-backdrop {
     padding-left: 8px;
     padding-right: 8px;
@@ -97,7 +114,9 @@
     max-height: calc(100dvh - 16px);
   }
 
-  .account-modal input:not([type='checkbox']) {
+  .account-modal input:not([type='checkbox']),
+  .account-modal textarea,
+  .account-modal select {
     min-height: 48px;
   }
 }
