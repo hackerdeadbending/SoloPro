@@ -1,0 +1,77 @@
+/* Premium cinematic motion layer. Keeps the existing SoloPro UI intact. */
+
+.theme-autumn,.theme-harvest,.theme-halloween{overflow:hidden;contain:paint}
+
+/* AUTUMN — slow parallax, real wind cadence, leaves leave the frame and return from the left. */
+.theme-autumn .autumn-sky{animation:autumnSkyDrift 22s ease-in-out infinite alternate}
+.theme-autumn .autumn-moon{animation:autumnMoonFloat 18s cubic-bezier(.37,0,.22,1) infinite}
+.theme-autumn .autumn-moon-haze{animation:autumnHaze 14s ease-in-out infinite alternate}
+.theme-autumn .autumn-tree-line{animation:autumnTreeBreath 18s ease-in-out infinite alternate}
+.theme-autumn .autumn-mist-a{animation:autumnMist 18s ease-in-out infinite}
+.theme-autumn .autumn-mist-b{animation:autumnMist 24s ease-in-out infinite reverse;animation-delay:-9s}
+.theme-autumn .autumn-wind{animation:autumnWindSweep 9.5s cubic-bezier(.22,.61,.36,1) infinite}
+.theme-autumn .autumn-wind i{animation:windThread 2.9s cubic-bezier(.22,.61,.36,1) infinite}
+.theme-autumn .autumn-wind i:nth-child(2){animation-delay:-1.15s}.theme-autumn .autumn-wind i:nth-child(3){animation-delay:-2.05s}
+.theme-autumn .autumn-leaf-bed span{animation:autumnLeafFlight 13.5s cubic-bezier(.22,.61,.36,1) infinite;will-change:transform,opacity}
+.theme-autumn .autumn-leaf-bed span:nth-child(2n){animation-duration:15.2s}.theme-autumn .autumn-leaf-bed span:nth-child(3n){animation-duration:12.8s}
+.theme-autumn .autumn-leaf-bed span:nth-child(2){animation-delay:-3.2s}.theme-autumn .autumn-leaf-bed span:nth-child(3){animation-delay:-6.4s}.theme-autumn .autumn-leaf-bed span:nth-child(4){animation-delay:-9.1s}.theme-autumn .autumn-leaf-bed span:nth-child(5){animation-delay:-1.7s}.theme-autumn .autumn-leaf-bed span:nth-child(6){animation-delay:-4.8s}.theme-autumn .autumn-leaf-bed span:nth-child(7){animation-delay:-7.8s}.theme-autumn .autumn-leaf-bed span:nth-child(8){animation-delay:-11.2s}.theme-autumn .autumn-leaf-bed span:nth-child(9){animation-delay:-2.4s}.theme-autumn .autumn-leaf-bed span:nth-child(10){animation-delay:-5.5s}.theme-autumn .autumn-leaf-bed span:nth-child(11){animation-delay:-8.5s}.theme-autumn .autumn-leaf-bed span:nth-child(12){animation-delay:-12.1s}
+
+@keyframes autumnSkyDrift{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.035) translate3d(-.8%,1%,0)}}
+@keyframes autumnMoonFloat{0%,100%{transform:translate3d(0,0,0);filter:brightness(.96)}50%{transform:translate3d(-3px,2px,0);filter:brightness(1.04)}}
+@keyframes autumnHaze{0%{transform:scale(.96);opacity:.55}100%{transform:scale(1.08) translate3d(-5px,3px,0);opacity:.9}}
+@keyframes autumnTreeBreath{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(-1.5%,0,0) scale(1.012)}}
+@keyframes autumnMist{0%{transform:translate3d(-7%,0,0) scaleX(.96);opacity:.18}50%{transform:translate3d(5%,2px,0) scaleX(1.04);opacity:.48}100%{transform:translate3d(10%,0,0) scaleX(1.08);opacity:.12}}
+@keyframes autumnWindSweep{0%{transform:translate3d(-18%,0,0);opacity:0}12%{opacity:.18}48%{transform:translate3d(18%,0,0);opacity:.22}72%{transform:translate3d(58%,0,0);opacity:0}100%{transform:translate3d(58%,0,0);opacity:0}}
+@keyframes windThread{0%,100%{transform:translateX(-15%);opacity:0}20%{opacity:.5}70%{transform:translateX(22%);opacity:.12}82%{opacity:0}}
+@keyframes autumnLeafFlight{
+  0%,43%{opacity:.84;transform:translate3d(0,0,0) rotate(var(--r,0deg)) scale(.94)}
+  48%{opacity:.98;transform:translate3d(3px,-2px,0) rotate(calc(var(--r,0deg) + 8deg)) scale(1)}
+  57%{opacity:1;transform:translate3d(28px,-19px,0) rotate(calc(var(--r,0deg) + 78deg)) scale(.92)}
+  67%{opacity:.94;transform:translate3d(76px,-31px,0) rotate(calc(var(--r,0deg) + 165deg)) scale(.82)}
+  76%{opacity:0;transform:translate3d(155px,-12px,0) rotate(calc(var(--r,0deg) + 260deg)) scale(.72)}
+  78%{opacity:0;transform:translate3d(-105px,-8px,0) rotate(calc(var(--r,0deg) - 80deg)) scale(.7)}
+  84%{opacity:.55;transform:translate3d(-65px,-3px,0) rotate(calc(var(--r,0deg) - 35deg)) scale(.76)}
+  91%{opacity:.94;transform:translate3d(-18px,-1px,0) rotate(calc(var(--r,0deg) - 8deg)) scale(.9)}
+  100%{opacity:.84;transform:translate3d(0,0,0) rotate(var(--r,0deg)) scale(.94)}
+}
+
+/* HARVEST — breathing moonlight, drifting haze and restrained fireflies. */
+.theme-harvest .harvest-sky{animation:harvestSky 20s ease-in-out infinite alternate}
+.theme-harvest .harvest-moon{animation:harvestMoon 16s cubic-bezier(.37,0,.22,1) infinite}
+.theme-harvest .harvest-moon-glow{animation:harvestGlow 11s ease-in-out infinite alternate}
+.theme-harvest .harvest-tree-a{animation:harvestTreeA 13s ease-in-out infinite alternate}.theme-harvest .harvest-tree-b{animation:harvestTreeB 17s ease-in-out infinite alternate}
+.theme-harvest .harvest-leaf{animation:harvestLeaf 8.8s cubic-bezier(.22,.61,.36,1) infinite}.theme-harvest .harvest-leaf-b{animation:harvestLeaf 10.7s cubic-bezier(.22,.61,.36,1) infinite reverse}
+.theme-harvest .harvest-firefly{animation:harvestFirefly 5.8s ease-in-out infinite}.theme-harvest .harvest-firefly-b{animation-delay:-2.2s}.theme-harvest .harvest-firefly-c{animation-delay:-4s}
+@keyframes harvestSky{0%{transform:scale(1)}100%{transform:scale(1.025) translate3d(0,1%,0)}}
+@keyframes harvestMoon{0%,100%{transform:translate3d(0,0,0);opacity:.88}50%{transform:translate3d(2px,3px,0);opacity:1}}
+@keyframes harvestGlow{0%{transform:scale(.92);opacity:.45}100%{transform:scale(1.08);opacity:.82}}
+@keyframes harvestTreeA{0%{transform:translate3d(0,0,0) scale(1.12)}100%{transform:translate3d(4px,0,0) scale(1.125)}}
+@keyframes harvestTreeB{0%{transform:translate3d(0,0,0) scale(.96)}100%{transform:translate3d(-3px,0,0) scale(.965)}}
+@keyframes harvestLeaf{0%,62%{opacity:.75;transform:translate3d(0,0,0) rotate(24deg)}75%{opacity:1;transform:translate3d(35px,-16px,0) rotate(105deg)}88%{opacity:0;transform:translate3d(86px,-6px,0) rotate(190deg)}100%{opacity:.75;transform:translate3d(0,0,0) rotate(24deg)}}
+@keyframes harvestFirefly{0%,100%{transform:translate3d(0,0,0) scale(.7);opacity:.18}35%{opacity:.9}60%{transform:translate3d(8px,-7px,0) scale(1.15);opacity:.72}78%{transform:translate3d(-5px,-13px,0) scale(.8);opacity:.25}}
+
+/* HALLOWEEN — cinematic cloud parallax, fog layers and warm lantern breathing. */
+.theme-halloween .halloween-sky{animation:halloweenSky 24s ease-in-out infinite alternate}
+.theme-halloween .halloween-moon{animation:halloweenMoon 19s cubic-bezier(.37,0,.22,1) infinite}
+.theme-halloween .halloween-moon-halo{animation:halloweenHalo 13s ease-in-out infinite alternate}
+.theme-halloween .halloween-cloud-a{animation:halloweenCloudA 30s linear infinite}.theme-halloween .halloween-cloud-b{animation:halloweenCloudB 38s linear infinite}
+.theme-halloween .halloween-fog-a{animation:halloweenFog 22s ease-in-out infinite}.theme-halloween .halloween-fog-b{animation:halloweenFog 29s ease-in-out infinite reverse}
+.theme-halloween .halloween-lantern{animation:halloweenLantern 4.7s ease-in-out infinite}.theme-halloween .halloween-lantern-b{animation-delay:-2.1s}
+.theme-halloween .halloween-ember{animation:halloweenEmber 6.5s cubic-bezier(.22,.61,.36,1) infinite}.theme-halloween .halloween-ember-b{animation-delay:-3.1s}
+@keyframes halloweenSky{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.035) translate3d(-.7%,.8%,0)}}
+@keyframes halloweenMoon{0%,100%{transform:translate3d(0,0,0);filter:brightness(.9)}50%{transform:translate3d(-2px,2px,0);filter:brightness(1.05)}}
+@keyframes halloweenHalo{0%{transform:scale(.92);opacity:.42}100%{transform:scale(1.08);opacity:.78}}
+@keyframes halloweenCloudA{0%{transform:translate3d(-18%,0,0);opacity:0}15%{opacity:.7}100%{transform:translate3d(165%,3px,0);opacity:0}}
+@keyframes halloweenCloudB{0%{transform:translate3d(85%,0,0);opacity:0}18%{opacity:.55}100%{transform:translate3d(-125%,-2px,0);opacity:0}}
+@keyframes halloweenFog{0%,100%{transform:translate3d(-5%,0,0) scaleX(.97);opacity:.12}50%{transform:translate3d(7%,2px,0) scaleX(1.06);opacity:.34}}
+@keyframes halloweenLantern{0%,100%{filter:brightness(.82);opacity:.7;transform:scale(.97)}45%{filter:brightness(1.15);opacity:1;transform:scale(1)}65%{filter:brightness(.9);opacity:.82;transform:scale(.985)}}
+@keyframes halloweenEmber{0%{opacity:0;transform:translate3d(0,8px,0) scale(.5)}18%{opacity:.8}75%{opacity:.25;transform:translate3d(16px,-32px,0) scale(.8)}100%{opacity:0;transform:translate3d(22px,-44px,0) scale(.35)}}
+
+@media(max-width:760px){
+  .theme-autumn .autumn-leaf-bed span{animation-duration:15.5s}
+  .theme-autumn .autumn-wind{opacity:.7}
+  .theme-halloween .halloween-cloud{filter:blur(5px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .theme-autumn *,.theme-harvest *,.theme-halloween *{animation:none!important;transition:none!important}
+}
