@@ -4,6 +4,7 @@ import {BrowserRouter} from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
 import './custom-theme.css';
+import './mobile-auth.css';
 import {AppStateProvider} from './context/AppState.jsx';
 import {ReferralProvider} from './context/ReferralEngine.jsx';
 
