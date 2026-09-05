@@ -26,13 +26,17 @@ export default function ThemeCard({theme='default',country,showCountryName=true,
     <div className="autumn-wind"><i/><i/><i/></div><div className="autumn-mist autumn-mist-a"/><div className="autumn-mist autumn-mist-b"/><div className="autumn-vignette"/>
   </div>;
   if(safeTheme==='harvest') return <div className={cls} aria-label="September monthly theme">
-    <div className="harvest-sky"/><div className="harvest-moon"/><div className="harvest-moon-glow"/><div className="harvest-horizon"/><div className="harvest-tree harvest-tree-a"/><div className="harvest-tree harvest-tree-b"/><div className="harvest-grass"/>
-    <div className="harvest-leaf"/><div className="harvest-leaf harvest-leaf-b"/><div className="harvest-firefly harvest-firefly-a"/><div className="harvest-firefly harvest-firefly-b"/><div className="harvest-firefly harvest-firefly-c"/><div className="harvest-vignette"/>
+    <div className="harvest-painted-sky"/><div className="harvest-painted-stars"/><div className="harvest-painted-moon"/><div className="harvest-painted-moonlight"/>
+    <div className="harvest-painted-hills harvest-painted-hills-far"/><div className="harvest-painted-hills harvest-painted-hills-near"/>
+    <div className="harvest-painted-field"/><div className="harvest-painted-grass"/><div className="harvest-painted-haze"/>
+    <div className="harvest-painted-fireflies"><i/><i/><i/><i/></div><div className="harvest-painted-leaf leaf-a"/><div className="harvest-painted-leaf leaf-b"/><div className="harvest-painted-vignette"/>
   </div>;
   if(safeTheme==='halloween') return <div className={cls} aria-label="Halloween thematic style">
-    <div className="halloween-sky"/><div className="halloween-moon"/><div className="halloween-moon-halo"/><div className="halloween-cloud halloween-cloud-a"/><div className="halloween-cloud halloween-cloud-b"/>
-    <div className="halloween-castle"/><div className="halloween-bare-tree"/><div className="halloween-fog halloween-fog-a"/><div className="halloween-fog halloween-fog-b"/>
-    <div className="halloween-lantern halloween-lantern-a"/><div className="halloween-lantern halloween-lantern-b"/><div className="halloween-ember halloween-ember-a"/><div className="halloween-ember halloween-ember-b"/><div className="halloween-vignette"/>
+    <div className="halloween-painted-sky"/><div className="halloween-painted-stars"/><div className="halloween-painted-moon"/><div className="halloween-painted-moon-haze"/>
+    <div className="halloween-painted-cloud cloud-a"/><div className="halloween-painted-cloud cloud-b"/><div className="halloween-painted-cloud cloud-c"/>
+    <div className="halloween-painted-hills"/><div className="halloween-painted-castle"/><div className="halloween-painted-tree"/>
+    <div className="halloween-painted-fog fog-a"/><div className="halloween-painted-fog fog-b"/><div className="halloween-painted-lantern lantern-a"/><div className="halloween-painted-lantern lantern-b"/>
+    <div className="halloween-painted-embers"><i/><i/><i/></div><div className="halloween-painted-vignette"/>
   </div>;
   return <div className={cls}><div className="standard-halo halo-a"/><div className="standard-halo halo-b"/><div className="standard-grid"/><div className="standard-star">✦</div></div>;
 }
