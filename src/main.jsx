@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
+import './custom-theme.css';
 import {AppStateProvider} from './context/AppState.jsx';
 import {ReferralProvider} from './context/ReferralEngine.jsx';
 
