@@ -4,58 +4,20 @@ import {useReferral} from '../context/ReferralEngine';
 import {createTranslator} from '../i18n';
 import Icon from '../components/Icon';
 import ThemeCard from '../components/ThemeCard';
-
-const themes=[
-  ['default','standard',0,'permanent'],
-  ['country','countryFlag',null,'permanent'],
-  ['skulls','skulls',7,'permanent'],
-  ['ships','ships',14,'permanent'],
-  ['money','moneyRain',21,'permanent'],
-  ['autumn','Autumn',null,'seasonal'],
-  ['harvest','Harvest Moon',null,'monthly'],
-  ['halloween','Halloween',null,'thematic']
-];
-
-function themeStatus(key,type,app,ref){
-  const now=new Date();
-  const month=now.getMonth()+1;
-  if(type==='seasonal') return app.premiumActive&&month>=9&&month<=11;
-  if(type==='monthly') return app.premiumActive&&month===9;
-  if(key==='default') return true;
-  if(key==='country') return app.premiumActive;
-  if(key==='halloween') return app.premiumActive;
-  return app.isAdmin||app.premiumActive||ref.count>={skulls:7,ships:14,money:21}[key];
-}
-
-function themeMeta(type){
-  if(type==='seasonal') return {label:'SEASONAL',className:'seasonal'};
-  if(type==='monthly') return {label:'SEPTEMBER 2026',className:'monthly'};
-  if(type==='thematic') return {label:'PERMANENT',className:'thematic'};
-  return {label:'STYLE',className:'standard'};
-}
-
-export default function Settings(){
-  const app=useApp();
-  const ref=useReferral();
-  const t=createTranslator(app.language);
-  const [saved,setSaved]=useState(false);
-  useEffect(()=>{if(saved){const x=setTimeout(()=>setSaved(false),1400);return()=>clearTimeout(x)}},[saved]);
-
-  const set=patch=>{app.update(patch);setSaved(true)};
-  const unlocked=(key,type)=>app.isAdmin||themeStatus(key,type,app,ref);
-
-  useEffect(()=>{
-    const current=themes.find(([key])=>key===app.activeTheme);
-    if(!current||!themeStatus(current[0],current[3],app,ref)){
-      app.update({activeTheme:'default'});
-    }
-  },[app.activeTheme,app.premiumActive,app.isAdmin,ref.count]);
-
-  return <div className="page"><div className="page-top"><div><div className="eyebrow">{t('settings').toUpperCase()}</div><h1>Make SoloPro yours.</h1><p className="sub">Country, language and tax jurisdiction can be managed independently.</p></div>{saved&&<span className="saved-pill"><Icon name="check" size={14}/>{t('saved')}</span>}</div>
- <div className="settings-column">
+const themes=[['default','standard',0,'permanent'],['country','countryFlag',null,'permanent'],['skulls','skulls',7,'permanent'],['ships','ships',14,'permanent'],['money','moneyRain',21,'permanent'],['autumn','Autumn',null,'seasonal'],['harvest','Harvest Moon',null,'monthly'],['halloween','Halloween',null,'thematic']];
+function themeStatus(key,type,app,ref){const month=new Date().getMonth()+1;if(type==='seasonal')return app.premiumActive&&month>=9&&month<=11;if(type==='monthly')return app.premiumActive&&month===9;if(key==='default')return true;if(key==='country'||key==='halloween')return app.premiumActive;return app.isAdmin||app.premiumActive||ref.count>={skulls:7,ships:14,money:21}[key];}
+function themeMeta(type){if(type==='seasonal')return {label:'SEASONAL',className:'seasonal'};if(type==='monthly')return {label:'SEPTEMBER 2026',className:'monthly'};if(type==='thematic')return {label:'PERMANENT',className:'thematic'};return {label:'STYLE',className:'standard'};}
+function customLive(style){const now=new Date();const start=style.start_date?new Date(`${style.start_date}T00:00:00`):null;const end=style.end_date?new Date(`${style.end_date}T23:59:59`):null;return Boolean(style.is_active)&&(!start||now>=start)&&(!end||now<=end);}
+export default function Settings(){const app=useApp();const ref=useReferral();const t=createTranslator(app.language);const [saved,setSaved]=useState(false);const [customStyles,setCustomStyles]=useState([]);
+ useEffect(()=>{if(saved){const x=setTimeout(()=>setSaved(false),1400);return()=>clearTimeout(x)}},[saved]);
+ useEffect(()=>{let cancelled=false;fetch('/api/styles').then(r=>r.ok?r.json():Promise.reject()).then(d=>{if(!cancelled)setCustomStyles(Array.isArray(d.styles)?d.styles:[])}).catch(()=>{});return()=>{cancelled=true}},[]);
+ const set=patch=>{app.update(patch);setSaved(true)};const staticUnlocked=(key,type)=>app.isAdmin||themeStatus(key,type,app,ref);const customUnlocked=style=>app.isAdmin||(app.premiumActive&&customLive(style));
+ useEffect(()=>{const staticCurrent=themes.find(([key])=>key===app.activeTheme);const customCurrent=customStyles.find(s=>s.slug===app.activeTheme);if((staticCurrent&&!themeStatus(staticCurrent[0],staticCurrent[3],app,ref))||(customCurrent&&!customUnlocked(customCurrent)))app.update({activeTheme:'default'});},[app.activeTheme,app.premiumActive,app.isAdmin,ref.count,customStyles]);
+ return <div className="page"><div className="page-top"><div><div className="eyebrow">{t('settings').toUpperCase()}</div><h1>Make SoloPro yours.</h1><p className="sub">Country, language and tax jurisdiction can be managed independently.</p></div>{saved&&<span className="saved-pill"><Icon name="check" size={14}/>{t('saved')}</span>}</div><div className="settings-column">
  <section className="panel"><div className="panel-head"><div><h2>{t('locationTax')}</h2><p>Country controls currency and tax jurisdiction. US states use a state-specific planning profile.</p></div></div><label>{t('country')}<select value={app.countryCode} onChange={e=>app.setCountry(e.target.value,false)}>{COUNTRIES.map(c=><option key={c.code} value={c.code}>{c.name}</option>)}</select></label>{app.countryCode==='US'&&<label>US state<select value={app.usState} onChange={e=>set({usState:e.target.value,locationAuto:false})}><option value="">Choose a state</option>{US_STATES.map(s=><option key={s.code} value={s.code}>{s.name}</option>)}</select></label>}<div className="info-row"><span>Currency</span><strong>{app.country.currency}</strong></div><div className="info-row"><span>Planning tax reserve</span><strong>{Math.round(app.taxRate*100)}%</strong></div><button className="ghost-btn full" onClick={async()=>{await app.detectLocation();setSaved(true)}}><Icon name="spark"/>{t('autoDetect')}</button></section>
  <section className="panel"><div className="panel-head"><div><h2>{t('language')}</h2><p>The interface language is independent from the country.</p></div></div><label>{t('language')}<select value={app.language} onChange={e=>set({language:e.target.value,locationAuto:false})}>{LANGUAGES.map(l=><option key={l.name} value={l.name}>{l.name}</option>)}</select></label></section>
  <section className="panel"><div className="panel-head"><div><h2>{t('businessProfile')}</h2><p>Used for calculations, reports and account identification.</p></div></div><label>{t('fullName')}<input value={app.user.name} onChange={e=>set({user:{...app.user,name:e.target.value}})} placeholder="Your name"/></label><label>{t('workEmail')}<input type="email" value={app.user.email} onChange={e=>set({user:{...app.user,email:e.target.value}})} placeholder="name@company.com"/></label><label>{t('fixedExpenses')}<input type="number" min="0" step="0.01" value={app.fixedExpenses} onChange={e=>set({fixedExpenses:Number(e.target.value)||0})}/></label><label>{t('period')}<select value={app.fixedExpensePeriod} onChange={e=>set({fixedExpensePeriod:e.target.value})}><option value="monthly">{t('monthly')}</option><option value="weekly">{t('weekly')}</option></select></label></section>
- <section className="panel"><div className="panel-head"><div><h2>{t('profitStyle')}</h2><p>{t('themeHelp')}</p></div></div><div className="theme-settings-list">{themes.map(([key,label,req,type])=>{const ok=unlocked(key,type);const selected=app.activeTheme===key;const meta=themeMeta(type);return <button key={key} className={`theme-setting-row ${selected?'selected':''} ${ok?'':'locked'} theme-type-${type}`} disabled={!ok} onClick={()=>set({activeTheme:key})}><div className="theme-setting-preview"><ThemeCard theme={key} country={app.country} showCountryName={key==='country'&&app.showCountryName} flagAnimation={app.flagAnimation} previewOnly compact/></div><div className="theme-setting-copy"><strong>{t(label)}</strong><span>{meta.label} · {key==='country'?t('premiumOnly'):key==='default'?t('standard'):type==='seasonal'?'Premium · Sep–Nov':type==='monthly'?'Premium · September only':type==='thematic'?'Premium · permanent':ok?t('unlocked'):`${Math.min(ref.count,req)}/${req} ${t('newUsers')}`}</span></div><span className={`theme-setting-icon ${meta.className}`}>{ok?'✓':'🔒'}</span></button>})}</div><label className="check-row"><input type="checkbox" checked={app.showCountryName} onChange={e=>set({showCountryName:e.target.checked})}/>{t('showCountryName')}</label></section>
+ <section className="panel"><div className="panel-head"><div><h2>{t('profitStyle')}</h2><p>{t('themeHelp')}</p></div></div><div className="theme-settings-list">{themes.map(([key,label,req,type])=>{const ok=staticUnlocked(key,type);const selected=app.activeTheme===key;const meta=themeMeta(type);return <button key={key} className={`theme-setting-row ${selected?'selected':''} ${ok?'':'locked'} theme-type-${type}`} disabled={!ok} onClick={()=>set({activeTheme:key})}><div className="theme-setting-preview"><ThemeCard theme={key} country={app.country} showCountryName={key==='country'&&app.showCountryName} flagAnimation={app.flagAnimation} previewOnly compact/></div><div className="theme-setting-copy"><strong>{t(label)}</strong><span>{meta.label} · {key==='country'?t('premiumOnly'):key==='default'?t('standard'):type==='seasonal'?'Premium · Sep–Nov':type==='monthly'?'Premium · September only':type==='thematic'?'Premium · permanent':ok?t('unlocked'):`${Math.min(ref.count,req)}/${req} ${t('newUsers')}`}</span></div><span className={`theme-setting-icon ${meta.className}`}>{ok?'✓':'🔒'}</span></button>})}
+ {customStyles.map(style=>{const ok=customUnlocked(style);const selected=app.activeTheme===style.slug;const live=customLive(style);const label=style.type==='SEASONAL'?'SEASONAL':style.type==='MONTHLY'?'MONTHLY':style.type==='PERMANENT'?'PERMANENT':'THEMATIC';return <button key={style.id} className={`theme-setting-row theme-type-custom ${selected?'selected':''} ${ok?'':'locked'}`} disabled={!ok} onClick={()=>set({activeTheme:style.slug})}><div className="theme-setting-preview"><ThemeCard customStyle={style} compact previewOnly/></div><div className="theme-setting-copy"><strong>{style.name}</strong><span>{label} · {style.description||'Custom SoloPro style'}</span></div><span className="theme-setting-icon thematic">{ok&&live?'✓':'🔒'}</span></button>})}</div><label className="check-row"><input type="checkbox" checked={app.showCountryName} onChange={e=>set({showCountryName:e.target.checked})}/>{t('showCountryName')}</label></section>
  {app.isAdmin&&<section className="panel admin-panel"><div className="panel-head"><div><span className="eyebrow">ADMIN ACCESS</span><h2>Owner controls</h2><p>{ADMIN_EMAIL}</p></div><span className="admin-badge">ADMIN</span></div><div className="admin-grid"><div><span>Premium</span><strong>Unlimited / Free</strong></div><div><span>All themes</span><strong>Unlocked</strong></div><div><span>Admin mode</span><strong>Active</strong></div></div><button className="danger-btn" onClick={()=>set({adminAccessEnabled:false})}>Disable admin access on this device</button></section>}
  </div></div>}
