@@ -19,10 +19,11 @@ const themes=[
 function themeStatus(key,type,app,ref){
   const now=new Date();
   const month=now.getMonth()+1;
-  if(type==='seasonal') return month>=9&&month<=11;
-  if(type==='monthly') return month===9;
+  if(type==='seasonal') return app.premiumActive&&month>=9&&month<=11;
+  if(type==='monthly') return app.premiumActive&&month===9;
   if(key==='default') return true;
   if(key==='country') return app.premiumActive;
+  if(key==='halloween') return app.premiumActive;
   return app.isAdmin||app.premiumActive||ref.count>={skulls:7,ships:14,money:21}[key];
 }
 
