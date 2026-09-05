@@ -22,7 +22,7 @@ export default function ThemeCard({theme='default',country,showCountryName=true,
   if(safeTheme==='money') return <div className={cls}><div className="money-sky"/><div className="money-confetti">{Array.from({length:18},(_,i)=><span key={`c-${i}`} style={{'--i':i}}/>)}</div><div className="money-bills">{Array.from({length:12},(_,i)=><span className="money-bill" key={i} style={{'--i':i}}><b>{billSymbols[i%billSymbols.length]}</b><i>SOLOPRO</i></span>)}</div><div className="money-coin"><b>$</b></div><div className="money-glow"/></div>;
   if(safeTheme==='autumn') return <div className={cls} aria-label="Autumn seasonal theme">
     <div className="autumn-sky"/><div className="autumn-moon"/><div className="autumn-moon-haze"/><div className="autumn-tree-line"/><div className="autumn-ground"/>
-    <div className="autumn-leaf-bed">{Array.from({length:12},(_,i)=><span key={i} style={{'--i':i}}>{i%3===0?'🍁':i%3===1?'🍂':'🍃'}</span>)}</div>
+    <div className="autumn-leaf-bed">{Array.from({length:12},(_,i)=><span key={i} style={{'--i':i}} aria-hidden="true"/>)}</div>
     <div className="autumn-wind"><i/><i/><i/></div><div className="autumn-mist autumn-mist-a"/><div className="autumn-mist autumn-mist-b"/><div className="autumn-vignette"/>
   </div>;
   if(safeTheme==='harvest') return <div className={cls} aria-label="September monthly theme">
