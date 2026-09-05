@@ -1,0 +1,59 @@
+/* Illustrated premium scenes — intentionally scoped to the new painted compositions. */
+.theme-harvest,.theme-halloween{position:relative;overflow:hidden;background:#070b14;isolation:isolate}
+.theme-harvest>div,.theme-halloween>div{position:absolute;inset:0;pointer-events:none}
+
+/* HARVEST — painted September night */
+.theme-harvest .harvest-painted-sky{background:radial-gradient(ellipse at 68% 28%,rgba(86,105,154,.28),transparent 25%),linear-gradient(180deg,#080d1d 0%,#111a31 45%,#1c2635 72%,#0b1018 100%);z-index:0;animation:paintedSky 24s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-stars{z-index:1;background-image:radial-gradient(circle at 18% 24%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 35% 16%,rgba(255,238,195,.6) 0 1px,transparent 1.5px),radial-gradient(circle at 79% 19%,rgba(255,255,255,.5) 0 1px,transparent 1.5px),radial-gradient(circle at 87% 34%,rgba(255,226,174,.45) 0 1px,transparent 1.5px);opacity:.55;animation:starDrift 18s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-moon{z-index:3;inset:13% auto auto 69%;width:17%;height:28%;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff7d5 0 13%,#f1e3b6 38%,#c7b98e 72%,#81775e 100%);box-shadow:0 0 24px rgba(239,218,164,.32),0 0 65px rgba(191,190,166,.16);animation:moonBreath 9s ease-in-out infinite}
+.theme-harvest .harvest-painted-moonlight{z-index:2;inset:30% 18% 18% 53%;background:radial-gradient(ellipse at 55% 20%,rgba(235,221,177,.12),transparent 42%),linear-gradient(150deg,transparent 0 42%,rgba(211,202,170,.08) 58%,transparent 75%);filter:blur(4px);animation:moonlight 13s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-hills{bottom:17%;top:auto;height:45%;border-radius:50% 50% 0 0/32% 32% 0 0;background:linear-gradient(180deg,#182333,#0b1119);transform-origin:bottom;}
+.theme-harvest .harvest-painted-hills-far{z-index:4;inset-left:-8%;width:116%;opacity:.72;clip-path:polygon(0 64%,12% 48%,22% 57%,35% 38%,49% 56%,62% 42%,77% 55%,91% 35%,100% 51%,100% 100%,0 100%);animation:hillsFar 20s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-hills-near{z-index:5;inset-left:-8%;width:116%;height:37%;opacity:.98;background:linear-gradient(180deg,#111a22,#070b10);clip-path:polygon(0 54%,15% 43%,29% 61%,43% 46%,57% 60%,72% 41%,87% 56%,100% 47%,100% 100%,0 100%);animation:hillsNear 15s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-field{z-index:6;top:auto;bottom:-5%;height:36%;background:linear-gradient(180deg,#12191a,#070a0c 78%);clip-path:polygon(0 23%,100% 8%,100% 100%,0 100%)}
+.theme-harvest .harvest-painted-grass{z-index:8;top:auto;bottom:-2%;height:27%;background:repeating-linear-gradient(102deg,transparent 0 18px,rgba(112,126,93,.24) 19px 21px,transparent 22px 43px);mask-image:linear-gradient(180deg,transparent,#000 25%);transform-origin:bottom;animation:grassSway 4.8s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-haze{z-index:9;top:auto;bottom:12%;height:20%;background:linear-gradient(90deg,transparent,rgba(171,177,161,.07),transparent);filter:blur(8px);animation:hazeMove 17s ease-in-out infinite alternate}
+.theme-harvest .harvest-painted-fireflies{z-index:10}
+.theme-harvest .harvest-painted-fireflies i{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffe8a5;box-shadow:0 0 8px 2px rgba(255,221,135,.55);animation:firefly 6s ease-in-out infinite}
+.theme-harvest .harvest-painted-fireflies i:nth-child(1){left:28%;top:64%;animation-delay:-1s}.theme-harvest .harvest-painted-fireflies i:nth-child(2){left:47%;top:70%;animation-delay:-3.2s}.theme-harvest .harvest-painted-fireflies i:nth-child(3){left:76%;top:61%;animation-delay:-4.5s}.theme-harvest .harvest-painted-fireflies i:nth-child(4){left:59%;top:77%;animation-delay:-2.1s}
+.theme-harvest .harvest-painted-leaf{z-index:11;width:10px;height:6px;border-radius:90% 8% 90% 8%;background:linear-gradient(135deg,#c77d3b,#70402a);opacity:.75;box-shadow:0 1px 3px #000;animation:singleLeaf 11s ease-in-out infinite}
+.theme-harvest .leaf-a{left:22%;top:28%;transform:rotate(28deg)}.theme-harvest .leaf-b{left:82%;top:40%;transform:rotate(-42deg);animation-delay:-5.7s}
+.theme-harvest .harvest-painted-vignette{z-index:20;background:radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.48) 100%)}
+
+/* HALLOWEEN — painted gothic night */
+.theme-halloween .halloween-painted-sky{background:radial-gradient(ellipse at 67% 30%,rgba(104,112,157,.2),transparent 25%),linear-gradient(180deg,#080912,#111323 48%,#171421 75%,#08090d);z-index:0;animation:paintedSky 28s ease-in-out infinite alternate}
+.theme-halloween .halloween-painted-stars{z-index:1;background-image:radial-gradient(circle at 18% 19%,rgba(255,255,255,.55) 0 1px,transparent 1.5px),radial-gradient(circle at 43% 26%,rgba(255,255,255,.4) 0 1px,transparent 1.5px),radial-gradient(circle at 88% 16%,rgba(255,255,255,.5) 0 1px,transparent 1.5px);opacity:.5}
+.theme-halloween .halloween-painted-moon{z-index:3;inset:11% auto auto 66%;width:18%;height:30%;border-radius:50%;background:radial-gradient(circle at 35% 32%,#fff8dc,#ddd4ae 54%,#8e8872 100%);box-shadow:0 0 28px rgba(232,220,177,.24),0 0 75px rgba(192,180,160,.12);animation:moonBreath 10s ease-in-out infinite}
+.theme-halloween .halloween-painted-moon-haze{z-index:2;inset:5% auto auto 58%;width:36%;height:43%;border-radius:50%;background:radial-gradient(circle,rgba(207,204,179,.14),transparent 67%);filter:blur(9px);animation:hazePulse 12s ease-in-out infinite alternate}
+.theme-halloween .halloween-painted-cloud{z-index:4;top:19%;height:13%;width:42%;border-radius:50%;background:rgba(37,38,51,.48);filter:blur(7px);animation:cloudFloat 34s linear infinite}
+.theme-halloween .cloud-a{left:-22%;}.theme-halloween .cloud-b{left:28%;top:28%;opacity:.42;animation-duration:43s;animation-delay:-18s}.theme-halloween .cloud-c{left:74%;top:14%;opacity:.32;animation-duration:51s;animation-delay:-28s}
+.theme-halloween .halloween-painted-hills{z-index:5;top:auto;bottom:18%;height:42%;background:#090b11;clip-path:polygon(0 62%,11% 48%,21% 59%,34% 40%,46% 55%,59% 45%,73% 58%,86% 38%,100% 52%,100% 100%,0 100%);animation:hillsNear 18s ease-in-out infinite alternate}
+.theme-halloween .halloween-painted-castle{z-index:7;top:auto;bottom:27%;left:28%;right:auto;width:44%;height:34%;background:#090a0e;clip-path:polygon(0 100%,0 38%,9% 38%,9% 18%,18% 29%,25% 12%,33% 30%,43% 7%,51% 29%,59% 16%,67% 32%,76% 22%,84% 37%,100% 37%,100% 100%);filter:drop-shadow(0 8px 8px rgba(0,0,0,.45));animation:castleDrift 22s ease-in-out infinite alternate}
+.theme-halloween .halloween-painted-castle:after{content:"";position:absolute;inset:43% 18% 30%;background:radial-gradient(circle at 20% 50%,rgba(235,170,82,.8) 0 3px,transparent 4px),radial-gradient(circle at 48% 50%,rgba(235,170,82,.65) 0 3px,transparent 4px),radial-gradient(circle at 78% 50%,rgba(235,170,82,.7) 0 3px,transparent 4px)}
+.theme-halloween .halloween-painted-tree{z-index:8;top:auto;bottom:15%;left:3%;right:auto;width:25%;height:65%;background:#07080b;clip-path:polygon(42% 100%,47% 58%,35% 45%,43% 47%,29% 27%,45% 39%,38% 7%,51% 35%,65% 14%,59% 42%,83% 29%,63% 49%,100% 48%,59% 60%,55% 100%);transform-origin:bottom;animation:treeBreathe 9s ease-in-out infinite alternate}
+.theme-halloween .halloween-painted-fog{z-index:12;top:auto;bottom:13%;height:23%;width:130%;left:-15%;border-radius:50%;background:rgba(153,157,171,.11);filter:blur(12px);animation:fogRoll 23s ease-in-out infinite}
+.theme-halloween .fog-b{bottom:25%;opacity:.07;animation-duration:31s;animation-delay:-11s}
+.theme-halloween .halloween-painted-lantern{z-index:14;top:auto;bottom:18%;left:87%;right:auto;width:5%;height:12%;border-radius:35% 35% 15% 15%;background:linear-gradient(180deg,#27252a,#0b0b0d);box-shadow:0 0 15px rgba(221,145,65,.18);animation:lanternGlow 5.5s ease-in-out infinite}
+.theme-halloween .lantern-b{left:76%;bottom:20%;transform:scale(.7);opacity:.7;animation-delay:-2.6s}
+.theme-halloween .halloween-painted-embers{z-index:15}
+.theme-halloween .halloween-painted-embers i{position:absolute;width:3px;height:3px;border-radius:50%;background:#e39a55;box-shadow:0 0 7px #a65d32;animation:ember 8s ease-in-out infinite}.theme-halloween .halloween-painted-embers i:nth-child(1){left:69%;top:68%}.theme-halloween .halloween-painted-embers i:nth-child(2){left:81%;top:59%;animation-delay:-3s}.theme-halloween .halloween-painted-embers i:nth-child(3){left:58%;top:74%;animation-delay:-5.1s}
+.theme-halloween .halloween-painted-vignette{z-index:20;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.58) 100%)}
+
+@keyframes paintedSky{to{transform:scale(1.035) translate3d(-.5%,.4%,0)}}
+@keyframes starDrift{to{transform:translate3d(-5px,2px,0);opacity:.38}}
+@keyframes moonBreath{50%{transform:translate3d(-2px,2px,0) scale(1.025);filter:brightness(1.04)}}
+@keyframes moonlight{to{transform:translate3d(-3%,2%,0) scale(1.06);opacity:.7}}
+@keyframes hillsFar{to{transform:translate3d(-1.5%,1px,0) scale(1.015)}}
+@keyframes hillsNear{to{transform:translate3d(1%,0,0) scale(1.012)}}
+@keyframes grassSway{to{transform:skewX(-1deg) translateX(2px)}}
+@keyframes hazeMove{to{transform:translateX(5%) scaleX(1.08);opacity:.7}}
+@keyframes firefly{0%,100%{opacity:.08;transform:translate3d(0,0,0) scale(.6)}35%{opacity:.8}55%{opacity:.95;transform:translate3d(7px,-8px,0) scale(1)}80%{opacity:.15;transform:translate3d(-5px,-15px,0) scale(.65)}}
+@keyframes singleLeaf{0%,55%{opacity:0;transform:translate3d(0,0,0) rotate(20deg)}62%{opacity:.8}88%{opacity:.12;transform:translate3d(38px,30px,0) rotate(180deg)}100%{opacity:0}}
+@keyframes cloudFloat{from{transform:translateX(-18%)}to{transform:translateX(125%)}}
+@keyframes hazePulse{to{transform:scale(1.12);opacity:.55}}
+@keyframes castleDrift{to{transform:translateX(-2px)}}
+@keyframes treeBreathe{to{transform:rotate(-.8deg) translateX(1px)}}
+@keyframes fogRoll{0%,100%{transform:translateX(-5%);opacity:.45}50%{transform:translateX(7%);opacity:.8}}
+@keyframes lanternGlow{0%,100%{filter:brightness(.8);box-shadow:0 0 12px rgba(221,145,65,.15)}50%{filter:brightness(1.18);box-shadow:0 0 24px rgba(221,145,65,.38)}}
+@keyframes ember{0%,100%{opacity:0;transform:translate3d(0,15px,0) scale(.5)}25%{opacity:.75}70%{opacity:.35;transform:translate3d(9px,-27px,0) scale(1)}90%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.theme-harvest *,.theme-halloween *{animation-duration:.001ms!important;animation-iteration-count:1!important}}
