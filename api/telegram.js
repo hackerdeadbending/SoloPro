@@ -73,8 +73,8 @@ async function hardTicket(msg, type) {
 }
 
 export default async function handler(req, res) {
-  // Keep the configured Vercel value when present; otherwise use the SoloPro owner chat.
-  if (!process.env.TELEGRAM_ADMIN_CHAT_ID) process.env.TELEGRAM_ADMIN_CHAT_ID = ADMIN_ID;
+  // Always use the configured SoloPro owner chat for support administration.
+  process.env.TELEGRAM_ADMIN_CHAT_ID = ADMIN_ID;
 
   if (req.method === 'POST' && req.body?.message) {
     const msg = req.body.message;
