@@ -1,5 +1,5 @@
 import {useMemo,useState} from 'react';
-import {useApp,useMemo as _unused,currencyCodeFor,COUNTRIES} from '../context/AppState';
+import {useApp,currencyCodeFor,COUNTRIES} from '../context/AppState';
 import {useReferral} from '../context/ReferralEngine';
 import {createTranslator} from '../i18n';
 import Icon from '../components/Icon';
