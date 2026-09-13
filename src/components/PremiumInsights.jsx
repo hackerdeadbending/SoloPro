@@ -65,7 +65,8 @@ export default function PremiumInsights(){
   thankyou:`Hi ${selected.name}, thank you again for choosing me. I really appreciate your support and hope to see you again soon!`,
   rebook:`Hi ${selected.name}, you are due for another visit. Would you like me to help you arrange your next appointment?`
  }[messageType]||'') : '';
- const numberStyle={display:'block',minHeight:20,whiteSpace:'nowrap',fontVariantNumeric:'tabular-nums',fontFeatureSettings:'"tnum"',letterSpacing:'-.1px'};
+ const numberStyle={display:'block',minHeight:20,width:'100%',minWidth:0,whiteSpace:'normal',fontVariantNumeric:'tabular-nums',fontFeatureSettings:'"tnum"',letterSpacing:'-.1px',lineHeight:1.35,overflowWrap:'anywhere'};
+ const trendStyle={fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,width:'100%'};
  if(!app.premiumActive) return null;
  return <section className="panel premium-insights">
   <div className="panel-head"><div><div className="eyebrow">PREMIUM INTELLIGENCE</div><h2>Smart business insights</h2><p>Turn your SoloPro data into practical next steps.</p></div><Icon name="spark" size={21}/></div>
@@ -79,7 +80,7 @@ export default function PremiumInsights(){
   <div className="premium-message-tool">
    <div><div className="eyebrow">ADVANCED EARNINGS</div><h3>Business performance</h3><p>See your monthly trend, average value and strongest services at a glance.</p></div>
    <div className="premium-insights-grid">
-    <article className="feature-card"><h3>6-month trend</h3><p style={{fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{insights.monthly.map(m=>`${m.label}: ${money(m.gross)}`).join(' · ')}</p><strong style={numberStyle}>{money(insights.revenue)} this month</strong></article>
+    <article className="feature-card"><h3>6-month trend</h3><p style={trendStyle}>{insights.monthly.map(m=>`${m.label}: ${money(m.gross)}`).join(' · ')}</p><strong style={numberStyle}>{money(insights.revenue)} this month</strong></article>
     <article className="feature-card"><h3>Average service</h3><p>{insights.avgChange===null?'More history is needed for a month-to-month comparison.':`Average value is ${Math.abs(insights.avgChange).toFixed(0)}% ${insights.avgChange>=0?'higher':'lower'} than last month.`}</p><strong style={numberStyle}>{money(insights.avg)} average</strong></article>
     <article className="feature-card"><h3>Top service</h3><p>{insights.highestService?`${insights.highestService.name} generated the most recorded revenue this month.`:'Record services to compare performance.'}</p><strong style={numberStyle}>{insights.highestService?money(insights.highestService.total):'—'}</strong></article>
     <article className="feature-card"><h3>Tax position</h3><p>Estimated reserve and net result for the current period.</p><strong style={numberStyle}>{money(insights.tax)} reserve · {money(insights.net)} net</strong></article>
