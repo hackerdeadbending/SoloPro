@@ -2,7 +2,7 @@ import { authenticate, supabase } from './_supabase.js';
 
 const PRICE_PREMIUM = process.env.STRIPE_PRICE_PREMIUM || 'price_1U6iWNJjfEziO2cjxvi6vYow';
 const PRICE_DISCOUNT = process.env.STRIPE_PRICE_DISCOUNT || 'price_1U6j1HJjfEziO2cj50SZbtMJ';
-const APP_URL = String(process.env.PUBLIC_APP_URL || 'https://solopro-final-lafkraft.vercel.app').replace(/\/$/, '');
+const APP_URL = String(process.env.PUBLIC_APP_URL || 'https://solopro.vercel.app').replace(/\/$/, '');
 
 function formBody(entries) {
   const body = new URLSearchParams();
