@@ -6,25 +6,30 @@ export default async function handler(req,res){
     const admin=await authenticate(req);
     if(!admin?.isAdmin) return res.status(403).json({error:'Admin access denied.'});
 
-    const [profiles,authData]=await Promise.all([
-      supabase('/rest/v1/profiles?select=id,email,full_name,premium_active,premium_until,referral_verified_count,created_at,updated_at&order=created_at.desc'),
-      supabase('/auth/v1/admin/users?page=1&per_page=1000')
-    ]);
-
+    const profiles=await supabase('/rest/v1/profiles?select=id,email,full_name,premium_active,premium_until,referral_verified_count,created_at,updated_at&order=created_at.desc');
     const profileRows=Array.isArray(profiles)?profiles:[];
-    const authRows=Array.isArray(authData?.users)?authData.users:[];
-    const byId=new Map(profileRows.map(p=>[p.id,p]));
-    const byEmail=new Map(profileRows.filter(p=>p.email).map(p=>[String(p.email).toLowerCase(),p]));
     const now=Date.now();
 
-    const users=authRows.map(u=>{
-      const profile=byId.get(u.id)||byEmail.get(String(u.email||'').toLowerCase())||{};
-      const createdAt=profile.created_at||u.created_at||null;
-      const updatedAt=profile.updated_at||u.last_sign_in_at||u.created_at||null;
+    // Profiles are the source of truth for the SoloPro account directory.
+    // Supabase Auth is only used to enrich rows when available, so a temporary
+    // Auth-admin listing problem can never turn a real user list into zero users.
+    let authRows=[];
+    try{
+      const authData=await supabase('/auth/v1/admin/users?page=1&per_page=1000');
+      authRows=Array.isArray(authData?.users)?authData.users:[];
+    }catch{}
+
+    const byId=new Map(authRows.map(u=>[u.id,u]));
+    const byEmail=new Map(authRows.filter(u=>u.email).map(u=>[String(u.email).toLowerCase(),u]));
+
+    const users=profileRows.map(profile=>{
+      const auth=byId.get(profile.id)||byEmail.get(String(profile.email||'').toLowerCase())||{};
+      const createdAt=profile.created_at||auth.created_at||null;
+      const updatedAt=profile.updated_at||auth.last_sign_in_at||auth.created_at||null;
       return {
-        id:u.id,
-        email:u.email||profile.email||'',
-        name:profile.full_name||u.user_metadata?.full_name||u.user_metadata?.name||'',
+        id:profile.id,
+        email:profile.email||auth.email||'',
+        name:profile.full_name||auth.user_metadata?.full_name||auth.user_metadata?.name||'',
         premiumActive:Boolean(profile.premium_active),
         premiumUntil:profile.premium_until||null,
         referrals:Number(profile.referral_verified_count||0),
@@ -34,14 +39,20 @@ export default async function handler(req,res){
       };
     });
 
+    // Include any Auth account that does not have a profile yet.
     const known=new Set(users.map(u=>u.id));
-    for(const p of profileRows){
-      if(known.has(p.id)) continue;
+    for(const auth of authRows){
+      if(known.has(auth.id)) continue;
       users.push({
-        id:p.id,email:p.email||'',name:p.full_name||'',premiumActive:Boolean(p.premium_active),
-        premiumUntil:p.premium_until||null,referrals:Number(p.referral_verified_count||0),
-        createdAt:p.created_at||null,updatedAt:p.updated_at||null,
-        online:Boolean(p.updated_at&&now-Date.parse(p.updated_at)<=5*60*1000)
+        id:auth.id,
+        email:auth.email||'',
+        name:auth.user_metadata?.full_name||auth.user_metadata?.name||'',
+        premiumActive:false,
+        premiumUntil:null,
+        referrals:0,
+        createdAt:auth.created_at||null,
+        updatedAt:auth.last_sign_in_at||auth.created_at||null,
+        online:Boolean(auth.last_sign_in_at&&now-Date.parse(auth.last_sign_in_at)<=5*60*1000)
       });
     }
 
