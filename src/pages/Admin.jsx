@@ -1,6 +1,7 @@
 import {useEffect,useMemo,useState} from 'react';
 import {ADMIN_EMAIL,useApp} from '../context/AppState';
 import {useReferral} from '../context/ReferralEngine';
+import {getStoredSession,refreshSession} from '../utils/supabaseAuth';
 import Icon from '../components/Icon';
 import AccountModal from '../components/AccountModal';
 import ThemeManager from '../components/ThemeManager';
@@ -11,7 +12,7 @@ export default function Admin(){
   const [users,setUsers]=useState([]);const [loadingUsers,setLoadingUsers]=useState(false);const [userError,setUserError]=useState('');const [busyEmail,setBusyEmail]=useState('');const [query,setQuery]=useState('');
   const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
   const hasAdminAccess=Boolean(app.isAdmin||ownerSignedIn);
-  const loadUsers=async()=>{if(!app.authSession?.access_token)return;setLoadingUsers(true);setUserError('');try{const res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${app.authSession.access_token}`}});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to load users.');setUsers(Array.isArray(data.users)?data.users:[]);}catch(err){setUserError(err.message||'Unable to load users.');}finally{setLoadingUsers(false);}};
+  const loadUsers=async()=>{const session=getStoredSession()||app.authSession;if(!session?.access_token)return;setLoadingUsers(true);setUserError('');try{let token=session.access_token;let res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});let data=await res.json().catch(()=>({}));if(res.status===401||res.status===403){const refreshed=await refreshSession(session);if(refreshed?.access_token){token=refreshed.access_token;res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});data=await res.json().catch(()=>({}));}}if(!res.ok)throw new Error(data.error||'Unable to load users.');setUsers(Array.isArray(data.users)?data.users:[]);}catch(err){setUserError(err.message||'Unable to load users.');}finally{setLoadingUsers(false);}};
   useEffect(()=>{loadUsers();},[app.authSession?.access_token]);
   const filtered=useMemo(()=>{const q=query.trim().toLowerCase();return q?users.filter(u=>`${u.name} ${u.email}`.toLowerCase().includes(q)):users;},[users,query]);
   const grant=async duration=>{try{const email=target||app.user.email;await app.grantPremium(email,duration);setMessage(`Premium granted to ${email}: ${duration}`);setTarget('');await loadUsers();}catch(err){setMessage(err.message||'Unable to grant Premium.')}};
