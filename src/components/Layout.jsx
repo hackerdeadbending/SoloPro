@@ -18,6 +18,11 @@ export default function Layout({children}){
  const hoursLeft=Number.isFinite(premiumUntil)?Math.ceil((premiumUntil-Date.now())/3600000):0;
  const expiryWarning=Boolean(app.premiumActive&&!app.isAdmin&&hoursLeft>0&&hoursLeft<=24);
  useEffect(()=>{
+  if(app.user?.premium!==app.premiumActive){
+   app.update({user:{...app.user,premium:app.premiumActive}});
+  }
+ },[app.premiumActive,app.user?.premium]);
+ useEffect(()=>{
   if(!expiryWarning||typeof window==='undefined')return;
   const key=`solopro-premium-expiry-notice:${app.securityProfile?.premium_until||''}`;
   if(localStorage.getItem(key))return;
