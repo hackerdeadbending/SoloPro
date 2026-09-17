@@ -10,7 +10,7 @@ export default function Admin(){
   const app=useApp();const r=useReferral();
   const [accountOpen,setAccountOpen]=useState(false);const [target,setTarget]=useState('');const [message,setMessage]=useState('');
   const [users,setUsers]=useState([]);const [loadingUsers,setLoadingUsers]=useState(false);const [userError,setUserError]=useState('');const [busyEmail,setBusyEmail]=useState('');const [query,setQuery]=useState('');
-  const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||app.user?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
   const hasAdminAccess=Boolean(app.isAdmin||ownerSignedIn);
 
   const loadUsers=async()=>{
@@ -18,8 +18,6 @@ export default function Admin(){
     if(!baseSession?.refresh_token&&!baseSession?.access_token)return;
     setLoadingUsers(true);setUserError('');
     try{
-      // Always refresh first. This avoids using a stale localStorage token for the
-      // owner account after a long session or after another device signed in.
       let session=await refreshSession(baseSession)||baseSession;
       let token=session?.access_token;
       if(!token)throw new Error('Admin session expired. Please sign in again.');
@@ -45,7 +43,30 @@ export default function Admin(){
 
   useEffect(()=>{if(hasAdminAccess)loadUsers();},[hasAdminAccess,app.authSession?.access_token]);
   const filtered=useMemo(()=>{const q=query.trim().toLowerCase();return q?users.filter(u=>`${u.name} ${u.email}`.toLowerCase().includes(q)):users;},[users,query]);
-  const grant=async duration=>{try{const email=target||app.user.email;await app.grantPremium(email,duration);setMessage(`Premium granted to ${email}: ${duration}`);setTarget('');await loadUsers();}catch(err){setMessage(err.message||'Unable to grant Premium.')}};
+
+  const grant=async duration=>{
+    try{
+      const baseSession=app.authSession||getStoredSession();
+      let session=await refreshSession(baseSession)||baseSession;
+      if(!session?.access_token)throw new Error('Admin session expired. Please sign in again.');
+
+      const email=String(target||app.user?.email||app.account?.email||'').trim().toLowerCase();
+      if(!email)throw new Error('Enter a user email.');
+
+      const res=await fetch('/api/admin-grant',{
+        method:'POST',
+        headers:{Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json','Cache-Control':'no-cache'},
+        body:JSON.stringify({email,duration})
+      });
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok)throw new Error(data.error||'Unable to grant Premium.');
+
+      setMessage(`Premium granted to ${email}: ${duration}`);
+      setTarget('');
+      await loadUsers();
+    }catch(err){setMessage(err.message||'Unable to grant Premium.');}
+  };
+
   const revoke=async email=>{if(!window.confirm(`Revoke Premium from ${email}?`))return;setBusyEmail(email);setMessage('');try{const session=await refreshSession(app.authSession||getStoredSession());if(!session?.access_token)throw new Error('Admin session expired. Please sign in again.');const res=await fetch('/api/admin-revoke',{method:'POST',headers:{Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({email})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to revoke Premium.');setMessage(`Premium revoked from ${email}.`);await loadUsers();}catch(err){setMessage(err.message||'Unable to revoke Premium.');}finally{setBusyEmail('');}};
   if(!hasAdminAccess)return <div className="page"><div className="panel admin-login"><span className="eyebrow">ADMIN ACCESS</span><h1>Owner access</h1><p className="sub">Sign in with the owner account to open the private admin area.</p><div className="owner-email"><Icon name="user" size={17}/><strong>{ADMIN_EMAIL}</strong></div><button className="primary full" onClick={()=>setAccountOpen(true)}><Icon name="user"/>Sign in as owner</button><small className="help">Admin access is restricted to the authenticated owner email.</small></div><AccountModal open={accountOpen} onClose={()=>setAccountOpen(false)}/></div>;
   return <div className="page">
