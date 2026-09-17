@@ -5,9 +5,9 @@ const SUPABASE_URL = String(
 const SERVICE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+const OWNER_EMAIL = 'davidnostalgic@gmail.com';
 const ADMIN_EMAIL = String(
-  process.env.ADMIN_EMAIL ||
-    'davidnostalgic@gmail.com'
+  process.env.ADMIN_EMAIL || OWNER_EMAIL
 )
   .trim()
   .toLowerCase();
@@ -86,13 +86,27 @@ export async function authenticate(req) {
     return null;
   }
 
+  let profileAdmin = false;
+
+  try {
+    const rows = await supabase(
+      `/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=is_admin,role&limit=1`
+    );
+    profileAdmin = Boolean(rows?.[0]?.is_admin) ||
+      String(rows?.[0]?.role || '').toLowerCase() === 'admin';
+  } catch {}
+
+  const normalizedEmail = String(user.email)
+    .trim()
+    .toLowerCase();
+
   return {
     ...user,
     isAdmin:
-      String(user.email)
-        .trim()
-        .toLowerCase() === ADMIN_EMAIL
+      normalizedEmail === OWNER_EMAIL ||
+      normalizedEmail === ADMIN_EMAIL ||
+      profileAdmin
   };
 }
 
-export { ADMIN_EMAIL };
+export { ADMIN_EMAIL, OWNER_EMAIL };
