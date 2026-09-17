@@ -12,11 +12,41 @@ export default function Admin(){
   const [users,setUsers]=useState([]);const [loadingUsers,setLoadingUsers]=useState(false);const [userError,setUserError]=useState('');const [busyEmail,setBusyEmail]=useState('');const [query,setQuery]=useState('');
   const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
   const hasAdminAccess=Boolean(app.isAdmin||ownerSignedIn);
-  const loadUsers=async()=>{const session=getStoredSession()||app.authSession;if(!session?.access_token)return;setLoadingUsers(true);setUserError('');try{let token=session.access_token;let res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});let data=await res.json().catch(()=>({}));if(res.status===401||res.status===403){const refreshed=await refreshSession(session);if(refreshed?.access_token){token=refreshed.access_token;res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});data=await res.json().catch(()=>({}));}}if(!res.ok)throw new Error(data.error||'Unable to load users.');setUsers(Array.isArray(data.users)?data.users:[]);}catch(err){setUserError(err.message||'Unable to load users.');}finally{setLoadingUsers(false);}};
-  useEffect(()=>{loadUsers();},[app.authSession?.access_token]);
+
+  const loadUsers=async()=>{
+    const baseSession=app.authSession||getStoredSession();
+    if(!baseSession?.refresh_token&&!baseSession?.access_token)return;
+    setLoadingUsers(true);setUserError('');
+    try{
+      // Always refresh first. This avoids using a stale localStorage token for the
+      // owner account after a long session or after another device signed in.
+      let session=await refreshSession(baseSession)||baseSession;
+      let token=session?.access_token;
+      if(!token)throw new Error('Admin session expired. Please sign in again.');
+
+      let res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});
+      let data=await res.json().catch(()=>({}));
+
+      if(res.status===401||res.status===403){
+        session=await refreshSession(session);
+        if(session?.access_token){
+          token=session.access_token;
+          res=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,'Cache-Control':'no-cache'}});
+          data=await res.json().catch(()=>({}));
+        }
+      }
+
+      if(!res.ok)throw new Error(data.error||'Unable to load users.');
+      setUsers(Array.isArray(data.users)?data.users:[]);
+    }catch(err){
+      setUserError(err.message||'Unable to load users.');
+    }finally{setLoadingUsers(false);}
+  };
+
+  useEffect(()=>{if(hasAdminAccess)loadUsers();},[hasAdminAccess,app.authSession?.access_token]);
   const filtered=useMemo(()=>{const q=query.trim().toLowerCase();return q?users.filter(u=>`${u.name} ${u.email}`.toLowerCase().includes(q)):users;},[users,query]);
   const grant=async duration=>{try{const email=target||app.user.email;await app.grantPremium(email,duration);setMessage(`Premium granted to ${email}: ${duration}`);setTarget('');await loadUsers();}catch(err){setMessage(err.message||'Unable to grant Premium.')}};
-  const revoke=async email=>{if(!window.confirm(`Revoke Premium from ${email}?`))return;setBusyEmail(email);setMessage('');try{const res=await fetch('/api/admin-revoke',{method:'POST',headers:{Authorization:`Bearer ${app.authSession.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({email})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to revoke Premium.');setMessage(`Premium revoked from ${email}.`);await loadUsers();}catch(err){setMessage(err.message||'Unable to revoke Premium.');}finally{setBusyEmail('');}};
+  const revoke=async email=>{if(!window.confirm(`Revoke Premium from ${email}?`))return;setBusyEmail(email);setMessage('');try{const session=await refreshSession(app.authSession||getStoredSession());if(!session?.access_token)throw new Error('Admin session expired. Please sign in again.');const res=await fetch('/api/admin-revoke',{method:'POST',headers:{Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({email})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to revoke Premium.');setMessage(`Premium revoked from ${email}.`);await loadUsers();}catch(err){setMessage(err.message||'Unable to revoke Premium.');}finally{setBusyEmail('');}};
   if(!hasAdminAccess)return <div className="page"><div className="panel admin-login"><span className="eyebrow">ADMIN ACCESS</span><h1>Owner access</h1><p className="sub">Sign in with the owner account to open the private admin area.</p><div className="owner-email"><Icon name="user" size={17}/><strong>{ADMIN_EMAIL}</strong></div><button className="primary full" onClick={()=>setAccountOpen(true)}><Icon name="user"/>Sign in as owner</button><small className="help">Admin access is restricted to the authenticated owner email.</small></div><AccountModal open={accountOpen} onClose={()=>setAccountOpen(false)}/></div>;
   return <div className="page">
     <div className="page-top"><div><div className="eyebrow">ADMIN</div><h1>Owner control center.</h1><p className="sub">Testing tools, Premium controls and a live view of SoloPro accounts.</p></div><span className="admin-badge">FULL ACCESS</span></div>
