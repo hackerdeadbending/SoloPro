@@ -1,7 +1,7 @@
 import {useEffect,useMemo,useState} from 'react';
 import {ADMIN_EMAIL,useApp} from '../context/AppState';
-import {useReferral} from '../context/ReferralEngine';
 import {getStoredSession,refreshSession} from '../utils/supabaseAuth';
+import {useReferral} from '../context/ReferralEngine';
 import Icon from '../components/Icon';
 import AccountModal from '../components/AccountModal';
 import ThemeManager from '../components/ThemeManager';
@@ -10,7 +10,8 @@ export default function Admin(){
   const app=useApp();const r=useReferral();
   const [accountOpen,setAccountOpen]=useState(false);const [target,setTarget]=useState('');const [message,setMessage]=useState('');
   const [users,setUsers]=useState([]);const [loadingUsers,setLoadingUsers]=useState(false);const [userError,setUserError]=useState('');const [busyEmail,setBusyEmail]=useState('');const [query,setQuery]=useState('');
-  const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||app.user?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  const storedSession=getStoredSession();
+  const ownerSignedIn=String(app.authSession?.user?.email||app.account?.email||app.user?.email||storedSession?.user?.email||'').trim().toLowerCase()===ADMIN_EMAIL.toLowerCase();
   const hasAdminAccess=Boolean(app.isAdmin||ownerSignedIn);
 
   const loadUsers=async()=>{
