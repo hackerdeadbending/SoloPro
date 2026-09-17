@@ -11,7 +11,7 @@ export default function Layout({children}){
   const t=createTranslator(app.language);
   const nav=[['/','dashboard','grid'],['/earnings','earnings','dollar'],['/clients','clients','users'],['/tax','tax','file'],['/referral','referral','gift'],['/premium','premium','crown'],['/settings','settings','settings']];
   if(app.isAdmin) nav.push(['/admin','Admin','settings']);
-  const renderNav=()=>nav.map(([to,key,icon])=><NavLink key={to} to={to} end={to==='/' } onClick={()=>setMobileMenu(false)} className={({isActive})=>isActive?'nav-link active':'nav-link'}><Icon name={icon} size={19} strokeWidth={1.8}/><span>{key==='Admin'?'Admin':t(key)}</span></NavLink>);
+  const renderNav=()=>nav.map(([to,key,icon])=><NavLink key={to} to={to} end={to==='/' } onClick={()=>setMobileMenu(false)} className={({isActive})=>`nav-link ${isActive?'active ':''}${key==='settings'||key==='Admin'?'nav-link-settings':''}`}><span className="nav-icon"><Icon name={icon} size={19} strokeWidth={1.8}/></span><span>{key==='Admin'?'Admin':t(key)}</span></NavLink>);
   const accountCard=<button className="account-card" type="button" onClick={()=>{setAccountOpen(true);setMobileMenu(false)}}><span className="account-card-icon"><Icon name="user" size={17}/></span><span className="account-card-copy"><strong>{app.account?.authenticated?(app.account.name||'My account'):'My account'}</strong><small>{app.account?.authenticated?(app.account.email||'Signed in'):'Sign in or create account'}</small></span><Icon name="arrow" size={14}/></button>;
   return <div className="shell">
     <aside className="sidebar">
@@ -25,5 +25,6 @@ export default function Layout({children}){
       <main className="content">{children}</main>
     </div>
     <AccountModal open={accountOpen} onClose={()=>setAccountOpen(false)}/>
+    <style>{`.nav-link .nav-icon{width:19px;height:19px;display:grid;place-items:center;flex:0 0 19px}.nav-link-settings .nav-icon{transform:scale(1.12);transform-origin:center}`}</style>
   </div>;
 }
