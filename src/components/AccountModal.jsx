@@ -17,8 +17,9 @@ export default function AccountModal({open,onClose,required=false}){
 
  useEffect(()=>{
    if(open){
-     setEmail(app.account?.email||app.user?.email||'');
-     setName(app.account?.name||app.user?.name||'');
+     const authenticated=Boolean(app.account?.authenticated);
+     setEmail(authenticated?(app.account?.email||app.user?.email||''):'');
+     setName(authenticated?(app.account?.name||app.user?.name||''):'');
      setPassword('');
      setConfirm('');
      setMessage('');
@@ -140,8 +141,10 @@ export default function AccountModal({open,onClose,required=false}){
 
            <button
              className="danger-btn full"
-             onClick={()=>{
-               app.signOut();
+             onClick={async()=>{
+               await app.signOut();
+               setEmail('');
+               setName('');
                onClose?.();
              }}
            >
