@@ -4,6 +4,7 @@ import './illustrated-theme-scenes.css';
 import './admin-themes.css';
 import './clients-social.css';
 import './smart-messages-polish.css';
+import './admin-input-fix.css';
 import {Routes,Route} from 'react-router-dom';
 import Layout from './components/Layout';
 import AuthGate from './components/AuthGate';
