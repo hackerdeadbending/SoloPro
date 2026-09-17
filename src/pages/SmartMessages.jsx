@@ -2,6 +2,7 @@ import {useEffect,useMemo,useState} from 'react';
 import {useApp,currencyCodeFor} from '../context/AppState';
 import Icon from '../components/Icon';
 import {getSmartTrialStatus,startSmartTrial} from '../utils/smartTrial';
+import '../smart-messages-polish.css';
 
 const empty={clientId:'',date:new Date().toISOString().slice(0,10),time:'',service:'',amount:'',note:'',meetingType:'client_place',meetingPlace:''};
 const dataKey=email=>`solopro-smart-messages-v1:${String(email||'guest').trim().toLowerCase()}`;
