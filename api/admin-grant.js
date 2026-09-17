@@ -64,40 +64,42 @@ export default async function handler(req, res) {
       });
     }
 
-    // The admin user directory is sourced from Supabase Auth, while
-    // Premium state lives in profiles. Resolve the real Auth user first
-    // so grants still work when the profile email is missing/stale.
+    // Resolve the Auth user first, but fall back to the profile table.
+    // This keeps Premium grants working even if the Auth directory is
+    // temporarily unavailable or does not contain the expected user.
     let authUser = null;
 
-    if (userId) {
+    try {
       const authData = await supabase(ADMIN_USERS_PATH);
       const authUsers = Array.isArray(authData?.users)
         ? authData.users
         : [];
-      authUser = authUsers.find(user => user.id === userId) || null;
+      authUser = userId
+        ? authUsers.find(user => user.id === userId) || null
+        : authUsers.find(
+            user =>
+              String(user.email || '').trim().toLowerCase() === normalized
+          ) || null;
+    } catch {}
+
+    let authUserId = String(authUser?.id || '').trim();
+    let authEmail = String(authUser?.email || normalized).trim().toLowerCase();
+
+    if (!authUserId && normalized) {
+      const profileRows = await supabase(
+        `/rest/v1/profiles?email=eq.${encodeURIComponent(normalized)}&select=id,email&limit=1`
+      );
+      if (profileRows?.[0]) {
+        authUserId = String(profileRows[0].id || '').trim();
+        authEmail = String(profileRows[0].email || normalized).trim().toLowerCase();
+      }
     }
 
-    if (!authUser && normalized) {
-      const authData = await supabase(ADMIN_USERS_PATH);
-      const authUsers = Array.isArray(authData?.users)
-        ? authData.users
-        : [];
-      authUser = authUsers.find(
-        user =>
-          String(user.email || '').trim().toLowerCase() === normalized
-      ) || null;
-    }
-
-    if (!authUser) {
+    if (!authUserId) {
       return res.status(404).json({
         error: 'User account not found.'
       });
     }
-
-    const authUserId = String(authUser.id);
-    const authEmail = String(authUser.email || normalized)
-      .trim()
-      .toLowerCase();
 
     const profileRows = await supabase(
       `/rest/v1/profiles?id=eq.${encodeURIComponent(authUserId)}&select=id,email`
@@ -118,8 +120,6 @@ export default async function handler(req, res) {
         }
       );
     } else {
-      // A valid Auth account can exist before its profile row is created.
-      // Create the minimal profile needed for Premium state in that case.
       await supabase(
         '/rest/v1/profiles',
         {
@@ -131,8 +131,8 @@ export default async function handler(req, res) {
             id: authUserId,
             email: authEmail,
             full_name: String(
-              authUser.user_metadata?.full_name ||
-              authUser.user_metadata?.name ||
+              authUser?.user_metadata?.full_name ||
+              authUser?.user_metadata?.name ||
               ''
             ).trim(),
             premium_active: true,
