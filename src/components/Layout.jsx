@@ -9,9 +9,9 @@ export default function Layout({children}){
   const app=useApp();
   const [mobileMenu,setMobileMenu]=useState(false);const [accountOpen,setAccountOpen]=useState(false);
   const t=createTranslator(app.language);
-  const nav=[['/','dashboard','grid'],['/earnings','earnings','dollar'],['/clients','clients','users'],['/tax','tax','file'],['/referral','referral','gift'],['/premium','premium','crown'],['/settings','settings','settings']];
+  const nav=[['/','dashboard','grid'],['/earnings','earnings','dollar'],['/clients','clients','users'],['/tax','tax','file'],['/smart-messages','Smart Messages','message'],['/referral','referral','gift'],['/premium','premium','crown'],['/settings','settings','settings']];
   if(app.isAdmin) nav.push(['/admin','Admin','settings']);
-  const renderNav=()=>nav.map(([to,key,icon])=><NavLink key={to} to={to} end={to==='/' } onClick={()=>setMobileMenu(false)} className={({isActive})=>isActive?'nav-link active':'nav-link'}><Icon name={icon} size={19}/><span>{key==='Admin'?'Admin':t(key)}</span></NavLink>);
+  const renderNav=()=>nav.map(([to,key,icon])=><NavLink key={to} to={to} end={to==='/' } onClick={()=>setMobileMenu(false)} className={({isActive})=>isActive?'nav-link active':'nav-link'}><Icon name={icon} size={19}/><span>{key==='Admin'||key==='Smart Messages'?key:t(key)}</span></NavLink>);
   const accountLabel=app.account?.authenticated?(app.account.name||'My account'):'My account';
   const accountSub=app.account?.authenticated?(app.account.email||'Signed in'):'Sign in or create account';
   const openAccount=()=>{setMobileMenu(false);setAccountOpen(true)};
