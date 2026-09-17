@@ -140,9 +140,28 @@ export default function AccountModal({open,onClose,required=false}){
 
            <button
              className="danger-btn full"
-             onClick={()=>{
-               app.signOut();
-               onClose?.();
+             onClick={async()=>{
+               try{
+                 await app.signOut();
+               }finally{
+                 app.update({
+                   user:{
+                     ...app.user,
+                     name:'',
+                     email:'',
+                     premium:false
+                   },
+                   account:{
+                     ...app.account,
+                     name:'',
+                     email:'',
+                     passwordHash:'',
+                     authenticated:false,
+                     createdAt:null
+                   }
+                 });
+                 onClose?.();
+               }
              }}
            >
              Sign out
