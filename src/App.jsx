@@ -71,6 +71,7 @@ export default function App(){
       <Route path="/privacy" element={<Privacy/>}/>
       <Route path="/cookies" element={<Cookies/>}/>
       <Route path="/app/*" element={<Workspace/>}/>
+      <Route path="/earnings" element={<Workspace/>}/><Route path="/clients" element={<Workspace/>}/><Route path="/tax" element={<Workspace/>}/><Route path="/referral" element={<Workspace/>}/><Route path="/smart-messages" element={<Workspace/>}/><Route path="/premium" element={<Workspace/>}/><Route path="/settings" element={<Workspace/>}/><Route path="/admin" element={<Workspace/>}/>
       <Route path="*" element={<PublicHome/>}/>
     </Routes>}
   </>;
