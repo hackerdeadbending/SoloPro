@@ -24,6 +24,20 @@ function isPasswordRecovery(){
 
 function WorkspaceRoutes(){
   return <Routes>
+    <Route path="/app" element={<Dashboard/>}/>
+    <Route path="/app/earnings" element={<Earnings/>}/>
+    <Route path="/app/clients" element={<Clients/>}/>
+    <Route path="/app/tax" element={<Tax/>}/>
+    <Route path="/app/referral" element={<Referral/>}/>
+    <Route path="/app/smart-messages" element={<SmartMessages/>}/>
+    <Route path="/app/premium" element={<Premium/>}/>
+    <Route path="/app/settings" element={<Settings/>}/>
+    <Route path="/app/admin" element={<Admin/>}/>
+  </Routes>;
+}
+
+function RecoveryRoutes(){
+  return <Routes>
     <Route path="/" element={<Dashboard/>}/>
     <Route path="/earnings" element={<Earnings/>}/>
     <Route path="/clients" element={<Clients/>}/>
@@ -44,7 +58,7 @@ export default function App(){
   const recovery=isPasswordRecovery();
   return <>
     <PasswordRecovery/>
-    {recovery ? <Layout><WorkspaceRoutes/></Layout> : <Routes>
+    {recovery ? <Layout><RecoveryRoutes/></Layout> : <Routes>
       <Route path="/" element={<PublicHome/>}/>
       <Route path="/features" element={<Features/>}/>
       <Route path="/pricing" element={<Pricing/>}/>
