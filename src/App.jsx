@@ -33,6 +33,7 @@ function WorkspaceRoutes(){
     <Route path="/app/premium" element={<Premium/>}/>
     <Route path="/app/settings" element={<Settings/>}/>
     <Route path="/app/admin" element={<Admin/>}/>
+    <Route path="/earnings" element={<Earnings/>}/><Route path="/clients" element={<Clients/>}/><Route path="/tax" element={<Tax/>}/><Route path="/referral" element={<Referral/>}/><Route path="/smart-messages" element={<SmartMessages/>}/><Route path="/premium" element={<Premium/>}/><Route path="/settings" element={<Settings/>}/><Route path="/admin" element={<Admin/>}/>
   </Routes>;
 }
 
