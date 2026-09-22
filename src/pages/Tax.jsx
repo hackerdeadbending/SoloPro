@@ -1,3 +1,4 @@
+// Stable Tax baseline — localization paused.
 import {useMemo,useState} from 'react';
 import {useApp,currencyCodeFor} from '../context/AppState';
 import {createTranslator} from '../i18n';
