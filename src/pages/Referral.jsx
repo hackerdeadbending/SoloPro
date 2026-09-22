@@ -65,23 +65,23 @@ export default function Referral(){
 
     <header className="referral-hero">
       <div className="referral-hero-copy">
-        <div className="eyebrow">REFERRAL PROGRAM</div>
-        <h1>Grow your network. Get rewarded.</h1>
-        <p>Invite genuinely new people to SoloPro. Every 7 verified referrals unlocks a discounted Premium month.</p>
+        <div className="eyebrow">{t('referralProgram')}</div>
+        <h1>{t('referralHeroTitle')}</h1>
+        <p>{t('referralHeroSub')}</p>
       </div>
-      <div className="referral-hero-actions"><button className="primary" onClick={()=>setInvite(true)}><Icon name="send"/>Invite people</button></div>
+      <div className="referral-hero-actions"><button className="primary" onClick={()=>setInvite(true)}><Icon name="send"/>{t('invite')}</button></div>
     </header>
 
     <div className="referral-main">
       <section className="panel reward-card">
         <div className="reward-top">
-          <div className="reward-copy"><div className="reward-icon"><Icon name={milestones>0?'check':'gift'} size={19}/></div><div className="reward-title"><div className="eyebrow">YOUR NEXT REWARD</div><h2>{verified===0?'Start your first reward.':progress===0?`Milestone ${milestones} complete.`:`${remaining} more ${remaining===1?'referral':'referrals'} to go.`}</h2><p>{verified===0?'Reach 7 verified new users to earn your first Premium reward.':progress===0?'You have completed this milestone. Keep sharing for the next one.':'Every verified new user moves you closer to your next Premium reward.'}</p></div></div>
+          <div className="reward-copy"><div className="reward-icon"><Icon name={milestones>0?'check':'gift'} size={19}/></div><div className="reward-title"><div className="eyebrow">{t('nextReward')}</div><h2>{verified===0?'Start your first reward.':progress===0?`Milestone ${milestones} complete.`:`${remaining} more ${remaining===1?'referral':'referrals'} to go.`}</h2><p>{verified===0?'Reach 7 verified new users to earn your first Premium reward.':progress===0?'You have completed this milestone. Keep sharing for the next one.':'Every verified new user moves you closer to your next Premium reward.'}</p></div></div>
           <div className="reward-number">{progress===0&&verified>0?7:progress}<span> / 7</span></div>
         </div>
-        <div className="meter"><div className="meter-head"><span>PROGRESS</span><span>{verified} verified total</span></div><div className="meter-bar"><i style={{width:`${progressPercent}%`}}/></div><div className="meter-foot"><span>{progress===0&&verified>0?'Milestone complete':`${remaining} remaining`}</span><strong>{milestones} reward{milestones===1?'':'s'} earned</strong></div></div>
+        <div className="meter"><div className="meter-head"><span>{t('progress')}</span><span>{verified} verified total</span></div><div className="meter-bar"><i style={{width:`${progressPercent}%`}}/></div><div className="meter-foot"><span>{progress===0&&verified>0?'Milestone complete':`${remaining} remaining`}</span><strong>{milestones} reward{milestones===1?'':'s'} earned</strong></div></div>
       </section>
 
-      <section className="panel benefit-card"><div><div className="eyebrow">YOUR REWARD</div><div className="benefit-price">{price}<span> / PREMIUM MONTH</span></div><p>Complete a group of 7 verified new users and get one discounted Premium month.</p><div className="benefit-meta"><i/>7 verified referrals per reward</div></div></section>
+      <section className="panel benefit-card"><div><div className="eyebrow">{t('yourReward')}</div><div className="benefit-price">{price}<span> / {t('premiumMonth')}</span></div><p>{t('rewardDescription')}</p><div className="benefit-meta"><i/>{t('sevenVerifiedReward')}</div></div></section>
     </div>
 
     <div className="stats">
@@ -90,20 +90,20 @@ export default function Referral(){
 
     <section className="panel link-panel">
       <div className="link-head">
-        <div className="link-copy"><div className="link-icon"><Icon name="link" size={17}/></div><div><div className="eyebrow">YOUR PERSONAL LINK</div><h2>Share your SoloPro link</h2><p>Your unique referral link is ready to share anywhere.</p></div></div>
+        <div className="link-copy"><div className="link-icon"><Icon name="link" size={17}/></div><div><div className="eyebrow">{t('personalLink')}</div><h2>{t('shareSoloProLink')}</h2><p>{t('personalLinkReady')}</p></div></div>
         <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'share'} size={15}/><span>{shared?'Shared':'Share'}</span></button></div>
       </div>
       <div className="referral-link-box"><code title={referralLink}>{referralLink||'Your referral link will appear here'}</code><button className="copy-icon" onClick={copy} disabled={!referralLink} aria-label="Copy referral link" title={copied?'Copied':'Copy link'}><Icon name={copied?'check':'copy'} size={13}/></button></div>
-      <div className="link-note"><Icon name="check" size={11}/><span>Only genuinely new, verified accounts count.</span></div>
+      <div className="link-note"><Icon name="check" size={11}/><span>{t('onlyNewVerified')}</span></div>
     </section>
 
     <section className="panel">
-      <div className="section-head"><div><div className="eyebrow">HOW IT WORKS</div><h2>From invite to reward</h2><p>Four simple steps between sharing your link and earning a Premium reward.</p></div><span className="section-count">7 VERIFIED = 1 REWARD</span></div>
+      <div className="section-head"><div><div className="eyebrow">{t('howItWorks')}</div><h2>{t('fromInviteReward')}</h2><p>{t('fourSteps')}</p></div><span className="section-count">{t('sevenVerifiedOneReward')}</span></div>
       <div className="steps"><Step n="01" icon="link" title="Share" text="Send your personal link to someone new."/><Step n="02" icon="user" title="They join" text="They create a SoloPro account through your link."/><Step n="03" icon="check" title="They verify" text="Their email is confirmed and the referral becomes eligible."/><Step n="04" icon="gift" title="You earn" text={`7 verified referrals unlock a Premium month at ${price}.`}/></div>
     </section>
 
     <section className="panel">
-      <div className="section-head"><div><div className="eyebrow">REWARD TRACKER</div><h2>Your milestones</h2><p>Completed rewards stay available until you use them.</p></div><span className="section-count">{available} AVAILABLE</span></div>
+      <div className="section-head"><div><div className="eyebrow">{t('rewardTracker')}</div><h2>{t('yourMilestones')}</h2><p>{t('rewardsStayAvailable')}</p></div><span className="section-count">{available} AVAILABLE</span></div>
       <div className="tracker">
         <div className="milestones">{Array.from({length:Math.max(1,milestones+1)},(_,i)=>{const n=i+1,done=i<milestones,reward=r.monthlyDiscounts?.[i],isAvailable=Boolean(reward&&!reward.used);return <div className={`milestone ${done?'done':''}`} key={n}><div className="badge">{done?<Icon name="check" size={12}/>:String(n).padStart(2,'0')}</div><div className="milestone-copy"><strong>Milestone {n}</strong><span>{n*7} verified new users</span></div><span className="status">{isAvailable?'Available':reward?.used?'Used':done?'Earned':'Locked'}</span></div>})}</div>
         <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> Fair referral rules</div><div className="rule"><i/><span>Only genuinely new SoloPro accounts count.</span></div><div className="rule"><i/><span>Existing users, duplicate accounts and self-referrals do not count.</span></div><div className="rule"><i/><span>A referral becomes eligible after the new user verifies their account.</span></div></div>
