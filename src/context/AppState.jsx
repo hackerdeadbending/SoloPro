@@ -114,7 +114,7 @@ function detectFromBrowser(){
     Rome:'IT',Paris:'FR',Berlin:'DE',Warsaw:'PL',London:'GB',
     Zurich:'CH',Tokyo:'JP',Seoul:'KR',Singapore:'SG',Sydney:'AU',
     Copenhagen:'DK',Oslo:'NO',Madrid:'ES',Helsinki:'FI',Lisbon:'PT',
-    Prague:'CZ',Vienna:'AT',Amsterdam:'NL'
+    Prague:'CZ',Vienna:'AT',Amsterdam:'NL',Kyiv:'UA'
   };
 
   for(const [needle,c] of Object.entries(zones)){
