@@ -3,9 +3,11 @@ import {useReferral} from '../context/ReferralEngine';
 import {useApp} from '../context/AppState';
 import Icon from '../components/Icon';
 import InviteModal from '../components/InviteModal';
+import {createTranslator} from '../i18n';
 
 export default function Referral(){
   const app=useApp();
+  const t=createTranslator(app.language);
   const r=useReferral();
   const [invite,setInvite]=useState(false);
   const [copied,setCopied]=useState(false);
