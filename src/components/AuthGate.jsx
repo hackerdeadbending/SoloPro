@@ -1,9 +1,11 @@
 import {useState} from 'react';
 import AccountModal from './AccountModal';
 import {useApp} from '../context/AppState';
+import {createTranslator} from '../i18n';
 
 export default function AuthGate({children}){
   const app=useApp();
+  const t=createTranslator(app.language);
   const [accountOpen,setAccountOpen]=useState(false);
 
   // The application is intentionally usable without authentication.
@@ -43,10 +45,10 @@ export default function AuthGate({children}){
       >
         <div style={{minWidth:0}}>
           <strong style={{display:'block',fontSize:'13px',lineHeight:1.3}}>
-            You’re using SoloPro as a guest
+            {t('guestTitle')}
           </strong>
           <span style={{display:'block',opacity:.65,fontSize:'11px',lineHeight:1.35,marginTop:'2px'}}>
-            Test the app freely. Your data is not saved permanently until you create an account.
+            {t('guestSub')}
           </span>
         </div>
 
@@ -56,7 +58,7 @@ export default function AuthGate({children}){
           onClick={()=>setAccountOpen(true)}
           style={{flex:'0 0 auto',whiteSpace:'nowrap'}}
         >
-          Create free account
+          {t('createFreeAccount')}
         </button>
       </div>
 
