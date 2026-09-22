@@ -45,7 +45,8 @@ export const COUNTRIES = [
   { code:'US', name:'United States', language:'English', locale:'en-US', currency:'$', symbol:'$', reserve:0.28, flag:'US', region:'North America' },
   { code:'AE', name:'United Arab Emirates', language:'Arabic', locale:'ar-AE', currency:'AED', symbol:'AED', reserve:0.05, flag:'AE', region:'Middle East' },
   { code:'HK', name:'Hong Kong', language:'Chinese', locale:'zh-HK', currency:'HK$', symbol:'HK$', reserve:0.17, flag:'HK', region:'Asia' },
-  { code:'TW', name:'Taiwan', language:'Chinese', locale:'zh-TW', currency:'NT
+  { code:'TW', name:'Taiwan', language:'Chinese', locale:'zh-TW', currency:'NT$', symbol:'NT$', reserve:0.20, flag:'TW', region:'Asia' },
+  { code:'UA', name:'Ukraine', language:'Ukrainian', locale:'uk-UA', currency:'₴', symbol:'₴', reserve:0.25, flag:'UA', region:'Europe' },
   { code:'QA', name:'Qatar', language:'Arabic', locale:'ar-QA', currency:'QAR', symbol:'QAR', reserve:0.05, flag:'QA', region:'Middle East' }
 ].sort((a,b)=>a.name.localeCompare(b.name));
 
