@@ -80,17 +80,6 @@ function downloadPdf(lines){
   const url=URL.createObjectURL(blob);
   const filename='solopro-financial-tax-report.pdf';
 
-  if(navigator.share && typeof File!=='undefined'){
-    try{
-      const file=new File([blob],filename,{type:'application/pdf'});
-      if(navigator.canShare?.({files:[file]})){
-        navigator.share({files:[file],title:filename}).catch(()=>{});
-        setTimeout(()=>URL.revokeObjectURL(url),10000);
-        return;
-      }
-    }catch{}
-  }
-
   const a=document.createElement('a');
   a.href=url;
   a.download=filename;
