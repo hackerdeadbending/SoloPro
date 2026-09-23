@@ -19,10 +19,11 @@ export const FALLBACK_USD_RATES = {
   HKD: 7.85,
   TWD: 31.8,
   QAR: 3.64,
+  UAH: 41,
 };
 
 export function currencyCodeFor(country) {
-  const map = { IT:'EUR',FR:'EUR',DE:'EUR',ES:'EUR',PT:'EUR',NL:'EUR',BE:'EUR',AT:'EUR',IE:'EUR',LU:'EUR',FI:'EUR',GB:'GBP',US:'USD',CA:'CAD',AU:'AUD',NZ:'NZD',CH:'CHF',PL:'PLN',CZ:'CZK',SE:'SEK',DK:'DKK',NO:'NOK',IS:'ISK',JP:'JPY',KR:'KRW',SG:'SGD',AE:'AED',HK:'HKD',TW:'TWD',QA:'QAR' };
+  const map = { IT:'EUR',FR:'EUR',DE:'EUR',ES:'EUR',PT:'EUR',NL:'EUR',BE:'EUR',AT:'EUR',IE:'EUR',LU:'EUR',FI:'EUR',GB:'GBP',US:'USD',CA:'CAD',AU:'AUD',NZ:'NZD',CH:'CHF',PL:'PLN',CZ:'CZK',SE:'SEK',DK:'DKK',NO:'NOK',IS:'ISK',JP:'JPY',KR:'KRW',SG:'SGD',AE:'AED',HK:'HKD',TW:'TWD',QA:'QAR',UA:'UAH' };
   return map[country?.code] || 'USD';
 }
 
