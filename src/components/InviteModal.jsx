@@ -38,7 +38,7 @@ export default function InviteModal({open,onClose,clientName=''}){
     {label:'Email',icon:'mail',onClick:email},
     {label:'Facebook',icon:'facebook',onClick:facebook},
     {label:'X',icon:'x',onClick:x},
-    {label:'Copy link',icon:'link',onClick:copy},
+    {label:t('copy'),icon:'link',onClick:copy},
   ];
 
   return <Modal open={open} onClose={onClose} title={clientName?`${t('invite')} ${clientName}`:t('invite')}>
@@ -58,10 +58,10 @@ export default function InviteModal({open,onClose,clientName=''}){
     </div>
     <div className="copy-row"><input value={referralLink} readOnly/><button onClick={copy}><Icon name="copy" size={13}/><span>Copy</span></button></div>
     {!clientName&&app.isAdmin&&<div className="ref-verify">
-      <label>New-user verification</label>
+      <label>{t('newUserVerification')}</label>
       <input value={identifier} onChange={e=>setIdentifier(e.target.value)} placeholder="Email or unique identifier"/>
-      <small>Only genuinely new sign-ups should be verified here.</small>
-      <button className="primary full" disabled={!identifier.trim()} onClick={()=>{recordReferral(identifier.trim());setIdentifier('');onClose()}}>Mark new signup</button>
+      <small>{t('newUserVerificationHelp')}</small>
+      <button className="primary full" disabled={!identifier.trim()} onClick={()=>{recordReferral(identifier.trim());setIdentifier('');onClose()}}>{t('markNewSignup')}</button>
     </div>}
   </Modal>;
 }

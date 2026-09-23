@@ -3,9 +3,11 @@ import {Link} from 'react-router-dom';
 import Modal from './Modal';
 import Icon from './Icon';
 import {useApp} from '../context/AppState';
+import {createTranslator} from '../i18n';
 
 export default function AccountModal({open,onClose,required=false}){
  const app=useApp();
+ const t=createTranslator(app.language);
  const [mode,setMode]=useState('signin');
  const [name,setName]=useState('');
  const [email,setEmail]=useState('');
@@ -104,12 +106,12 @@ export default function AccountModal({open,onClose,required=false}){
 
  const title=
    app.account?.authenticated
-     ? 'Your account'
+     ? t('myAccount')
      : mode==='signup'
-       ? 'Create your account'
+       ? t('createAccount')
        : mode==='forgot'
          ? 'Reset your password'
-         : 'Sign in';
+         : t('signIn');
 
  return (
    <Modal
@@ -164,7 +166,7 @@ export default function AccountModal({open,onClose,required=false}){
                }
              }}
            >
-             Sign out
+             {t('signOut')}
            </button>
          </>
        ) : (
@@ -177,7 +179,7 @@ export default function AccountModal({open,onClose,required=false}){
                      setMessage('');
                    }}
                  >
-                   Sign in
+                   {t('signIn')}
                  </button>
 
                  <button
@@ -187,7 +189,7 @@ export default function AccountModal({open,onClose,required=false}){
                      setMessage('');
                    }}
                  >
-                   Create account
+                   {t('createAccount')}
                  </button>
              </div>)}
 
@@ -198,7 +200,7 @@ export default function AccountModal({open,onClose,required=false}){
 
              {mode==='signup'&&(
                <label>
-                 Full name
+                 {t('fullName')}
                  <input
                    value={name}
                    onChange={e=>setName(e.target.value)}
@@ -209,7 +211,7 @@ export default function AccountModal({open,onClose,required=false}){
              )}
 
              <label>
-               Email
+               {t('email')}
                <input
                  type="email"
                  value={email}
@@ -221,7 +223,7 @@ export default function AccountModal({open,onClose,required=false}){
 
              {mode!=='forgot'&&(
                <label>
-                 Password
+                 {t('password')}
                  <input
                    type="password"
                    value={password}
@@ -239,7 +241,7 @@ export default function AccountModal({open,onClose,required=false}){
 
              {mode==='signup'&&(
                <label>
-                 Password confirmation
+                 {t('passwordConfirmation')}
                  <input
                    type="password"
                    value={confirm}
@@ -262,15 +264,15 @@ export default function AccountModal({open,onClose,required=false}){
                  <span>
                    I agree to the{' '}
                    <Link to="/terms" target="_blank">
-                     Terms of Service
+                     {t('termsTitle')}
                    </Link>
                    ,{' '}
                    <Link to="/privacy" target="_blank">
-                     Privacy Policy
+                     {t('privacyTitle')}
                    </Link>
                    {' '}and{' '}
                    <Link to="/cookies" target="_blank">
-                     Cookie Policy
+                     {t('cookiesTitle')}
                    </Link>
                    .
                  </span>
@@ -290,10 +292,10 @@ export default function AccountModal({open,onClose,required=false}){
                {busy
                  ? 'Please wait…'
                  : mode==='signup'
-                   ? 'Create account'
+                   ? t('createAccount')
                    : mode==='forgot'
                      ? 'Send reset link'
-                     : 'Sign in'}
+                     : t('signIn')}
              </button>
 
            </form>
@@ -306,7 +308,7 @@ export default function AccountModal({open,onClose,required=false}){
                  setMessage('');
                }}
              >
-               Forgot your password?
+               {t('forgotPassword')}
              </button>
            )}
 
@@ -318,13 +320,13 @@ export default function AccountModal({open,onClose,required=false}){
                  setMessage('');
                }}
              >
-               Back to sign in
+               {t('backToSignIn')}
              </button>
            )}
 
            {mode==='signup'&&(
              <p className="modal-sub account-note">
-               You must verify your email before full account access is enabled.
+               {t('verifyEmailNotice')}
              </p>
            )}
 
@@ -335,7 +337,7 @@ export default function AccountModal({open,onClose,required=false}){
                disabled={busy}
                onClick={resend}
              >
-               Resend confirmation email
+               {t('resendConfirmation')}
              </button>
            )}
 

@@ -91,16 +91,10 @@ async function downloadPdf(lines){
   }
 
   const url=URL.createObjectURL(blob);
-  const opened=window.open('', '_blank');
-  if(opened){
-    opened.location.href=url;
-    setTimeout(()=>URL.revokeObjectURL(url),60000);
-    return;
-  }
-
   const a=document.createElement('a');
   a.href=url;
   a.download=filename;
+  a.target='_blank';
   a.rel='noopener';
   a.style.display='none';
   document.body.appendChild(a);
@@ -143,6 +137,12 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   if(!expenses.length&&!serviceCosts&&!fixed) lines.push('No expense records for this period.');
   services.forEach(x=>{const cost=Number(x.materialCost||0)+Number(x.extraExpense||0);if(cost)lines.push(`${new Date(x.date).toLocaleDateString(app.country.locale)} | ${x.service||'—'} | ${money(cost)}`);});
   expenses.forEach(x=>lines.push(`${new Date(x.date).toLocaleDateString(app.country.locale)} | ${x.label||'—'} | ${money(x.amount)}`));
-  lines.push('', 'TAX / DECLARATION INFORMATION', `${rc.taxReserve}: ${money(report.tax)}`, `${rc.reserveRate}: ${app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':rc.notApplied}`, `Tax calculation mode: ${app.taxMode==='reserve'?'Reserve planning':'Manual expense'}`, '', 'DECLARATION NOTES', `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', 'DECLARATION CHECKLIST', `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', 'This report is a planning and record-keeping document. Verify the final figures and local filing requirements before submitting a tax return.');
+  lines.push('', 'TAX / DECLARATION INFORMATION', `${rc.taxReserve}: ${money(report.tax)}`, `${rc.reserveRate}: ${app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':rc.notApplied}`, `Tax calculation mode: ${app.taxMode==='reserve'?'Reserve planning':'Manual expense'}`, '', 'MONTHLY SERVICE DETAIL');
+  if(app.monthlyServices.length){app.monthlyServices.forEach((s,i)=>lines.push(`${i+1}. ${s.service||'Service'} — ${money(Number(s.amount)||0)} | ${rc.costs}: ${money((Number(s.materialCost)||0)+(Number(s.extraExpense)||0))}`));}else lines.push(rc.noNotes);
+  lines.push('', 'ADDITIONAL INCOME');
+  if(extraIncome.length)extraIncome.forEach((x,i)=>lines.push(`${i+1}. ${x.description||x.name||'Income'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
+  lines.push('', 'ADDITIONAL EXPENSES');
+  if(extraExpenses.length)extraExpenses.forEach((x,i)=>lines.push(`${i+1}. ${x.description||x.name||'Expense'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
+  lines.push('', 'DECLARATION NOTES', `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', 'DECLARATION CHECKLIST', `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', 'This report is a planning and record-keeping document. Verify the final figures and local filing requirements before submitting a tax return.');
   downloadPdf(lines);
 };;return <div className="page"><div className="page-top"><div><div className="eyebrow">{t('tax').toUpperCase()}</div><h1>{tc('headline')}</h1><p className="sub">{app.taxMode==='reserve'?tc('planningOn'):tc('planningOff')}</p></div><button className="ghost-btn" onClick={download}><Icon name="file"/>{t('exportReport')}</button></div><section className="tax-banner"><div><span>{tc('jurisdiction')}</span><strong>{app.country.name}{app.stateProfile?` — ${app.stateProfile.name}`:''}</strong></div><div><span>{tc('reserve')}</span><strong>{app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':'OFF'}</strong></div><div><span>{tc('frequency')}</span><strong>{app.taxMode==='reserve'?tc('monthlyPlanning'):tc('manualExpense')}</strong></div></section><div className="tax-grid"><section className="panel"><div className="panel-head"><div><h2>{tc('currentMonth')}</h2><p>{tc('planningOnly')}</p></div><Icon name="chart"/></div><div className="declaration-summary"><div><span>{t('revenue')}</span><strong>{money(report.gross)}</strong></div><div><span>{tc('costs')}</span><strong>{money(report.costs)}</strong></div><div><span>{t('taxReserve')}</span><strong>{money(report.tax)}</strong></div><div><span>{t('estimatedNet')}</span><strong>{money(report.net)}</strong></div></div></section><section className="panel"><div className="panel-head"><div><h2>{tc('notesChecklist')}</h2><p>{tc('notesHelp')}</p></div></div><div className="note-type-row"><label>{tc('noteType')}<select value={noteType} onChange={e=>setNoteType(e.target.value)}><option value="general">{tc('general')}</option><option value="deductions">{tc('deductions')}</option><option value="receipts">{tc('receipts')}</option><option value="questions">{tc('questions')}</option></select></label></div><textarea className="notes" value={notes} onChange={e=>setNotes(e.target.value)} placeholder={tc('notesPlaceholder')}/><div style={{display:'flex',justifyContent:'flex-end',width:'100%',marginTop:'12px',marginLeft:'0',marginRight:'0',padding:'0'}}><div className="checklist" style={{width:'fit-content',display:'flex',flexDirection:'column',alignItems:'flex-start',margin:'0',padding:'0'}}>{[['reconciled','reconciled'],['expenses','expensesChecked'],['receipts','receipts'],['deadlines','deadlines']].map(([id,key])=><label key={id}><input type="checkbox" checked={checks[id]} onChange={e=>setChecks({...checks,[id]:e.target.checked})}/><span>{t(key)}</span></label>)}</div></div></section></div><section className="panel"><div className="panel-head"><div><h2>{tc('estimateWorks')}</h2><p>{tc('planningSupport')}</p></div></div><div className="tax-explain"><p><b>{tc('taxOn')}</b> {tc('taxOnExplain')}</p><p><b>{tc('taxOff')}</b> {tc('taxOffExplain')}</p><div className="notice"><Icon name="spark"/>{app.taxInfo}</div></div></section></div>}

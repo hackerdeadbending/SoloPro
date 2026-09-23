@@ -108,7 +108,7 @@ export default function Referral(){
       <div className="section-head"><div><div className="eyebrow">{t('rewardTracker')}</div><h2>{t('yourMilestones')}</h2><p>{t('rewardsStayAvailable')}</p></div><span className="section-count">{available} AVAILABLE</span></div>
       <div className="tracker">
         <div className="milestones">{Array.from({length:Math.max(1,milestones+1)},(_,i)=>{const n=i+1,done=i<milestones,reward=r.monthlyDiscounts?.[i],isAvailable=Boolean(reward&&!reward.used);return <div className={`milestone ${done?'done':''}`} key={n}><div className="badge">{done?<Icon name="check" size={12}/>:String(n).padStart(2,'0')}</div><div className="milestone-copy"><strong>Milestone {n}</strong><span>{n*7} verified new users</span></div><span className="status">{isAvailable?'Available':reward?.used?'Used':done?'Earned':'Locked'}</span></div>})}</div>
-        <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> Fair referral rules</div><div className="rule"><i/><span>Only genuinely new SoloPro accounts count.</span></div><div className="rule"><i/><span>Existing users, duplicate accounts and self-referrals do not count.</span></div><div className="rule"><i/><span>A referral becomes eligible after the new user verifies their account.</span></div></div>
+        <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> Fair referral rules</div><div className="rule"><i/><span>{t('onlyNewAccounts')}</span></div><div className="rule"><i/><span>{t('duplicateSelfReferrals')}</span></div><div className="rule"><i/><span>{t('eligibleAfterVerification')}</span></div></div>
       </div>
     </section>
 
