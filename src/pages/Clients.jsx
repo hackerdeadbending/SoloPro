@@ -14,9 +14,9 @@ export default function Clients(){
  return <div className="page">
   <div className="page-top">
    <div>
-    <div className="eyebrow">CLIENTS</div>
-    <h1>People, not spreadsheets.</h1>
-    <p className="sub">Track relationships, spending and repeat work without tracking hours.</p>
+    <div className="eyebrow">{t("clients").toUpperCase()}</div>
+    <h1>{t('clientsHeroTitle')}</h1>
+    <p className="sub">{t('clientsHeroSub')}</p>
    </div>
    <button className="primary" onClick={()=>setOpen(true)}>
     <Icon name="plus"/>Add client
@@ -26,7 +26,7 @@ export default function Clients(){
   <div className="client-toolbar">
    <div className="search">
     <Icon name="search" size={18}/>
-    <input placeholder="Search clients" value={search} onChange={e=>setSearch(e.target.value)}/>
+    <input placeholder={t("searchClients")} value={search} onChange={e=>setSearch(e.target.value)}/>
    </div>
    <div className="toolbar-stats">
     <span>{app.clients.length} clients</span>
@@ -57,11 +57,11 @@ export default function Clients(){
 
       <div className="profile-metrics">
        <div>
-        <span>Visits</span>
+        <span>{t('visits')}</span>
         <strong>{app.services.filter(s=>s.clientId===c.id).length}</strong>
        </div>
        <div>
-        <span>Last visit</span>
+        <span>{t('lastVisit')}</span>
         <strong>{l?new Date(l.date).toLocaleDateString():'—'}</strong>
        </div>
       </div>
@@ -79,7 +79,7 @@ export default function Clients(){
    </div>
   }
 
-  <Modal open={open} onClose={()=>setOpen(false)} title="Add client">
+  <Modal open={open} onClose={()=>setOpen(false)} title={t("addClient")}>
    <form className="form-stack" onSubmit={submit}>
     <label>
      Full name
@@ -102,11 +102,11 @@ export default function Clients(){
      <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/>
     </label>
 
-    <button className="primary full">Save client</button>
+    <button className="primary full" >{t('saveClient')}</button>
    </form>
   </Modal>
 
-  <Modal open={!!selected} onClose={()=>setSelected(null)} title={selected?.name||'Client'}>
+  <Modal open={!!selected} onClose={()=>setSelected(null)} title={selected?.name||t('client')}>
    {selected&&<ClientDetail client={selected} onClose={()=>setSelected(null)} />}
   </Modal>
 
@@ -147,7 +147,7 @@ function ClientDetail({client,onClose}){
   }}>
    <label>
     New service
-    <input required value={service} onChange={e=>setService(e.target.value)} placeholder="Service"/>
+    <input required value={service} onChange={e=>setService(e.target.value)} placeholder={t("service")}/>
    </label>
 
    <div className="two-col">
@@ -166,7 +166,7 @@ function ClientDetail({client,onClose}){
     <input type="number" value={extra} onChange={e=>setExtra(e.target.value)}/>
    </label>
 
-   <button className="primary full">Add service</button>
+   <button className="primary full" >{t('addService')}</button>
   </form>
 
   <div className="modal-danger" style={{marginTop:'16px'}}>

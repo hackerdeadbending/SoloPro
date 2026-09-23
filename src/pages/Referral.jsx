@@ -95,20 +95,20 @@ export default function Referral(){
         <div className="link-copy"><div className="link-icon"><Icon name="link" size={17}/></div><div><div className="eyebrow">{t('personalLink')}</div><h2>{t('shareSoloProLink')}</h2><p>{t('personalLinkReady')}</p></div></div>
         <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'share'} size={15}/><span>{shared?'Shared':'Share'}</span></button></div>
       </div>
-      <div className="referral-link-box"><code title={referralLink}>{referralLink||'Your referral link will appear here'}</code><button className="copy-icon" onClick={copy} disabled={!referralLink} aria-label="Copy referral link" title={copied?'Copied':'Copy link'}><Icon name={copied?'check':'copy'} size={13}/></button></div>
+      <div className="referral-link-box"><code title={referralLink}>{referralLink||t('referralLinkPending')}</code><button className="copy-icon" onClick={copy} disabled={!referralLink} aria-label={t('copy')} title={copied?t('copied'):t('copy')}><Icon name={copied?'check':'copy'} size={13}/></button></div>
       <div className="link-note"><Icon name="check" size={11}/><span>{t('onlyNewVerified')}</span></div>
     </section>
 
     <section className="panel">
       <div className="section-head"><div><div className="eyebrow">{t('howItWorks')}</div><h2>{t('fromInviteReward')}</h2><p>{t('fourSteps')}</p></div><span className="section-count">{t('sevenVerifiedOneReward')}</span></div>
-      <div className="steps"><Step n="01" icon="link" title="Share" text="Send your personal link to someone new."/><Step n="02" icon="user" title="They join" text="They create a SoloPro account through your link."/><Step n="03" icon="check" title="They verify" text="Their email is confirmed and the referral becomes eligible."/><Step n="04" icon="gift" title="You earn" text={`7 verified referrals unlock a Premium month at ${price}.`}/></div>
+      <div className="steps"><Step n="01" icon="link" title={t("share")} text={t("shareReferralText")}/><Step n="02" icon="user" title={t("theyJoin")} text={t("joinReferralText")}/><Step n="03" icon="check" title={t("theyVerify")} text={t("verifyReferralText")}/><Step n="04" icon="gift" title={t("youEarn")} text={`${t("premiumMonth")} · ${price}`}/></div>
     </section>
 
     <section className="panel">
       <div className="section-head"><div><div className="eyebrow">{t('rewardTracker')}</div><h2>{t('yourMilestones')}</h2><p>{t('rewardsStayAvailable')}</p></div><span className="section-count">{available} AVAILABLE</span></div>
       <div className="tracker">
         <div className="milestones">{Array.from({length:Math.max(1,milestones+1)},(_,i)=>{const n=i+1,done=i<milestones,reward=r.monthlyDiscounts?.[i],isAvailable=Boolean(reward&&!reward.used);return <div className={`milestone ${done?'done':''}`} key={n}><div className="badge">{done?<Icon name="check" size={12}/>:String(n).padStart(2,'0')}</div><div className="milestone-copy"><strong>Milestone {n}</strong><span>{n*7} verified new users</span></div><span className="status">{isAvailable?'Available':reward?.used?'Used':done?'Earned':'Locked'}</span></div>})}</div>
-        <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> Fair referral rules</div><div className="rule"><i/><span>{t('onlyNewAccounts')}</span></div><div className="rule"><i/><span>{t('duplicateSelfReferrals')}</span></div><div className="rule"><i/><span>{t('eligibleAfterVerification')}</span></div></div>
+        <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> {t("fairReferralRules")}</div><div className="rule"><i/><span>{t('onlyNewAccounts')}</span></div><div className="rule"><i/><span>{t('duplicateSelfReferrals')}</span></div><div className="rule"><i/><span>{t('eligibleAfterVerification')}</span></div></div>
       </div>
     </section>
 
