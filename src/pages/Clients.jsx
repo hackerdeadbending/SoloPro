@@ -1,11 +1,12 @@
 import {useMemo,useState} from 'react';
 import {useApp,currencyCodeFor} from '../context/AppState';
+import {createTranslator} from '../i18n';
 import Icon from '../components/Icon';
 import Modal from '../components/Modal';
 import InviteModal from '../components/InviteModal';
 
 export default function Clients(){
- const app=useApp(); const [search,setSearch]=useState(''); const [open,setOpen]=useState(false); const [invite,setInvite]=useState(null); const [selected,setSelected]=useState(null); const [form,setForm]=useState({name:'',email:'',phone:'',notes:''});
+ const app=useApp(); const t=createTranslator(app.language); const [search,setSearch]=useState(''); const [open,setOpen]=useState(false); const [invite,setInvite]=useState(null); const [selected,setSelected]=useState(null); const [form,setForm]=useState({name:'',email:'',phone:'',notes:''});
  const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);
  const filtered=useMemo(()=>app.clients.filter(c=>`${c.name} ${c.email||''} ${c.phone||''}`.toLowerCase().includes(search.toLowerCase())),[app.clients,search]);
  const last=id=>app.services.filter(s=>s.clientId===id).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
