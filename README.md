@@ -41,3 +41,5 @@ The GitHub/Vercel integration deploys pushes to the Production branch automatica
 ## Referral program
 
 The Referral page is intentionally limited to referral progress, the personal invite link, sharing actions, milestones, rewards and referral rules. Theme/style unlocking belongs in Settings, not on the Referral page.
+
+<!-- Vercel main auto-deploy trigger verification: 2026-09-23 -->
