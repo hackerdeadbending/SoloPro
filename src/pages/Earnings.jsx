@@ -52,7 +52,7 @@ export default function Earnings(){
    <small>{copy.taxHint}</small>
   </div>
 
-  <div className="stat-cards">
+  <div className="stat-cards" style={{gridTemplateColumns:"repeat(4,minmax(0,1fr))",alignItems:"stretch"}}>
    <Stat label={copy.income} value={money(revenue)}/><Stat label={copy.expense} value={money(expenses)}/><Stat label={copy.taxReserve} value={money(tax)}/><Stat label={copy.netAvailable} value={money(net)} green/>
   </div>
 
@@ -80,4 +80,4 @@ export default function Earnings(){
   <Modal open={templateOpen} onClose={()=>setTemplateOpen(false)} title={copy.savedTemplates}><p className="modal-sub">{copy.repeatableIncome}</p><div className="template-list">{(JSON.parse(localStorage.getItem('solopro_templates')||'[]')).map((t,i)=><div className="template" key={i}><strong>{t.service}</strong><span>{money(t.amount)} — {copy.materialsWord} {money(t.materialCost)}</span><button className="pink-btn" onClick={()=>{app.addService(t);setTemplateOpen(false)}}>{copy.add}</button></div>)}<div className="empty compact"><span>{copy.templatesSaved}</span></div></div></Modal>
  </div>
 }
-function Stat({label,value,green}){return <div className="stat-card"><span>{label}</span><strong className={green?'green':''}>{value}</strong></div>}
+function Stat({label,value,green}){return <div className="stat-card" style={{display:"flex",flexDirection:"column",justifyContent:"space-between",textAlign:"center",minWidth:0}}><span style={{minHeight:"2.4em",display:"flex",alignItems:"center",justifyContent:"center"}}>{label}</span><strong className={green?'green':''} style={{display:"block",whiteSpace:"nowrap"}}>{value}</strong></div>}
