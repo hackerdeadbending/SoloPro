@@ -1,9 +1,11 @@
 import {useMemo,useState} from 'react';
 import {useApp,currencyCodeFor} from '../context/AppState';
 import Icon from './Icon';
+import {createTranslator} from '../i18n';
 
 export default function PremiumInsights(){
  const app=useApp();
+ const t=createTranslator(app.language);
  const [clientId,setClientId]=useState('');
  const [messageType,setMessageType]=useState('followup');
  const [copied,setCopied]=useState(false);
@@ -49,15 +51,15 @@ export default function PremiumInsights(){
   const expenseTotal=Number(app.totals?.materials||0)+Number(app.totals?.expenses||0);
   const expenseRatio=revenue?expenseTotal/revenue:0;
   const recommendations=[];
-  if(!revenue) recommendations.push('Record your first service to unlock personalized business recommendations.');
-  if(change!==null&&change<-5) recommendations.push(`Revenue is down ${Math.abs(change).toFixed(0)}% versus last month. Consider following up with recent clients and promoting your strongest service.`);
-  if(avgChange!==null&&avgChange<-5) recommendations.push(`Your average recorded service is down ${Math.abs(avgChange).toFixed(0)}%. Review pricing or look for a simple add-on opportunity.`);
-  if(dormant.length) recommendations.push(`${dormant.length} client${dormant.length===1?'':'s'} have been inactive for 45+ days. A personal re-book message could bring them back.`);
-  if(expenseRatio>.35&&revenue) recommendations.push(`Recorded materials and expenses are ${Math.round(expenseRatio*100)}% of revenue. Review recurring costs before your next pricing decision.`);
-  if(highestService) recommendations.push(`${highestService.name} is your strongest service this month at ${money(highestService.total)} recorded revenue. Consider making it a focus of your next promotion.`);
-  if(!recommendations.length) recommendations.push('Your current numbers look steady. Keep recording services and clients so SoloPro can spot stronger trends over time.');
+  if(!revenue) recommendations.push(t('recRecordFirst'));
+  if(change!==null&&change<-5) recommendations.push(t('recRevenueDown').replace('{pct}',Math.abs(change).toFixed(0)));
+  if(avgChange!==null&&avgChange<-5) recommendations.push(t('recAvgDown').replace('{pct}',Math.abs(avgChange).toFixed(0)));
+  if(dormant.length) recommendations.push(t('recDormant').replace('{n}',String(dormant.length)));
+  if(expenseRatio>.35&&revenue) recommendations.push(t('recExpensesHigh').replace('{pct}',String(Math.round(expenseRatio*100))));
+  if(highestService) recommendations.push(t('recStrongest').replace('{name}',highestService.name).replace('{amount}',money(highestService.total)));
+  if(!recommendations.length) recommendations.push(t('recSteady'));
   return {revenue,net,tax,change,avg,avgChange,monthly,serviceStats,clientStats,dormant,top,highestService,expenseRatio,recommendations};
- },[app.totals,app.services,app.clients,app.country,monthServices]);
+ },[app.totals,app.services,app.clients,app.country,monthServices,app.language]);
  const selected=insights.clientStats.find(c=>c.id===clientId);
  const message=selected?({
   followup:`Hi ${selected.name}, just checking in — it was great working with you. If you would like to book another ${selected.rows[0]?.service||'appointment'}, I would be happy to find a time that works for you.`,
@@ -69,40 +71,40 @@ export default function PremiumInsights(){
  const trendStyle={fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,width:'100%'};
  if(!app.premiumActive) return null;
  return <section className="panel premium-insights">
-  <div className="panel-head"><div><div className="eyebrow">PREMIUM INTELLIGENCE</div><h2>Smart business insights</h2><p>Turn your SoloPro data into practical next steps.</p></div><Icon name="spark" size={21}/></div>
+  <div className="panel-head"><div><div className="eyebrow">{t('premiumIntelligence')}</div><h2>{t('smartBusinessInsights')}</h2><p>{t('smartBusinessInsightsSub')}</p></div><Icon name="spark" size={21}/></div>
   <div className="premium-insights-grid">
-   <article className="feature-card"><div className="feature-icon"><Icon name="chart" size={20}/></div><h3>Profit intelligence</h3><p>{insights.change===null?'Build your first month of history to unlock trend analysis.':`Revenue is ${Math.abs(insights.change).toFixed(0)}% ${insights.change>=0?'higher':'lower'} than last month.`}</p><strong>{money(insights.net)} estimated net</strong></article>
-   <article className="feature-card"><div className="feature-icon"><Icon name="users" size={20}/></div><h3>Client intelligence</h3><p>{insights.dormant.length?`${insights.dormant.length} client${insights.dormant.length===1?'':'s'} may be ready for a follow-up.`:'No dormant clients detected from your current history.'}</p>{insights.top&&<strong>Top client: {insights.top.name} · {money(insights.top.total)}</strong>}</article>
-   <article className="feature-card"><div className="feature-icon"><Icon name="spark" size={20}/></div><h3>Business alerts</h3><p>{insights.revenue===0?'Record a service to start receiving personalized business signals.':insights.avg?`Your current average recorded service is ${money(insights.avg)}.`:'Keep recording services to build your business signals.'}</p><strong>{monthServices.length} services this month</strong></article>
-   <article className="feature-card"><div className="feature-icon"><Icon name="file" size={20}/></div><h3>Tax assistant</h3><p>Your current planning reserve is based on your SoloPro tax setting.</p><strong>{money(insights.tax)} estimated reserve · {Math.round(Number(app.country?.reserve||0)*100)}%</strong></article>
+   <article className="feature-card"><div className="feature-icon"><Icon name="chart" size={20}/></div><h3>{t('profitIntelligence')}</h3><p>{insights.change===null?t('buildFirstMonth'):t('revenueVsLast').replace('{pct}',Math.abs(insights.change).toFixed(0)).replace('{dir}',insights.change>=0?t('higher'):t('lower'))}</p><strong>{money(insights.net)} {t('estimatedNet')}</strong></article>
+   <article className="feature-card"><div className="feature-icon"><Icon name="users" size={20}/></div><h3>{t('clientIntelligence')}</h3><p>{insights.dormant.length?t('dormantReady').replace('{n}',String(insights.dormant.length)):t('noDormantClients')}</p>{insights.top&&<strong>{t('topClient')}: {insights.top.name} · {money(insights.top.total)}</strong>}</article>
+   <article className="feature-card"><div className="feature-icon"><Icon name="spark" size={20}/></div><h3>{t('businessAlerts')}</h3><p>{insights.revenue===0?t('recordServiceSignals'):insights.avg?t('currentAvgService').replace('{amount}',money(insights.avg)):t('keepRecordingSignals')}</p><strong>{monthServices.length} {t('servicesThisMonth')}</strong></article>
+   <article className="feature-card"><div className="feature-icon"><Icon name="file" size={20}/></div><h3>{t('taxAssistant')}</h3><p>{t('planningReserveNote')}</p><strong>{money(insights.tax)} {t('estimatedReserve')} · {Math.round(Number(app.country?.reserve||0)*100)}%</strong></article>
   </div>
 
   <div className="premium-message-tool">
-   <div><div className="eyebrow">ADVANCED EARNINGS</div><h3>Business performance</h3><p>See your monthly trend, average value and strongest services at a glance.</p></div>
+   <div><div className="eyebrow">{t('advancedEarnings')}</div><h3>{t('businessPerformance')}</h3><p>{t('businessPerformanceSub')}</p></div>
    <div className="premium-insights-grid">
-    <article className="feature-card"><h3>6-month trend</h3><p style={trendStyle}>{insights.monthly.map(m=>`${m.label}: ${money(m.gross)}`).join(' · ')}</p><strong style={numberStyle}>{money(insights.revenue)} this month</strong></article>
-    <article className="feature-card"><h3>Average service</h3><p>{insights.avgChange===null?'More history is needed for a month-to-month comparison.':`Average value is ${Math.abs(insights.avgChange).toFixed(0)}% ${insights.avgChange>=0?'higher':'lower'} than last month.`}</p><strong style={numberStyle}>{money(insights.avg)} average</strong></article>
-    <article className="feature-card"><h3>Top service</h3><p>{insights.highestService?`${insights.highestService.name} generated the most recorded revenue this month.`:'Record services to compare performance.'}</p><strong style={numberStyle}>{insights.highestService?money(insights.highestService.total):'—'}</strong></article>
-    <article className="feature-card"><h3>Tax position</h3><p>Estimated reserve and net result for the current period.</p><strong style={numberStyle}>{money(insights.tax)} reserve · {money(insights.net)} net</strong></article>
+    <article className="feature-card"><h3>{t('sixMonthTrend')}</h3><p style={trendStyle}>{insights.monthly.map(m=>`${m.label}: ${money(m.gross)}`).join(' · ')}</p><strong style={numberStyle}>{money(insights.revenue)} {t('thisMonth')}</strong></article>
+    <article className="feature-card"><h3>{t('averageService')}</h3><p>{insights.avgChange===null?t('moreHistoryNeeded'):t('avgVsLast').replace('{pct}',Math.abs(insights.avgChange).toFixed(0)).replace('{dir}',insights.avgChange>=0?t('higher'):t('lower'))}</p><strong style={numberStyle}>{money(insights.avg)} {t('average')}</strong></article>
+    <article className="feature-card"><h3>{t('topService')}</h3><p>{insights.highestService?t('topServiceText').replace('{name}',insights.highestService.name):t('recordServicesCompare')}</p><strong style={numberStyle}>{insights.highestService?money(insights.highestService.total):'—'}</strong></article>
+    <article className="feature-card"><h3>{t('taxPosition')}</h3><p>{t('taxPositionSub')}</p><strong style={numberStyle}>{money(insights.tax)} {t('reserve')} · {money(insights.net)} {t('net')}</strong></article>
    </div>
   </div>
 
   <div className="premium-message-tool">
-   <div><div className="eyebrow">SMART BUSINESS ASSISTANT</div><h3>Your next best moves</h3><p>Recommendations generated from the numbers and client history already stored in SoloPro.</p></div>
+   <div><div className="eyebrow">{t('smartBusinessAssistant')}</div><h3>{t('yourNextBestMoves')}</h3><p>{t('recommendationsSub')}</p></div>
    <div className="premium-insights-grid">
     {insights.recommendations.slice(0,4).map((item,index)=><article className="feature-card" key={index}><div className="feature-icon"><Icon name="spark" size={20}/></div><p>{item}</p></article>)}
    </div>
   </div>
 
   <div className="premium-message-tool">
-   <div><div className="eyebrow">CLIENT QUICK-ACTION</div><h3>Smart client message</h3><p>Generate a ready-to-send follow-up from the client history already in SoloPro.</p></div>
-   {clients.length===0?<div className="notice">Add a client to use Smart Client Messages.</div>:<>
+   <div><div className="eyebrow">{t('clientQuickAction')}</div><h3>{t('smartClientMessage')}</h3><p>{t('smartClientMessageSub')}</p></div>
+   {clients.length===0?<div className="notice">{t('addClientForMessages')}</div>:<>
     <div className="two-col">
-     <label>Client<select value={clientId} onChange={e=>{setClientId(e.target.value);setCopied(false)}}><option value="">Choose a client</option>{clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-     <label>Message type<select value={messageType} onChange={e=>{setMessageType(e.target.value);setCopied(false)}}><option value="followup">Follow-up</option><option value="reminder">Reminder</option><option value="rebook">Re-book</option><option value="thankyou">Thank you</option></select></label>
+     <label>{t('client')}<select value={clientId} onChange={e=>{setClientId(e.target.value);setCopied(false)}}><option value="">{t('chooseClient')}</option>{clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+     <label>{t('messageType')}<select value={messageType} onChange={e=>{setMessageType(e.target.value);setCopied(false)}}><option value="followup">{t('followup')}</option><option value="reminder">{t('reminder')}</option><option value="rebook">{t('rebook')}</option><option value="thankyou">{t('thankyou')}</option></select></label>
     </div>
     {message&&<textarea readOnly value={message} rows="4"/>}
-    <button className="ghost-btn" disabled={!message} onClick={async()=>{try{await navigator.clipboard.writeText(message);setCopied(true)}catch{setCopied(false)}}}>{copied?'Copied':'Copy message'}</button>
+    <button className="ghost-btn" disabled={!message} onClick={async()=>{try{await navigator.clipboard.writeText(message);setCopied(true)}catch{setCopied(false)}}}>{copied?t('copied'):t('copyMessage')}</button>
    </>}
   </div>
  </section>;
