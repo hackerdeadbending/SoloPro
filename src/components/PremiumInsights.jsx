@@ -36,7 +36,7 @@ export default function PremiumInsights(){
    return {label:d.toLocaleDateString(app.country.locale,{month:'short'}),gross,materials,reserve,net:gross-materials-reserve,count:rows.length};
   });
   const serviceStats=Object.entries(monthServices.reduce((acc,s)=>{
-   const name=String(s.service||s.name||'Service');
+   const name=String(s.service||s.name||t('serviceFallback'));
    acc[name]=(acc[name]||0)+Number(s.amount||0);
    return acc;
   },{})).map(([name,total])=>({name,total})).sort((a,b)=>b.total-a.total);
@@ -51,21 +51,21 @@ export default function PremiumInsights(){
   const expenseTotal=Number(app.totals?.materials||0)+Number(app.totals?.expenses||0);
   const expenseRatio=revenue?expenseTotal/revenue:0;
   const recommendations=[];
-  if(!revenue) recommendations.push('Record your first service to unlock personalized business recommendations.');
-  if(change!==null&&change<-5) recommendations.push(`Revenue is down ${Math.abs(change).toFixed(0)}% versus last month. Consider following up with recent clients and promoting your strongest service.`);
-  if(avgChange!==null&&avgChange<-5) recommendations.push(`Your average recorded service is down ${Math.abs(avgChange).toFixed(0)}%. Review pricing or look for a simple add-on opportunity.`);
-  if(dormant.length) recommendations.push(`${dormant.length} client${dormant.length===1?'':'s'} have been inactive for 45+ days. A personal re-book message could bring them back.`);
-  if(expenseRatio>.35&&revenue) recommendations.push(`Recorded materials and expenses are ${Math.round(expenseRatio*100)}% of revenue. Review recurring costs before your next pricing decision.`);
-  if(highestService) recommendations.push(`${highestService.name} is your strongest service this month at ${money(highestService.total)} recorded revenue. Consider making it a focus of your next promotion.`);
-  if(!recommendations.length) recommendations.push('Your current numbers look steady. Keep recording services and clients so SoloPro can spot stronger trends over time.');
+  if(!revenue) recommendations.push(t('recordFirstServiceRecommendations'));
+  if(change!==null&&change<-5) recommendations.push(`${t('recommendRevenueDown')} ${Math.abs(change).toFixed(0)}% ${t('thanLastMonth')}. ${t('followUpRecentClients')}`);
+  if(avgChange!==null&&avgChange<-5) recommendations.push(`${t('averageServiceDown')} ${Math.abs(avgChange).toFixed(0)}%. ${t('reviewPricing')}`);
+  if(dormant.length) recommendations.push(`${dormant.length} ${t('inactiveClients')} ${t('personalRebook')}`);
+  if(expenseRatio>.35&&revenue) recommendations.push(`${t('expensesShare')} ${Math.round(expenseRatio*100)}% ${t('ofRevenue')} ${t('reviewCosts')}`);
+  if(highestService) recommendations.push(`${highestService.name} ${t('strongestService')} ${money(highestService.total)}. ${t('focusPromotion')}`);
+  if(!recommendations.length) recommendations.push(`${t('numbersSteady')} ${t('keepRecordingTrends')}`);
   return {revenue,net,tax,change,avg,avgChange,monthly,serviceStats,clientStats,dormant,top,highestService,expenseRatio,recommendations};
  },[app.totals,app.services,app.clients,app.country,monthServices]);
  const selected=insights.clientStats.find(c=>c.id===clientId);
  const message=selected?({
-  followup:`Hi ${selected.name}, just checking in — it was great working with you. If you would like to book another ${selected.rows[0]?.service||'appointment'}, I would be happy to find a time that works for you.`,
-  reminder:`Hi ${selected.name}, a quick reminder from me — whenever you are ready for your next visit, feel free to message me and we can arrange it.`,
-  thankyou:`Hi ${selected.name}, thank you again for choosing me. I really appreciate your support and hope to see you again soon!`,
-  rebook:`Hi ${selected.name}, you are due for another visit. Would you like me to help you arrange your next appointment?`
+  followup:`${t('checkIn')} ${selected.rows[0]?.service||t('appointment')}, ${t('happyToHelp')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
+  reminder:`${t('quickReminder')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
+  thankyou:`${t('thankYouAgain')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
+  rebook:`${t('dueForVisit')}`.replace(/^/,`${t('hi')} ${selected.name}, `)
  }[messageType]||'') : '';
  const numberStyle={display:'block',minHeight:20,width:'100%',minWidth:0,whiteSpace:'normal',fontVariantNumeric:'tabular-nums',fontFeatureSettings:'"tnum"',letterSpacing:'-.1px',lineHeight:1.35,overflowWrap:'anywhere'};
  const trendStyle={fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,width:'100%'};
