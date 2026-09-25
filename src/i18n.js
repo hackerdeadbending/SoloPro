@@ -251,6 +251,25 @@ Icelandic:{deadlines:'Frestir framtala',declarationHelper:'Framtalsaðstoð',dec
 };
 Object.entries(FINAL_I18N_OVERRIDES_2).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+
+const FINAL_I18N_OVERRIDES_3={
+Italian:{dashboard:'Cruscotto',email:'E-mail',followup:'Ricontatto',online:'Online',password:'Password',premium:'Premium',referral:'Segnalazioni',standard:'Standard',socialNetwork:'Social network'},
+French:{client:'Client',clients:'Clients',cookiesTitle:'Cookies',date:'Date',flexible:'Flexible',premium:'Premium',service:'Service',standard:'Standard',clientsFormTitle:'Client',notes:'Notes'},
+German:{cookiesTitle:'Cookies',dashboard:'Übersicht',online:'Online',optional:'optional',premium:'Premium',premiumIntelligence:'Premium-Analyse',standard:'Standard',support:'Hilfe'},
+Spanish:{cookiesTitle:'Cookies',flexible:'Flexible',premium:'Premium'},
+Polish:{online:'Online',premium:'Premium',standard:'Standard'},
+Chinese:{premium:'高级版'},
+Portuguese:{cookiesTitle:'Cookies',email:'E-mail',online:'Online',premium:'Premium',standard:'Padrão'},
+Dutch:{cookiesTitle:'Cookies',dashboard:'Overzicht',online:'Online',premium:'Premium'},
+Czech:{cookiesTitle:'Soubory cookie',online:'Online',premium:'Premium',standard:'Standardní'},
+Finnish:{premium:'Premium',standard:'Vakio'},
+Swedish:{cookiesTitle:'Cookies',online:'Online',period:'Period',premium:'Premium',standard:'Standard',support:'Support'},
+Danish:{cookiesTitle:'Cookies',online:'Online',premium:'Premium',standard:'Standard',support:'Support'},
+Norwegian:{premium:'Premium',standard:'Standard'},
+Icelandic:{premium:'Premium'}
+};
+Object.entries(FINAL_I18N_OVERRIDES_3).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
