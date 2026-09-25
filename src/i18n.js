@@ -148,7 +148,31 @@ Chinese:{'Dashboard':'仪表盘','Earnings':'收益','Clients':'客户','Tax & D
 Object.assign(FULL_UI_FALLBACKS,
 {Italian:{SEASONAL:'STAGIONALE',STYLE:'STILE',THEMATIC:'TEMATICO','Custom SoloPro style':'Stile SoloPro personalizzato','Premium · Sep–Nov':'Premium · Set–Nov',Autumn:'Autunno',ON:'ATTIVO',OFF:'DISATTIVO'},French:{SEASONAL:'SAISONNIER',STYLE:'STYLE',THEMATIC:'THÉMATIQUE','Custom SoloPro style':'Style SoloPro personnalisé','Premium · Sep–Nov':'Premium · sept.–nov.',Autumn:'Automne',ON:'ACTIVÉ',OFF:'DÉSACTIVÉ'},German:{SEASONAL:'SAISONAL',STYLE:'STIL',THEMATIC:'THEMATISCH','Custom SoloPro style':'Benutzerdefinierter SoloPro-Stil','Premium · Sep–Nov':'Premium · Sep–Nov',Autumn:'Herbst',ON:'AN',OFF:'AUS'},Spanish:{SEASONAL:'ESTACIONAL',STYLE:'ESTILO',THEMATIC:'TEMÁTICO','Custom SoloPro style':'Estilo SoloPro personalizado','Premium · Sep–Nov':'Premium · sep.–nov.',Autumn:'Otoño',ON:'ACTIVADO',OFF:'DESACTIVADO'},Polish:{SEASONAL:'SEZONOWY',STYLE:'STYL',THEMATIC:'TEMATYCZNY','Custom SoloPro style':'Niestandardowy styl SoloPro','Premium · Sep–Nov':'Premium · wrz.–lis.',Autumn:'Jesień',ON:'WŁ.',OFF:'WYŁ.'},Japanese:{SEASONAL:'季節限定',STYLE:'スタイル',THEMATIC:'テーマ','Custom SoloPro style':'カスタムSoloProスタイル','Premium · Sep–Nov':'Premium · 9月〜11月',Autumn:'秋',ON:'オン',OFF:'オフ'},Korean:{SEASONAL:'시즌',STYLE:'스타일',THEMATIC:'테마','Custom SoloPro style':'맞춤 SoloPro 스타일','Premium · Sep–Nov':'Premium · 9~11월',Autumn:'가을',ON:'켜짐',OFF:'꺼짐'},Ukrainian:{SEASONAL:'СЕЗОННИЙ',STYLE:'СТИЛЬ',THEMATIC:'ТЕМАТИЧНИЙ','Custom SoloPro style':'Власний стиль SoloPro','Premium · Sep–Nov':'Premium · вер–лист',Autumn:'Осінь',ON:'УВІМК.',OFF:'ВИМК.'},Portuguese:{SEASONAL:'SAZONAL',STYLE:'ESTILO',THEMATIC:'TEMÁTICO','Custom SoloPro style':'Estilo SoloPro personalizado','Premium · Sep–Nov':'Premium · set.–nov.',Autumn:'Outono',ON:'ATIVO',OFF:'DESATIVADO'},Dutch:{SEASONAL:'SEIZOENSGEBONDEN',STYLE:'STIJL',THEMATIC:'THEMATISCH','Custom SoloPro style':'Aangepaste SoloPro-stijl','Premium · Sep–Nov':'Premium · sep.–nov.',Autumn:'Herfst',ON:'AAN',OFF:'UIT'},Czech:{SEASONAL:'SEZÓNNÍ',STYLE:'STYL',THEMATIC:'TEMATICKÝ','Custom SoloPro style':'Vlastní styl SoloPro','Premium · Sep–Nov':'Premium · zář–lis',Autumn:'Podzim',ON:'ZAP.',OFF:'VYP.'},Finnish:{SEASONAL:'KAUSI',STYLE:'TYYLI',THEMATIC:'TEEMALLINEN','Custom SoloPro style':'Mukautettu SoloPro-tyyli','Premium · Sep–Nov':'Premium · syys–marras',Autumn:'Syksy',ON:'PÄÄLLÄ',OFF:'POIS'},Swedish:{SEASONAL:'SÄSONG',STYLE:'STIL',THEMATIC:'TEMATISK','Custom SoloPro style':'Anpassad SoloPro-stil','Premium · Sep–Nov':'Premium · sep–nov',Autumn:'Höst',ON:'PÅ',OFF:'AV'},Danish:{SEASONAL:'SÆSON',STYLE:'STIL',THEMATIC:'TEMATISK','Custom SoloPro style':'Tilpasset SoloPro-stil','Premium · Sep–Nov':'Premium · sep–nov',Autumn:'Efterår',ON:'TIL',OFF:'FRA'},Norwegian:{SEASONAL:'SESONG',STYLE:'STIL',THEMATIC:'TEMATISK','Custom SoloPro style':'Tilpasset SoloPro-stil','Premium · Sep–Nov':'Premium · sep–nov',Autumn:'Høst',ON:'PÅ',OFF:'AV'},Icelandic:{SEASONAL:'ÁRSTÍÐABUNDIÐ',STYLE:'STÍLL',THEMATIC:'ÞEMA','Custom SoloPro style':'Sérsniðinn SoloPro-stíll','Premium · Sep–Nov':'Premium · sep.–nóv.',Autumn:'Haust',ON:'KVEIKT',OFF:'SLÖKKT'},Arabic:{SEASONAL:'موسمي',STYLE:'النمط',THEMATIC:'موضوعي','Custom SoloPro style':'نمط SoloPro مخصص','Premium · Sep–Nov':'Premium · سبتمبر–نوفمبر',Autumn:'الخريف',ON:'تشغيل',OFF:'إيقاف'},Chinese:{SEASONAL:'季节性',STYLE:'样式',THEMATIC:'主题','Custom SoloPro style':'自定义 SoloPro 样式','Premium · Sep–Nov':'Premium · 9月至11月',Autumn:'秋季',ON:'开启',OFF:'关闭'}});
 
+
+function buildAutoPhraseFallbacks(){
+  const result={};
+  for(const lang of Object.keys(core||{})){
+    const pairs=[];
+    const add=(obj)=>{for(const k of Object.keys(obj||{})){const target=obj[k],source=EN?.[k];if(typeof source==='string'&&typeof target==='string'&&source!==target&&source.length>=2&&target.length>=2)pairs.push([source,target]);}};
+    add(core[lang]); add(EXTRA?.[lang]); add(EXTRA_CLIENTS?.[lang]); add(EXTRA2?.[lang]); add(SMART?.[lang]); add(UI_EXTRA?.[lang]);
+    const uniq=new Map(); for(const [a,b] of pairs) if(!uniq.has(a)) uniq.set(a,b);
+    result[lang]=[...uniq.entries()].sort((a,b)=>b[0].length-a[0].length);
+  }
+  return result;
+}
+let AUTO_PHRASE_FALLBACKS=null;
+function autoTranslatePhrase(value,language){
+  if(typeof value!=='string'||language==='English')return value;
+  AUTO_PHRASE_FALLBACKS ||= buildAutoPhraseFallbacks();
+  let out=value;
+  for(const [from,to] of (AUTO_PHRASE_FALLBACKS[language]||[])){
+    if(from.length<3)continue;
+    out=out.split(from).join(to);
+  }
+  return out;
+}
 function translateFallbackValue(value,key,language){
+  value=autoTranslatePhrase(value,language);
   if(SETTINGS_UI_KEYS[key]!==undefined){const full=FULL_UI_FALLBACKS[language];if(full&&full[SETTINGS_UI_KEYS[key]]!==undefined)return full[SETTINGS_UI_KEYS[key]];}
   const full=FULL_UI_FALLBACKS[language];
   if(full&&full[value]!==undefined)return full[value];
