@@ -2,54 +2,26 @@ import {Link} from 'react-router-dom';
 import Layout from '../components/Layout';
 import Dashboard from './Dashboard';
 import {useApp} from '../context/AppState';
+import {createTranslator} from '../i18n';
 
-const features=[
-  ['Income tracking','Record business income and keep a clear view of what you earned.'],
-  ['Expense tracking','Organize business costs so you can understand where money is going.'],
-  ['Profit overview','See revenue, expenses and profit together instead of relying on scattered spreadsheets.'],
-  ['Tax reserve','Set aside a percentage for taxes when you choose to use the feature.'],
-  ['Client management','Keep client details and service history in one workspace.'],
-  ['Reports','Turn your recorded activity into a clearer monthly picture of your business.'],
-];
+const featureKeys=[['publicIncome','publicIncomeText'],['publicExpense','publicExpenseText'],['publicProfit','publicProfitText'],['publicTax','publicTaxText'],['publicClients','publicClientsText'],['publicReports','publicReportsText']];
+const faqKeys=Array.from({length:10},(_,i)=>[\`publicFAQ\${i+1}Q\`,\`publicFAQ\${i+1}A\`]);
+const articleKeys=Array.from({length:4},(_,i)=>[\`publicArticle\${i+1}\`,\`publicArticle\${i+1}Text\`]);
 
-const faq=[
-  ['What is SoloPro?','SoloPro is a financial workspace for freelancers, self-employed professionals and other independent workers. It brings income, expenses, profit, clients and optional tax reserves together in one place.'],
-  ['Can I try SoloPro before creating an account?','Yes. SoloPro can be explored as a guest. Guest data is not intended to be permanently stored until you create an account.'],
-  ['Does SoloPro calculate my taxes?','SoloPro can help you set aside a tax reserve based on the settings you choose. It is a planning tool, not a substitute for professional tax advice or an official tax calculation.'],
-  ['Can I turn the tax reserve off?','Yes. The tax-reserve feature is optional, so you can use SoloPro without including a tax reserve in your profit view.'],
-  ['Who is SoloPro for?','SoloPro is designed for people who work independently and want a simple way to understand income, costs, profit and client activity without maintaining several separate spreadsheets.'],
-  ['What can I track?','You can track income, material or business costs, additional expenses, clients and service activity, with the available features depending on your account and settings.'],
-  ['Is SoloPro a replacement for an accountant?','No. SoloPro is a business organization and tracking tool. Tax rules differ by country and situation, so important tax decisions should be checked with a qualified professional.'],
-  ['What is Premium?','Premium provides additional SoloPro functionality beyond the free experience. The current pricing and included features are shown on the pricing page.'],
-  ['How does the referral program work?','SoloPro rewards verified new-user referrals. The current program milestone is seven verified new users for a monthly discount reward, subject to the program rules shown in the app.'],
-  ['How do I contact SoloPro?','Use the contact page for support and project enquiries.'],
-];
-
-const articles=[
-  ['How freelancers can track income and expenses','A practical framework for keeping business money organized without maintaining multiple disconnected spreadsheets.'],
-  ['Revenue, expenses and profit: what is the difference?','Understand the three numbers that matter when you want to know how your independent work is actually performing.'],
-  ['What is a tax reserve?','A simple explanation of setting aside money for future tax obligations without treating a planning reserve as a tax bill.'],
-  ['A simple monthly financial routine for self-employed professionals','A repeatable monthly process for recording income, checking expenses and reviewing profit.'],
-];
+function usePublicT(){const app=useApp();return createTranslator(app.language)}
 
 function Shell({children}){
+  const t=usePublicT();
   return <div className="public-site">
     <header className="public-nav">
       <Link className="public-brand" to="/"><span className="public-mark">✦</span>SoloPro</Link>
-      <nav>
-        <Link to="/features">Features</Link>
-        <Link to="/pricing">Pricing</Link>
-        <Link to="/faq">FAQ</Link>
-        <Link to="/resources">Resources</Link>
-      </nav>
-      <Link className="public-nav-cta" to="/app">Try SoloPro</Link>
+      <nav><Link to="/features">{t('publicFeatures')}</Link><Link to="/pricing">{t('publicPricing')}</Link><Link to="/faq">{t('publicFAQ')}</Link><Link to="/resources">{t('publicResources')}</Link></nav>
+      <Link className="public-nav-cta" to="/app">{t('publicTry')}</Link>
     </header>
     <main>{children}</main>
     <footer className="public-footer">
-      <div><strong>SoloPro</strong><span>Your business, simplified.</span></div>
-      <nav>
-        <Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link><Link to="/cookies">Cookies</Link>
-      </nav>
+      <div><strong>SoloPro</strong><span>{t('publicTagline')}</span></div>
+      <nav><Link to="/about">{t('publicAbout')}</Link><Link to="/contact">{t('publicContact')}</Link><Link to="/privacy">{t('publicPrivacy')}</Link><Link to="/terms">{t('publicTerms')}</Link><Link to="/cookies">{t('publicCookies')}</Link></nav>
       <small>© {new Date().getFullYear()} SoloPro</small>
     </footer>
     <style>{`
@@ -81,16 +53,34 @@ function Shell({children}){
   </div>
 }
 
-export function PublicHome(){const app=useApp();if(app.account?.authenticated)return <Layout><Dashboard/></Layout>;return <Shell><section className="public-hero"><div className="public-kicker">Financial workspace for independent professionals</div><h1>Understand your business without living in spreadsheets.</h1><p>SoloPro brings income, expenses, profit, clients and optional tax reserves into one focused workspace for freelancers and self-employed professionals.</p><div className="public-actions"><Link className="public-btn primary" to="/app">Try SoloPro</Link><Link className="public-btn secondary" to="/features">Explore features</Link></div></section><section className="public-section"><h2>Everything you need to understand your business</h2><p>SoloPro is built around the everyday numbers and tasks that independent professionals need to keep organized.</p><div className="public-grid">{features.map(([h,p])=><article className="public-card" key={h}><h3>{h}</h3><p>{p}</p></article>)}</div></section><section className="public-section"><div className="public-prose"><h2>Built for people who work independently</h2><p>When you work for yourself, business finances can end up spread across bank statements, notes, spreadsheets and separate client records. SoloPro gives those everyday activities a single place to live.</p><p>The goal is simple: make it easier to record what came in, what went out and what remains, while keeping the tools understandable enough to use regularly.</p><p>SoloPro is a tracking and organization tool. It does not replace an accountant, financial adviser or official tax authority.</p></div></section></Shell>}
+export function PublicHome(){
+  const app=useApp(); const t=createTranslator(app.language);
+  if(app.account?.authenticated)return <Layout><Dashboard/></Layout>;
+  return <Shell><section className="public-hero"><div className="public-kicker">{t('publicKicker')}</div><h1>{t('publicHero')}</h1><p>{t('publicHeroText')}</p><div className="public-actions"><Link className="public-btn primary" to="/app">{t('publicTry')}</Link><Link className="public-btn secondary" to="/features">{t('publicExplore')}</Link></div></section>
+    <section className="public-section"><h2>{t('publicEverything')}</h2><p>{t('publicEveryday')}</p><div className="public-grid">{featureKeys.map(([h,p])=><article className="public-card" key={h}><h3>{t(h)}</h3><p>{t(p)}</p></article>)}</div></section>
+    <section className="public-section"><div className="public-prose"><h2>{t('publicBuilt')}</h2><p>{t('publicBuilt1')}</p><p>{t('publicBuilt2')}</p><p>{t('publicDisclaimer')}</p></div></section></Shell>
+}
 
-export function Features(){return <Shell><section className="public-section"><div className="public-kicker">SoloPro features</div><h1>One workspace for the numbers behind your independent work.</h1><p>SoloPro combines practical business tracking tools without requiring you to maintain several separate systems.</p><div className="public-grid">{features.map(([h,p])=><article className="public-card" key={h}><h3>{h}</h3><p>{p}</p></article>)}</div><div className="public-prose"><h2>How the workflow fits together</h2><p>Start by recording income and business costs. SoloPro uses those entries to give you a clearer view of profit. If you want to plan for taxes, you can enable a reserve percentage. Client records and service history help keep customer activity alongside the financial picture.</p><p>The result is a simple workspace designed for regular use rather than a complicated accounting system.</p></div></section></Shell>}
+export function Features(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicFeatureKicker')}</div><h1>{t('publicFeatureHero')}</h1><p>{t('publicFeatureIntro')}</p><div className="public-grid">{featureKeys.map(([h,p])=><article className="public-card" key={h}><h3>{t(h)}</h3><p>{t(p)}</p></article>)}</div><div className="public-prose"><h2>{t('publicWorkflow')}</h2><p>{t('publicWorkflowText')}</p><p>{t('publicWorkflowEnd')}</p></div></section></Shell>
+}
 
-export function Pricing(){return <Shell><section className="public-section"><div className="public-kicker">Simple plans</div><h1>Choose the SoloPro experience that fits your work.</h1><p>SoloPro offers a free experience and an optional Premium subscription. Check the in-app pricing before purchasing because prices and features can change.</p><div className="public-grid"><article className="public-card"><h3>Free</h3><p>Use the core SoloPro workspace to organize your business activity and understand the basics of your income, costs and profit.</p></article><article className="public-card"><h3>Premium</h3><p>Unlock additional SoloPro functionality through the Premium subscription. The current feature list and price are shown inside SoloPro.</p></article><article className="public-card"><h3>Referral rewards</h3><p>Verified new-user referrals can contribute toward the current seven-user milestone for a monthly discount reward, subject to the program rules.</p></article></div><div className="public-prose"><h2>Before you subscribe</h2><p>SoloPro is a software service for organizing business information. Subscription access does not constitute accounting, legal or tax advice.</p></div></section></Shell>}
+export function Pricing(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicPlans')}</div><h1>{t('publicPlansHero')}</h1><p>{t('publicPlansIntro')}</p><div className="public-grid"><article className="public-card"><h3>{t('publicFree')}</h3><p>{t('publicFreeText')}</p></article><article className="public-card"><h3>{t('publicPremium')}</h3><p>{t('publicPremiumText')}</p></article><article className="public-card"><h3>{t('publicReferral')}</h3><p>{t('publicReferralText')}</p></article></div><div className="public-prose"><h2>{t('publicBeforeSubscribe')}</h2><p>{t('publicBeforeSubscribeText')}</p></div></section></Shell>
+}
 
-export function FAQ(){return <Shell><section className="public-section"><div className="public-kicker">Help</div><h1>Frequently asked questions</h1><p>Answers to common questions about SoloPro, its features and how the service is intended to be used.</p><div className="public-list">{faq.map(([q,a])=><article className="public-faq" key={q}><h3>{q}</h3><p>{a}</p></article>)}</div></section></Shell>}
+export function FAQ(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicHelp')}</div><h1>{t('publicFAQTitle')}</h1><p>{t('publicFAQIntro')}</p><div className="public-list">{faqKeys.map(([q,a])=><article className="public-faq" key={q}><h3>{t(q)}</h3><p>{t(a)}</p></article>)}</div></section></Shell>
+}
 
-export function About(){return <Shell><section className="public-section"><div className="public-kicker">About SoloPro</div><h1>A simpler way to keep independent work organized.</h1><div className="public-prose"><p>SoloPro was created around a straightforward problem: people who work independently often need to understand their business finances without turning every month into a spreadsheet project.</p><p>The product brings everyday tracking into one workspace: income, expenses, profit, clients and optional tax reserves. The emphasis is on clarity and practical use rather than accounting jargon.</p><h2>What SoloPro is — and is not</h2><p>SoloPro is a software tool for organizing and understanding information you enter. It is not an accounting firm, tax authority, bank or financial adviser. Country-specific tax decisions should always be checked against official guidance or with a qualified professional.</p></div></section></Shell>}
+export function About(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicAboutKicker')}</div><h1>{t('publicAboutTitle')}</h1><div className="public-prose"><p>{t('publicAboutText1')}</p><p>{t('publicAboutText2')}</p><h2>{t('publicAboutWhat')}</h2><p>{t('publicAboutText3')}</p></div></section></Shell>
+}
 
-export function Contact(){return <Shell><section className="public-section"><div className="public-kicker">Contact</div><h1>Get in touch with SoloPro.</h1><div className="public-prose"><p>For product questions, bug reports, feedback or partnership enquiries, contact the SoloPro support team through the support channel provided in the application.</p><p>When reporting a technical issue, include the page or feature involved and the steps that reproduce the problem. Please do not send passwords, payment credentials or other sensitive information.</p></div></section></Shell>}
+export function Contact(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicContactKicker')}</div><h1>{t('publicContactTitle')}</h1><div className="public-prose"><p>{t('publicContactText1')}</p><p>{t('publicContactText2')}</p></div></section></Shell>
+}
 
-export function Resources(){return <Shell><section className="public-section"><div className="public-kicker">Resources</div><h1>Practical guides for freelancers and self-employed professionals.</h1><p>These guides explain everyday financial organization concepts in plain language. They are educational resources, not individualized tax or financial advice.</p><div className="public-grid">{articles.map(([h,p])=><article className="public-card" key={h}><h3>{h}</h3><p>{p}</p></article>)}</div><div className="public-prose"><h2>Why these resources exist</h2><p>Good financial organization starts with understanding the difference between money received, business costs and actual profit. These resources are designed to make those concepts easier to apply in a real independent business.</p></div></section></Shell>}
+export function Resources(){
+  const t=usePublicT(); return <Shell><section className="public-section"><div className="public-kicker">{t('publicResourcesKicker')}</div><h1>{t('publicResourcesTitle')}</h1><p>{t('publicResourcesIntro')}</p><div className="public-grid">{articleKeys.map(([h,p])=><article className="public-card" key={h}><h3>{t(h)}</h3><p>{t(p)}</p></article>)}</div><div className="public-prose"><h2>{t('publicResourcesWhy')}</h2><p>{t('publicResourcesWhyText')}</p></div></section></Shell>
+}
