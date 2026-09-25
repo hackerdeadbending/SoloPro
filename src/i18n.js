@@ -270,6 +270,24 @@ Icelandic:{premium:'Premium'}
 };
 Object.entries(FINAL_I18N_OVERRIDES_3).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+
+const FINAL_I18N_OVERRIDES_4={
+Italian:{online:'In linea',password:'Parola d’accesso',premium:'Versione Premium',standard:'Versione standard',socialNetwork:'Rete sociale'},
+French:{client:'Clientèle',clients:'Clients',cookiesTitle:'Témoins de connexion',date:'Date',flexible:'Souple',premium:'Version Premium',service:'Prestation',standard:'Version standard',clientsFormTitle:'Fiche client',notes:'Remarques'},
+German:{cookiesTitle:'Cookies',online:'Online',optional:'optional',premium:'Premium-Version',standard:'Standard-Version'},
+Spanish:{cookiesTitle:'Cookies',flexible:'Flexible',premium:'Versión Premium'},
+Polish:{online:'Dostępny online',premium:'Wersja Premium',standard:'Wersja standardowa'},
+Portuguese:{online:'Disponível online',premium:'Versão Premium',standard:'Versão padrão'},
+Dutch:{online:'Online beschikbaar',premium:'Premium-versie',dashboard:'Overzicht'},
+Czech:{online:'Online',premium:'Verze Premium'},
+Finnish:{premium:'Premium-versio'},
+Swedish:{cookiesTitle:'Kakor',online:'Tillgänglig online',period:'Tidsperiod',premium:'Premium-version',standard:'Standardversion',support:'Kundhjälp'},
+Danish:{cookiesTitle:'Cookies',online:'Tilgængelig online',premium:'Premium-version',standard:'Standardversion',support:'Hjælp'},
+Norwegian:{premium:'Premium-versjon',standard:'Standardversjon'},
+Icelandic:{premium:'Premium-útgáfa'}
+};
+Object.entries(FINAL_I18N_OVERRIDES_4).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
