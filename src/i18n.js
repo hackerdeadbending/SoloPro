@@ -161,9 +161,27 @@ function buildAutoPhraseFallbacks(){
   return result;
 }
 let AUTO_PHRASE_FALLBACKS=null;
+let AUTO_WORD_MAPS=null;
+function buildAutoWordMaps(){
+  const result={};
+  for(const lang of Object.keys(core||{})){
+    const counts={};
+    const add=(obj)=>{for(const k of Object.keys(obj||{})){const a=EN?.[k],b=obj[k];if(typeof a!=='string'||typeof b!=='string'||a===b)continue;const aw=a.match(/[\\p{L}]+/gu)||[],bw=b.match(/[\\p{L}]+/gu)||[];if(aw.length!==bw.length)continue;for(let i=0;i<aw.length;i++){const s=aw[i].toLowerCase(),t=bw[i];counts[s] ||= {};counts[s][t]=(counts[s][t]||0)+1;}}};
+    add(core[lang]);add(EXTRA?.[lang]);add(EXTRA_CLIENTS?.[lang]);add(EXTRA2?.[lang]);add(SMART?.[lang]);add(UI_EXTRA?.[lang]);
+    result[lang]={};for(const s of Object.keys(counts)){const best=Object.entries(counts[s]).sort((a,b)=>b[1]-a[1])[0];if(best&&s.length>2)result[lang][s]=best[0];}
+  }
+  return result;
+}
+function autoTranslateWords(value,language){
+  if(typeof value!=='string'||language==='English')return value;
+  AUTO_WORD_MAPS ||= buildAutoWordMaps();
+  const map=AUTO_WORD_MAPS[language]||{};
+  return value.replace(/[\\p{L}]+/gu,w=>map[w.toLowerCase()]||w);
+}
 function autoTranslatePhrase(value,language){
   if(typeof value!=='string'||language==='English')return value;
   AUTO_PHRASE_FALLBACKS ||= buildAutoPhraseFallbacks();
+  value=autoTranslateWords(value,language);
   let out=value;
   for(const [from,to] of (AUTO_PHRASE_FALLBACKS[language]||[])){
     if(from.length<3)continue;
