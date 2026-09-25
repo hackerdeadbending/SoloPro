@@ -51,21 +51,21 @@ export default function PremiumInsights(){
   const expenseTotal=Number(app.totals?.materials||0)+Number(app.totals?.expenses||0);
   const expenseRatio=revenue?expenseTotal/revenue:0;
   const recommendations=[];
-  if(!revenue) recommendations.push(t('recordFirstServiceRecommendations'));
-  if(change!==null&&change<-5) recommendations.push(`${t('recommendRevenueDown')} ${Math.abs(change).toFixed(0)}% ${t('thanLastMonth')}. ${t('followUpRecentClients')}`);
-  if(avgChange!==null&&avgChange<-5) recommendations.push(`${t('averageServiceDown')} ${Math.abs(avgChange).toFixed(0)}%. ${t('reviewPricing')}`);
-  if(dormant.length) recommendations.push(`${dormant.length} ${t('inactiveClients')} ${t('personalRebook')}`);
-  if(expenseRatio>.35&&revenue) recommendations.push(`${t('expensesShare')} ${Math.round(expenseRatio*100)}% ${t('ofRevenue')} ${t('reviewCosts')}`);
-  if(highestService) recommendations.push(`${highestService.name} ${t('strongestService')} ${money(highestService.total)}. ${t('focusPromotion')}`);
-  if(!recommendations.length) recommendations.push(`${t('numbersSteady')} ${t('keepRecordingTrends')}`);
+  if(!revenue) recommendations.push(t('recommendation'));
+  if(change!==null&&change<-5) recommendations.push(t('recommendation'));
+  if(avgChange!==null&&avgChange<-5) recommendations.push(t('recommendation'));
+  if(dormant.length) recommendations.push(t('recommendation'));
+  if(expenseRatio>.35&&revenue) recommendations.push(t('recommendation'));
+  if(highestService) recommendations.push(t('recommendation'));
+  if(!recommendations.length) recommendations.push(t('recommendation'));
   return {revenue,net,tax,change,avg,avgChange,monthly,serviceStats,clientStats,dormant,top,highestService,expenseRatio,recommendations};
  },[app.totals,app.services,app.clients,app.country,monthServices]);
  const selected=insights.clientStats.find(c=>c.id===clientId);
  const message=selected?({
-  followup:`${t('checkIn')} ${selected.rows[0]?.service||t('appointment')}, ${t('happyToHelp')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
-  reminder:`${t('quickReminder')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
-  thankyou:`${t('thankYouAgain')}`.replace(/^/,`${t('hi')} ${selected.name}, `),
-  rebook:`${t('dueForVisit')}`.replace(/^/,`${t('hi')} ${selected.name}, `)
+  followup:t('followup').replace('{{name}}',selected.name).replace('{{service}}',selected.rows[0]?.service||t('serviceFallback')),
+  reminder:t('reminder').replace('{{name}}',selected.name),
+  thankyou:t('thankyou').replace('{{name}}',selected.name),
+  rebook:t('rebook').replace('{{name}}',selected.name)
  }[messageType]||'') : '';
  const numberStyle={display:'block',minHeight:20,width:'100%',minWidth:0,whiteSpace:'normal',fontVariantNumeric:'tabular-nums',fontFeatureSettings:'"tnum"',letterSpacing:'-.1px',lineHeight:1.35,overflowWrap:'anywhere'};
  const trendStyle={fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,width:'100%'};
