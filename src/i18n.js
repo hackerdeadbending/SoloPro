@@ -300,6 +300,10 @@ Danish:{cookiesTitle:'Cookieindstillinger'}
 };
 Object.entries(FINAL_I18N_OVERRIDES_5).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+
+const FINAL_I18N_OVERRIDES_6={French:{date:'Date du jour'}};
+Object.entries(FINAL_I18N_OVERRIDES_6).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
