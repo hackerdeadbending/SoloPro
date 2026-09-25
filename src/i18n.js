@@ -166,7 +166,7 @@ function buildAutoWordMaps(){
   const result={};
   for(const lang of Object.keys(core||{})){
     const counts={};
-    const add=(obj)=>{for(const k of Object.keys(obj||{})){const a=EN?.[k],b=obj[k];if(typeof a!=='string'||typeof b!=='string'||a===b)continue;const aw=a.match(/[\\p{L}]+/gu)||[],bw=b.match(/[\\p{L}]+/gu)||[];if(aw.length!==bw.length)continue;for(let i=0;i<aw.length;i++){const s=aw[i].toLowerCase(),t=bw[i];counts[s] ||= {};counts[s][t]=(counts[s][t]||0)+1;}}};
+    const add=(obj)=>{for(const k of Object.keys(obj||{})){const a=EN?.[k]??UI_AUDIT_EN?.[k],b=obj[k];if(typeof a!=='string'||typeof b!=='string'||a===b)continue;const aw=a.match(/[\\p{L}]+/gu)||[],bw=b.match(/[\\p{L}]+/gu)||[];if(aw.length!==bw.length)continue;for(let i=0;i<aw.length;i++){const s=aw[i].toLowerCase(),t=bw[i];counts[s] ||= {};counts[s][t]=(counts[s][t]||0)+1;}}};
     add(core[lang]);add(EXTRA?.[lang]);add(EXTRA_CLIENTS?.[lang]);add(EXTRA2?.[lang]);add(SMART?.[lang]);add(UI_EXTRA?.[lang]);
     result[lang]={};for(const s of Object.keys(counts)){const best=Object.entries(counts[s]).sort((a,b)=>b[1]-a[1])[0];if(best&&s.length>2)result[lang][s]=best[0];}
   }
