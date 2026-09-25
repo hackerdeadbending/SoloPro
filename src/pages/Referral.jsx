@@ -18,6 +18,7 @@ export default function Referral(){
   const milestones=Math.floor(verified/7);
   const progress=verified%7;
   const remaining=progress===0?7:7-progress;
+  const remainingText=remaining===1?t('oneReferralRemaining'):t('referralsRemaining').replace('{count}',String(remaining));
   const available=Math.max(0,(r.monthlyDiscounts||[]).filter(x=>!x.used).length);
   const price=app.formatUsdPrice(2.99);
   const referralLink=r.referralLink||'';
@@ -77,17 +78,17 @@ export default function Referral(){
     <div className="referral-main">
       <section className="panel reward-card">
         <div className="reward-top">
-          <div className="reward-copy"><div className="reward-icon"><Icon name={milestones>0?'check':'gift'} size={19}/></div><div className="reward-title"><div className="eyebrow">{t('nextReward')}</div><h2>{verified===0?'Start your first reward.':progress===0?`Milestone ${milestones} complete.`:`${remaining} more ${remaining===1?'referral':'referrals'} to go.`}</h2><p>{verified===0?'Reach 7 verified new users to earn your first Premium reward.':progress===0?'You have completed this milestone. Keep sharing for the next one.':'Every verified new user moves you closer to your next Premium reward.'}</p></div></div>
+          <div className="reward-copy"><div className="reward-icon"><Icon name={milestones>0?'check':'gift'} size={19}/></div><div className="reward-title"><div className="eyebrow">{t('nextReward')}</div><h2>{verified===0?t('startFirstReward'):progress===0?t('milestoneComplete').replace('{count}',String(milestones)):remainingText}</h2><p>{verified===0?t('reachSevenVerified'):progress===0?t('milestoneCompletedKeepSharing'):t('everyVerifiedCloser')}</p></div></div>
           <div className="reward-number">{progress===0&&verified>0?7:progress}<span> / 7</span></div>
         </div>
-        <div className="meter"><div className="meter-head"><span>{t('progress')}</span><span>{verified} verified total</span></div><div className="meter-bar"><i style={{width:`${progressPercent}%`}}/></div><div className="meter-foot"><span>{progress===0&&verified>0?'Milestone complete':`${remaining} remaining`}</span><strong>{milestones} reward{milestones===1?'':'s'} earned</strong></div></div>
+        <div className="meter"><div className="meter-head"><span>{t('progress')}</span><span>{verified} {t('verifiedTotal')}</span></div><div className="meter-bar"><i style={{width:`${progressPercent}%`}}/></div><div className="meter-foot"><span>{progress===0&&verified>0?t('milestoneCompleteShort'):t('remainingCount').replace('{count}',String(remaining))}</span><strong>{milestones} {t('rewardsEarnedLabel')}</strong></div></div>
       </section>
 
       <section className="panel benefit-card"><div><div className="eyebrow">{t('yourReward')}</div><div className="benefit-price">{price}<span> / {t('premiumMonth')}</span></div><p>{t('rewardDescription')}</p><div className="benefit-meta"><i/>{t('sevenVerifiedReward')}</div></div></section>
     </div>
 
     <div className="stats">
-      <Stat icon="users" label="Verified new users" value={verified}/><Stat icon="send" label="Invites sent" value={invited}/><Stat icon="gift" label="Rewards earned" value={milestones}/><Stat icon="crown" label="Available now" value={available}/>
+      <Stat icon="users" label={t("verifiedNewUsers")} value={verified}/><Stat icon="send" label={t("invitesSent")} value={invited}/><Stat icon="gift" label={t("rewardsEarned")} value={milestones}/><Stat icon="crown" label={t("availableNow")} value={available}/>
     </div>
 
     <section className="panel link-panel">
@@ -107,7 +108,7 @@ export default function Referral(){
     <section className="panel">
       <div className="section-head"><div><div className="eyebrow">{t('rewardTracker')}</div><h2>{t('yourMilestones')}</h2><p>{t('rewardsStayAvailable')}</p></div><span className="section-count">{available} AVAILABLE</span></div>
       <div className="tracker">
-        <div className="milestones">{Array.from({length:Math.max(1,milestones+1)},(_,i)=>{const n=i+1,done=i<milestones,reward=r.monthlyDiscounts?.[i],isAvailable=Boolean(reward&&!reward.used);return <div className={`milestone ${done?'done':''}`} key={n}><div className="badge">{done?<Icon name="check" size={12}/>:String(n).padStart(2,'0')}</div><div className="milestone-copy"><strong>Milestone {n}</strong><span>{n*7} verified new users</span></div><span className="status">{isAvailable?'Available':reward?.used?'Used':done?'Earned':'Locked'}</span></div>})}</div>
+        <div className="milestones">{Array.from({length:Math.max(1,milestones+1)},(_,i)=>{const n=i+1,done=i<milestones,reward=r.monthlyDiscounts?.[i],isAvailable=Boolean(reward&&!reward.used);return <div className={`milestone ${done?'done':''}`} key={n}><div className="badge">{done?<Icon name="check" size={12}/>:String(n).padStart(2,'0')}</div><div className="milestone-copy"><strong>{t('milestoneLabel')} {n}</strong><span>{n*7} {t('verifiedNewUsers')}</span></div><span className="status">{isAvailable?t('available'):reward?.used?t('used'):done?t('earned'):t('locked')}</span></div>})}</div>
         <div className="rules"><div className="rules-title"><Icon name="shield" size={13}/> {t("fairReferralRules")}</div><div className="rule"><i/><span>{t('onlyNewAccounts')}</span></div><div className="rule"><i/><span>{t('duplicateSelfReferrals')}</span></div><div className="rule"><i/><span>{t('eligibleAfterVerification')}</span></div></div>
       </div>
     </section>
