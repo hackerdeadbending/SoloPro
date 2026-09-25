@@ -62,10 +62,10 @@ export default function PremiumInsights(){
  },[app.totals,app.services,app.clients,app.country,monthServices,app.language]);
  const selected=insights.clientStats.find(c=>c.id===clientId);
  const message=selected?({
-  followup:`Hi ${selected.name}, just checking in — it was great working with you. If you would like to book another ${selected.rows[0]?.service||'appointment'}, I would be happy to find a time that works for you.`,
-  reminder:`Hi ${selected.name}, a quick reminder from me — whenever you are ready for your next visit, feel free to message me and we can arrange it.`,
-  thankyou:`Hi ${selected.name}, thank you again for choosing me. I really appreciate your support and hope to see you again soon!`,
-  rebook:`Hi ${selected.name}, you are due for another visit. Would you like me to help you arrange your next appointment?`
+  followup:t('smartFollowupTemplate').replace('{name}',selected.name).replace('{service}',selected.rows[0]?.service||t('appointment')),
+  reminder:t('smartReminderTemplate').replace('{name}',selected.name),
+  thankyou:t('smartThankyouTemplate').replace('{name}',selected.name),
+  rebook:t('smartRebookTemplate').replace('{name}',selected.name)
  }[messageType]||'') : '';
  const numberStyle={display:'block',minHeight:20,width:'100%',minWidth:0,whiteSpace:'normal',fontVariantNumeric:'tabular-nums',fontFeatureSettings:'"tnum"',letterSpacing:'-.1px',lineHeight:1.35,overflowWrap:'anywhere'};
  const trendStyle={fontVariantNumeric:'tabular-nums',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,width:'100%'};
