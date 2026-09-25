@@ -1,4 +1,3 @@
-const RECOVERY_I18N={passwordMinLength:'Password must be at least 8 characters.',recoverySessionMissing:'Recovery session is missing.',passwordUpdated:'Password updated successfully. You can now sign in.',unableToUpdatePassword:'Unable to update password.',newPassword:'New password',confirmPassword:'Confirm password',saving:'Saving…',updatePassword:'Update password'};
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { useApp } from '../context/AppState';
