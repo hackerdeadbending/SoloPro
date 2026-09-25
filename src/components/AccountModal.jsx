@@ -36,15 +36,15 @@ export default function AccountModal({open,onClose,required=false}){
    try{
      if(mode==='signup'){
        if(!name.trim()||!email.trim()||password.length<8){
-         throw new Error('Enter your name, a valid email and a password of at least 8 characters.');
+         throw new Error(t('enterNameEmailPassword'));
        }
 
        if(password!==confirm){
-         throw new Error('Passwords do not match.');
+         throw new Error(t('passwordsDoNotMatch'));
        }
 
        if(!agreed){
-         throw new Error('Please accept the Terms of Service and Privacy Policy.');
+         throw new Error(t('acceptTermsPrivacy'));
        }
 
        const result=await app.createAccount({
@@ -54,23 +54,23 @@ export default function AccountModal({open,onClose,required=false}){
        });
 
        if(result?.needsConfirmation){
-         setMessage('Account created. Check your email to confirm your address, then sign in.');
+         setMessage(t('accountCreatedCheckEmail'));
          setMode('signin');
          return;
        }
 
-       setMessage('Account created successfully.');
+       setMessage(t('accountCreatedSuccess'));
        onClose?.();
 
      }else if(mode==='forgot'){
 
        if(!email.trim()){
-         throw new Error('Enter the email linked to your account.');
+         throw new Error(t('enterEmailLinked'));
        }
 
        await app.resetPassword(email);
 
-       setMessage('If an account exists for this email, a password reset link has been sent.');
+       setMessage(t('resetLinkSent'));
 
      }else{
 
@@ -79,12 +79,12 @@ export default function AccountModal({open,onClose,required=false}){
          password
        });
 
-       setMessage('Signed in.');
+       setMessage(t('signedInMsg'));
        onClose?.();
      }
 
    }catch(err){
-     setMessage(err.message||'Unable to continue.');
+     setMessage(err.message||t('unableToContinue'));
    }finally{
      setBusy(false);
      setPassword('');
@@ -96,9 +96,9 @@ export default function AccountModal({open,onClose,required=false}){
    try{
      setBusy(true);
      await app.resendEmail(email);
-     setMessage('A new confirmation email has been sent.');
+     setMessage(t('confirmationEmailSent'));
    }catch(err){
-     setMessage(err.message||'Unable to resend email.');
+     setMessage(err.message||t('unableToResend'));
    }finally{
      setBusy(false);
    }
@@ -110,7 +110,7 @@ export default function AccountModal({open,onClose,required=false}){
      : mode==='signup'
        ? t('createAccount')
        : mode==='forgot'
-         ? 'Reset your password'
+         ? t('resetYourPassword')
          : t('signIn');
 
  return (
@@ -128,7 +128,7 @@ export default function AccountModal({open,onClose,required=false}){
            </div>
 
            <strong>
-             {app.account.name||app.user.name||'SoloPro user'}
+             {app.account.name||app.user.name||t('soloproUser')}
            </strong>
 
            <span>
@@ -136,8 +136,7 @@ export default function AccountModal({open,onClose,required=false}){
            </span>
 
            <p className="modal-sub">
-             Your account is protected by secure cloud authentication.
-             Premium and admin status are verified server-side.
+             {t('accountProtectedNote')}
            </p>
 
            <button
@@ -187,67 +186,157 @@ export default function AccountModal({open,onClose,required=false}){
              </button>
            </div>
 
-           <form className="form-stack" onSubmit={submit}>
+           <form
+             className="form-stack"
+             onSubmit={submit}
+           >
+
              {mode==='signup'&&(
                <label>
                  {t('fullName')}
-                 <input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" required />
+                 <input
+                   value={name}
+                   onChange={e=>setName(e.target.value)}
+                   autoComplete="name"
+                   required
+                 />
                </label>
              )}
+
              <label>
                {t('email')}
-               <input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" required />
+               <input
+                 type="email"
+                 value={email}
+                 onChange={e=>setEmail(e.target.value)}
+                 autoComplete="email"
+                 required
+               />
              </label>
+
              {mode!=='forgot'&&(
                <label>
                  {t('password')}
-                 <input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete={mode==='signup'?'new-password':'current-password'} minLength={8} required />
+                 <input
+                   type="password"
+                   value={password}
+                   onChange={e=>setPassword(e.target.value)}
+                   autoComplete={
+                     mode==='signup'
+                       ? 'new-password'
+                       : 'current-password'
+                   }
+                   minLength={8}
+                   required
+                 />
                </label>
              )}
+
              {mode==='signup'&&(
                <label>
                  {t('passwordConfirmation')}
-                 <input type="password" value={confirm} onChange={e=>setConfirm(e.target.value)} autoComplete="new-password" minLength={8} required />
+                 <input
+                   type="password"
+                   value={confirm}
+                   onChange={e=>setConfirm(e.target.value)}
+                   autoComplete="new-password"
+                   minLength={8}
+                   required
+                 />
                </label>
              )}
+
              {mode==='signup'&&(
                <label className="check-row legal-check">
-                 <input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)} />
+                 <input
+                   type="checkbox"
+                   checked={agreed}
+                   onChange={e=>setAgreed(e.target.checked)}
+                 />
+
                  <span>
-                   I agree to the{' '}
-                   <Link to="/terms" target="_blank">{t('termsTitle')}</Link>,{' '}
-                   <Link to="/privacy" target="_blank">{t('privacyTitle')}</Link>
-                   {' '}and{' '}
-                   <Link to="/cookies" target="_blank">{t('cookiesTitle')}</Link>.
+                   {t('iAgreeTo')}{' '}
+                   <Link to="/terms" target="_blank">
+                     {t('termsTitle')}
+                   </Link>
+                   ,{' '}
+                   <Link to="/privacy" target="_blank">
+                     {t('privacyTitle')}
+                   </Link>
+                   {' '}{t('and')}{' '}
+                   <Link to="/cookies" target="_blank">
+                     {t('cookiesTitle')}
+                   </Link>
+                   .
                  </span>
                </label>
              )}
-             {message&&<div className="account-message">{message}</div>}
-             <button className="primary full" disabled={busy}>
-               {busy?'Please wait…':mode==='signup'?t('createAccount'):mode==='forgot'?'Send reset link':t('signIn')}
+
+             {message&&(
+               <div className="account-message">
+                 {message}
+               </div>
+             )}
+
+             <button
+               className="primary full"
+               disabled={busy}
+             >
+               {busy
+                 ? t('pleaseWait')
+                 : mode==='signup'
+                   ? t('createAccount')
+                   : mode==='forgot'
+                     ? t('sendResetLink')
+                     : t('signIn')}
              </button>
+
            </form>
 
            {mode==='signin'&&(
-             <button className="text-link account-forgot" onClick={()=>{setMode('forgot');setMessage('');}}>
+             <button
+               className="text-link account-forgot"
+               onClick={()=>{
+                 setMode('forgot');
+                 setMessage('');
+               }}
+             >
                {t('forgotPassword')}
              </button>
            )}
+
            {mode==='forgot'&&(
-             <button className="text-link account-forgot" onClick={()=>{setMode('signin');setMessage('');}}>
+             <button
+               className="text-link account-forgot"
+               onClick={()=>{
+                 setMode('signin');
+                 setMessage('');
+               }}
+             >
                {t('backToSignIn')}
              </button>
            )}
+
            {mode==='signup'&&(
-             <p className="modal-sub account-note">{t('verifyEmailNotice')}</p>
+             <p className="modal-sub account-note">
+               {t('verifyEmailNotice')}
+             </p>
            )}
-           {message?.startsWith('Account created.')&&(
-             <button className="ghost-btn full" type="button" disabled={busy} onClick={resend}>
+
+           {mode==='signin'&&message&&(message===t('accountCreatedCheckEmail')||message===t('accountCreatedSuccess')||message.startsWith('Account created'))&&(
+             <button
+               className="ghost-btn full"
+               type="button"
+               disabled={busy}
+               onClick={resend}
+             >
                {t('resendConfirmation')}
              </button>
            )}
+
          </>
        )}
+
      </div>
    </Modal>
  );
