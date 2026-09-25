@@ -1,8 +1,13 @@
+const RECOVERY_I18N={passwordMinLength:'Password must be at least 8 characters.',recoverySessionMissing:'Recovery session is missing.',passwordUpdated:'Password updated successfully. You can now sign in.',unableToUpdatePassword:'Unable to update password.',newPassword:'New password',confirmPassword:'Confirm password',saving:'Saving…',updatePassword:'Update password'};
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
+import { useApp } from '../context/AppState';
+import { createTranslator } from '../i18n';
 import { updatePassword } from '../utils/supabaseAuth';
 
 export default function PasswordRecovery() {
+  const app = useApp();
+  const t = createTranslator(app.language);
   const [open, setOpen] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [password, setPassword] = useState('');
@@ -44,17 +49,17 @@ export default function PasswordRecovery() {
     setMessage('');
 
     if (password.length < 8) {
-      setMessage('Password must be at least 8 characters.');
+      setMessage(t('passwordMinLength'));
       return;
     }
 
     if (password !== confirm) {
-      setMessage('Passwords do not match.');
+      setMessage(t('passwordsDoNotMatch'));
       return;
     }
 
     if (!accessToken) {
-      setMessage('Recovery session is missing.');
+      setMessage(t('recoverySessionMissing'));
       return;
     }
 
@@ -64,7 +69,7 @@ export default function PasswordRecovery() {
       await updatePassword(accessToken, password);
 
       setMessage(
-        'Password updated successfully. You can now sign in.'
+        t('passwordUpdated')
       );
 
       try {
@@ -90,7 +95,7 @@ export default function PasswordRecovery() {
 
       setMessage(
         err?.message ||
-        'Unable to update password.'
+        t('unableToUpdatePassword')
       );
     } finally {
       setBusy(false);
@@ -101,11 +106,11 @@ export default function PasswordRecovery() {
     <Modal
       open={open}
       onClose={() => {}}
-      title="Choose a new password"
+      title={t("resetYourPassword")}
     >
       <div className="account-modal"><form className="form-stack" onSubmit={submit}>
         <label>
-          New password
+          {t("newPassword")}
 
           <input
             type="password"
@@ -118,7 +123,7 @@ export default function PasswordRecovery() {
         </label>
 
         <label>
-          Confirm password
+          {t("confirmPassword")}
 
           <input
             type="password"
@@ -141,7 +146,7 @@ export default function PasswordRecovery() {
           type="submit"
           disabled={busy}
         >
-          {busy ? 'Saving...' : 'Update password'}
+          {busy ? t('saving') : t('updatePassword')}
         </button>
       </form></div>
     </Modal>
