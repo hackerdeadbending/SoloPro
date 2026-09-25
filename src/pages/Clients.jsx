@@ -30,15 +30,15 @@ export default function Clients(){
     <input placeholder={t("searchClients")} value={search} onChange={e=>setSearch(e.target.value)}/>
    </div>
    <div className="toolbar-stats">
-    <span>{app.clients.length} clients</span>
+    <span>{app.clients.length} {t('clients')}</span>
    </div>
   </div>
 
   {filtered.length===0?
    <div className="panel empty">
     <Icon name="users" size={30}/>
-    <strong>{app.clients.length?'No matching clients':'Your client book is empty'}</strong>
-    <span>{app.clients.length?'Try a different search.':'Add your first client. The Dashboard stays empty until you add a real contact; no permanent sample people are kept.'}</span>
+    <strong>{app.clients.length?t('noMatchingClients'):t('clientBookEmpty')}</strong>
+    <span>{app.clients.length?t('tryDifferentSearch'):t('addFirstClient')}</span>
    </div>
   :
    <div className="clients-grid">
@@ -49,7 +49,7 @@ export default function Clients(){
        <div className="avatar large">{c.name.split(' ').map(x=>x[0]).join('').slice(0,2)}</div>
        <div>
         <h3>{c.name}</h3>
-        <p>{c.email||c.phone||'No contact saved'}</p>
+        <p>{c.email||c.phone||t('noContactSaved')}</p>
        </div>
        <button className="icon-btn" onClick={()=>setSelected(c)}>
         <Icon name="edit" size={16}/>
@@ -69,10 +69,10 @@ export default function Clients(){
 
       <div className="profile-actions">
        <button className="ghost-btn" onClick={()=>setInvite(c)}>
-        <Icon name="send"/>Invite
+        <Icon name="send"/>{t('invite')}
        </button>
        <button className="pink-btn" onClick={()=>setSelected(c)}>
-        <Icon name="plus"/>Record service
+        <Icon name="plus"/>{t('recordService')}
        </button>
       </div>
      </article>
@@ -83,7 +83,7 @@ export default function Clients(){
   <Modal open={open} onClose={()=>setOpen(false)} title={t("addClient")}>
    <form className="form-stack" onSubmit={submit}>
     <label>
-     Full name
+     {t('fullName')}
      <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/>
     </label>
 
@@ -124,11 +124,11 @@ function ClientDetail({client,onClose}){
  const services=app.services.filter(s=>s.clientId===client.id);
 
  return <div>
-  <p className="modal-sub">A simple client ledger: no hours, no clutter. Attach services whenever you want, or keep income separate.</p>
+  <p className="modal-sub">{t('clientLedgerDescription')}</p>
 
   <div className="client-detail-stats">
-   <span><b>{services.length}</b> visits</span>
-   <span><b>{services.length?new Date(services[services.length-1].date).toLocaleDateString():'—'}</b> last recorded</span>
+   <span><b>{services.length}</b> {t('visits')}</span>
+   <span><b>{services.length?new Date(services[services.length-1].date).toLocaleDateString():'—'}</b> {t('lastRecorded')}</span>
   </div>
 
   <form className="form-stack" onSubmit={e=>{
@@ -175,7 +175,7 @@ function ClientDetail({client,onClose}){
     app.deleteClient(client.id);
     onClose();
    }}>
-    <Icon name="trash"/>Delete client
+    <Icon name="trash"/>{t('deleteClient')}
    </button>
   </div>
  </div>
