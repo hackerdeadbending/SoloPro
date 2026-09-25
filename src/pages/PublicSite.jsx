@@ -5,8 +5,8 @@ import {useApp} from '../context/AppState';
 import {createTranslator} from '../i18n';
 
 const featureKeys=[['publicIncome','publicIncomeText'],['publicExpense','publicExpenseText'],['publicProfit','publicProfitText'],['publicTax','publicTaxText'],['publicClients','publicClientsText'],['publicReports','publicReportsText']];
-const faqKeys=Array.from({length:10},(_,i)=>[\`publicFAQ\${i+1}Q\`,\`publicFAQ\${i+1}A\`]);
-const articleKeys=Array.from({length:4},(_,i)=>[\`publicArticle\${i+1}\`,\`publicArticle\${i+1}Text\`]);
+const faqKeys=Array.from({length:10},(_,i)=>[`publicFAQ\${i+1}Q`,`publicFAQ\${i+1}A`]);
+const articleKeys=Array.from({length:4},(_,i)=>[`publicArticle\${i+1}`,`publicArticle\${i+1}Text`]);
 
 function usePublicT(){const app=useApp();return createTranslator(app.language)}
 
