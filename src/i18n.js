@@ -95,6 +95,9 @@ Danish:{dashboard:'Oversigt',earnings:'Indtægter',clients:'Kunder',tax:'Skat og
 Norwegian:{dashboard:'Oversikt',earnings:'Inntekter',clients:'Kunder',tax:'Skatt og erklæringer',settings:'Innstillinger',country:'Land',language:'Språk',save:'Lagre',open:'Åpne',close:'Lukk',create:'Opprett',delete:'Slett',edit:'Rediger',add:'Legg til',search:'Søk',payment:'Betaling',subscription:'Abonnement',support:'Støtte',free:'Gratis',active:'Aktiv',disabled:'Deaktivert',verified:'Bekreftet',invite:'Inviter',share:'Del',copy:'Kopier',message:'Melding',messages:'Meldinger',trial:'Prøveperiode',days:'dager',reward:'Belønning',theme:'Tema',themes:'Temaer',today:'I dag',tomorrow:'I morgen'},
 Icelandic:{dashboard:'Yfirlit',earnings:'Tekjur',clients:'Viðskiptavinir',tax:'Skattar og skil',settings:'Stillingar',country:'Land',language:'Tungumál',save:'Vista',open:'Opna',close:'Loka',create:'Búa til',delete:'Eyða',edit:'Breyta',add:'Bæta við',search:'Leita',payment:'Greiðsla',subscription:'Áskrift',support:'Aðstoð',free:'Ókeypis',active:'Virkur',disabled:'Óvirkur',verified:'Staðfest',invite:'Bjóða',share:'Deila',copy:'Afrita',message:'Skilaboð',messages:'Skilaboð',trial:'Prufuáskrift',days:'dagar',reward:'Verðlaun',theme:'Þema',themes:'Þemu',today:'Í dag',tomorrow:'Á morgun'}
 };
+
+function localizedEnglishValue(key){return EN[key]??EXTRA.English?.[key]??EXTRA_CLIENTS.English?.[key]??EXTRA2.English?.[key]??SMART.English?.[key]??UI_EXTRA.English?.[key]??UI_AUDIT_EN[key];}
+function translateFallbackValue(value,key,language){const map=LOCALIZED_FALLBACKS[language];if(!map||map[key]===undefined)return value;return map[key];}
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(core[raw]) return raw;
@@ -105,5 +108,5 @@ function resolveLanguage(language){
 export function createTranslator(language){
   const resolved=resolveLanguage(language);
   const dict=core[resolved]||EN;
-  return key=>dict[key]??EXTRA[resolved]?.[key]??EXTRA_CLIENTS[resolved]?.[key]??EXTRA2[resolved]?.[key]??SMART[resolved]?.[key]??UI_EXTRA[resolved]?.[key]??UI_AUDIT_EN[key]??EN[key]??EXTRA.English?.[key]??EXTRA_CLIENTS.English?.[key]??EXTRA2.English?.[key]??SMART.English?.[key]??key;
+  return key=>{const explicit=dict[key]??EXTRA[resolved]?.[key]??EXTRA_CLIENTS[resolved]?.[key]??EXTRA2[resolved]?.[key]??SMART[resolved]?.[key]??UI_EXTRA[resolved]?.[key]??UI_AUDIT_EN[key];if(explicit!==undefined){const english=localizedEnglishValue(key);if(explicit===english){const translated=translateFallbackValue(explicit,key,resolved);if(translated!==explicit)return translated;}return explicit;}const english=localizedEnglishValue(key);if(english!==undefined){const translated=translateFallbackValue(english,key,resolved);if(translated!==english)return translated;return english;}return key;};
 }
