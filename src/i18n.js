@@ -288,6 +288,18 @@ Icelandic:{premium:'Premium-útgáfa'}
 };
 Object.entries(FINAL_I18N_OVERRIDES_4).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+
+const FINAL_I18N_OVERRIDES_5={
+French:{clients:'Clients',date:'Date locale'},
+German:{cookiesTitle:'Cookie-Einstellungen',online:'Verfügbar online',optional:'freiwillig'},
+Spanish:{cookiesTitle:'Configuración de cookies',flexible:'Adaptable'},
+Portuguese:{cookiesTitle:'Definições de cookies'},
+Dutch:{cookiesTitle:'Cookie-instellingen'},
+Czech:{online:'Dostupné online'},
+Danish:{cookiesTitle:'Cookieindstillinger'}
+};
+Object.entries(FINAL_I18N_OVERRIDES_5).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
