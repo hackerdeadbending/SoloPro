@@ -1,3 +1,5 @@
+<!-- Production restored to known working build -->
+
 # SoloPro
 
 SoloPro is a React/Vite application with Supabase-backed account data and Vercel serverless API routes.
