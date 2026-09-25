@@ -31,7 +31,7 @@ export default function InviteModal({open,onClose,clientName=''}){
   const copy=async()=>{await navigator.clipboard?.writeText(referralLink);markInvite();};
 
   const actions=[
-    {label:'Share',icon:'share',onClick:nativeShare,primary:true},
+    {label:t('share'),icon:'share',onClick:nativeShare,primary:true},
     {label:'WhatsApp',icon:'whatsapp',onClick:whatsapp},
     {label:'Telegram',icon:'telegram',onClick:telegram},
     {label:'SMS',icon:'message',onClick:sms},
@@ -56,10 +56,10 @@ export default function InviteModal({open,onClose,clientName=''}){
     <div className="invite-grid">
       {actions.map(action=><button key={action.label} className={action.primary?'invite-primary':''} onClick={action.onClick}><Icon name={action.icon} size={16}/><span>{action.label}</span></button>)}
     </div>
-    <div className="copy-row"><input value={referralLink} readOnly/><button onClick={copy}><Icon name="copy" size={13}/><span>Copy</span></button></div>
+    <div className="copy-row"><input value={referralLink} readOnly/><button onClick={copy}><Icon name="copy" size={13}/><span>{t('copy')}</span></button></div>
     {!clientName&&app.isAdmin&&<div className="ref-verify">
       <label>{t('newUserVerification')}</label>
-      <input value={identifier} onChange={e=>setIdentifier(e.target.value)} placeholder="Email or unique identifier"/>
+      <input value={identifier} onChange={e=>setIdentifier(e.target.value)} placeholder={t('emailOrIdentifier')}/>
       <small>{t('newUserVerificationHelp')}</small>
       <button className="primary full" disabled={!identifier.trim()} onClick={()=>{recordReferral(identifier.trim());setIdentifier('');onClose()}}>{t('markNewSignup')}</button>
     </div>}
