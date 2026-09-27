@@ -1447,7 +1447,7 @@ Icelandic:{needHelp:'Þarftu aðstoð?',openSupport:'Opna aðstoð',premiumAcces
 Object.entries(FINAL_CORE_UI_PATCH).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
 const FINAL_USER_VISIBLE_LOCALIZATION={
-  English:{incomeExpensesTax:'Income, expenses & taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
+  English:{incomeExpensesTax:'Income, Expenses & Taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
   Ukrainian:{incomeExpensesTax:'Доходи, витрати та податки',incomeExpensesTaxes:'Доходи, витрати та податки'},
   Italian:{incomeExpensesTax:'Entrate, spese e imposte',incomeExpensesTaxes:'Entrate, spese e imposte'},
   French:{incomeExpensesTax:'Revenus, dépenses et impôts',incomeExpensesTaxes:'Revenus, dépenses et impôts'},
@@ -1458,9 +1458,9 @@ const FINAL_USER_VISIBLE_LOCALIZATION={
   Polish:{incomeExpensesTax:'Przychody, wydatki i podatki',incomeExpensesTaxes:'Przychody, wydatki i podatki'},
   Czech:{incomeExpensesTax:'Příjmy, výdaje a daně',incomeExpensesTaxes:'Příjmy, výdaje a daně'},
   Finnish:{incomeExpensesTax:'Tulot, menot ja verot',incomeExpensesTaxes:'Tulot, menot ja verot'},
-  Swedish:{incomeExpensesTax:'Intäkter, utgifter och skatt',incomeExpensesTaxes:'Intäkter, utgifter och skatt'},
-  Danish:{incomeExpensesTax:'Indtægter, udgifter og skat',incomeExpensesTaxes:'Indtægter, udgifter og skat'},
-  Norwegian:{incomeExpensesTax:'Inntekter, utgifter og skatt',incomeExpensesTaxes:'Inntekter, utgifter og skatt'},
+  Swedish:{incomeExpensesTax:'Intäkter, utgifter och skatter',incomeExpensesTaxes:'Intäkter, utgifter och skatt'},
+  Danish:{incomeExpensesTax:'Indtægter, udgifter og skatter',incomeExpensesTaxes:'Indtægter, udgifter og skat'},
+  Norwegian:{incomeExpensesTax:'Inntekter, utgifter og skatter',incomeExpensesTaxes:'Inntekter, utgifter og skatt'},
   Icelandic:{incomeExpensesTax:'Tekjur, gjöld og skattar',incomeExpensesTaxes:'Tekjur, gjöld og skattar'},
   Japanese:{incomeExpensesTax:'収入・支出・税金',incomeExpensesTaxes:'収入・支出・税金'},
   Korean:{incomeExpensesTax:'수입, 지출 및 세금',incomeExpensesTaxes:'수입, 지출 및 세금'},
