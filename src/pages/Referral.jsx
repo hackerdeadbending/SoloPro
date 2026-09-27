@@ -32,7 +32,7 @@ export default function Referral(){
     if(!referralLink)return;
     try{
       if(navigator.share){
-        await navigator.share({title:'Join me on SoloPro',text:'Join me on SoloPro — a simple way to manage my freelance business.',url:referralLink});
+        await navigator.share({title:t('referralShareTitle'),text:t('referralShareText'),url:referralLink});
         setShared(true);setTimeout(()=>setShared(false),1600);
       }else await copy();
     }catch{}
@@ -94,7 +94,7 @@ export default function Referral(){
     <section className="panel link-panel">
       <div className="link-head">
         <div className="link-copy"><div className="link-icon"><Icon name="link" size={17}/></div><div><div className="eyebrow">{t('personalLink')}</div><h2>{t('shareSoloProLink')}</h2><p>{t('personalLinkReady')}</p></div></div>
-        <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'share'} size={15}/><span>{shared?'Shared':'Share'}</span></button></div>
+        <div className="link-actions"><button className="primary share-button" onClick={share} disabled={!referralLink}><Icon name={shared?'check':'share'} size={15}/><span>{shared?t('shared'):t('share')}</span></button></div>
       </div>
       <div className="referral-link-box"><code title={referralLink}>{referralLink||t('referralLinkPending')}</code><button className="copy-icon" onClick={copy} disabled={!referralLink} aria-label={t('copy')} title={copied?t('copied'):t('copy')}><Icon name={copied?'check':'copy'} size={13}/></button></div>
       <div className="link-note"><Icon name="check" size={11}/><span>{t('onlyNewVerified')}</span></div>
