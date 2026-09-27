@@ -943,6 +943,9 @@ Object.entries(FIRST_HALF_REFINEMENTS).forEach(([language,values])=>Object.assig
 
 Object.entries(FINAL_UI_PATCHES).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+// Apply first-half refinements last so they cannot be overwritten by legacy UI patches.
+Object.entries(FIRST_HALF_REFINEMENTS).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
