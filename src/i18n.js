@@ -1537,6 +1537,13 @@ const FINAL_USER_VISIBLE_TERMS={
 };
 Object.entries(FINAL_USER_VISIBLE_TERMS).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+const FINAL_PHONE_LABELS={
+  English:'Phone',Italian:'Telefono',French:'Téléphone',German:'Telefon',Spanish:'Teléfono',Polish:'Telefon',Japanese:'電話',Korean:'전화',Ukrainian:'Телефон',Portuguese:'Telefone',Dutch:'Telefoon',Czech:'Telefon',Finnish:'Puhelin',Swedish:'Telefon',Danish:'Telefon',Norwegian:'Telefon',Icelandic:'Sími',Arabic:'الهاتف',Chinese:'电话'
+};
+Object.entries(FINAL_PHONE_LABELS).forEach(([language,value])=>{ LANGUAGES[language].phone=value; });
+
+
+
 
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
