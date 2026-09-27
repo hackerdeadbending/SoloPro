@@ -386,30 +386,75 @@ export function AppStateProvider({children}){
   },[state.services]);
 
   const totals=useMemo(()=>{
-    const gross=monthlyServices.reduce(
-      (s,x)=>s+Number(x.amount||0),
-      0
-    );
+    const customIncome=
+      Array.isArray(state.financialIncome)
+        ? state.financialIncome
+        : [];
 
-    const materials=monthlyServices.reduce(
-      (s,x)=>s+Number(x.materialCost||0),
-      0
-    );
+    const customExpenses=
+      Array.isArray(state.financialExpenses)
+        ? state.financialExpenses
+        : [];
 
-    const extra=monthlyServices.reduce(
-      (s,x)=>s+Number(x.extraExpense||0),
-      0
-    );
+    const now=new Date();
+    const inMonth=x=>{
+      const d=new Date(x.date);
+      return(
+        d.getMonth()===now.getMonth()&&
+        d.getFullYear()===now.getFullYear()
+      );
+    };
+
+    const monthIncome=
+      customIncome
+        .filter(inMonth)
+        .reduce((s,x)=>s+Number(x.amount||0),0);
+
+    const monthExpenses=
+      customExpenses
+        .filter(inMonth)
+        .reduce((s,x)=>s+Number(x.amount||0),0);
+
+    const gross=
+      monthlyServices.reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      )+
+      monthIncome;
+
+    const materials=
+      monthlyServices.reduce(
+        (s,x)=>s+Number(x.materialCost||0),
+        0
+      );
+
+    const extra=
+      monthlyServices.reduce(
+        (s,x)=>s+Number(x.extraExpense||0),
+        0
+      );
 
     const fixedMonthly=
       state.fixedExpensePeriod==='weekly'
         ? Number(state.fixedExpenses||0)*52/12
         : Number(state.fixedExpenses||0);
 
-    const expenses=extra+fixedMonthly;
-    const taxableBase=Math.max(0,gross-materials-extra);
-    const tax=taxableBase*taxRate;
-    const net=gross-materials-expenses-tax;
+    const expenses=
+      materials+
+      extra+
+      monthExpenses+
+      fixedMonthly;
+
+    const taxableBase=
+      Math.max(0,gross-materials-extra-monthExpenses);
+
+    const tax=
+      state.taxMode==='reserve'
+        ? taxableBase*taxRate
+        : 0;
+
+    const net=
+      gross-expenses-tax;
 
     return{
       gross,
@@ -421,8 +466,11 @@ export function AppStateProvider({children}){
     };
   },[
     monthlyServices,
+    state.financialIncome,
+    state.financialExpenses,
     state.fixedExpenses,
     state.fixedExpensePeriod,
+    state.taxMode,
     taxRate
   ]);
 
