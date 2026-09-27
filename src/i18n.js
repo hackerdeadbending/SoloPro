@@ -1446,6 +1446,83 @@ Icelandic:{needHelp:'Þarftu aðstoð?',openSupport:'Opna aðstoð',premiumAcces
 };
 Object.entries(FINAL_CORE_UI_PATCH).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+const FINAL_USER_VISIBLE_LOCALIZATION={
+  Ukrainian:{
+    passwordMinLength:'Пароль має містити щонайменше 8 символів.',recoverySessionMissing:'Сеанс відновлення відсутній.',passwordUpdated:'Пароль оновлено. Тепер ви можете увійти.',unableToUpdatePassword:'Не вдалося оновити пароль.',newPassword:'Новий пароль',confirmPassword:'Підтвердження пароля',updatePassword:'Оновити пароль',
+    smartMessenger:'Розумні повідомлення',online:'Онлайн',flexible:'Гнучкий',email:'Електронна пошта',client:'Клієнт',clients:'Клієнти',date:'Дата',clientsFormTitle:'Клієнт',themeStyle:'СТИЛЬ',optional:'необов’язково',publicCookies:'Файли cookie',publicFAQ:'Поширені запитання',publicPrivacy:'Конфіденційність',publicContact:'Контакти',publicContactKicker:'Контакти',publicHelp:'Допомога'
+  },
+  Italian:{
+    passwordMinLength:'La password deve contenere almeno 8 caratteri.',recoverySessionMissing:'La sessione di recupero è assente.',passwordUpdated:'Password aggiornata. Ora puoi accedere.',unableToUpdatePassword:'Impossibile aggiornare la password.',newPassword:'Nuova password',confirmPassword:'Conferma password',updatePassword:'Aggiorna password',
+    smartMessenger:'Messaggi intelligenti',online:'Online',flexible:'Flessibile',email:'Email',client:'Cliente',clients:'Clienti',date:'Data',clientsFormTitle:'Cliente',themeStyle:'STILE',optional:'opzionale',publicCookies:'Cookie',publicFAQ:'FAQ',publicPrivacy:'Privacy',publicContact:'Contatti',publicContactKicker:'Contatti',publicHelp:'Aiuto'
+  },
+  French:{
+    passwordMinLength:'Le mot de passe doit contenir au moins 8 caractères.',recoverySessionMissing:'La session de récupération est absente.',passwordUpdated:'Mot de passe mis à jour. Vous pouvez maintenant vous connecter.',unableToUpdatePassword:'Impossible de mettre à jour le mot de passe.',newPassword:'Nouveau mot de passe',confirmPassword:'Confirmer le mot de passe',updatePassword:'Mettre à jour le mot de passe',
+    smartMessenger:'Messages intelligents',online:'En ligne',flexible:'Flexible',email:'E-mail',client:'Client',clients:'Clients',date:'Date',clientsFormTitle:'Client',themeStyle:'STYLE',optional:'facultatif',publicCookies:'Cookies',publicFAQ:'FAQ',publicPrivacy:'Confidentialité',publicContact:'Contact',publicContactKicker:'Contact',publicHelp:'Aide'
+  },
+  German:{
+    passwordMinLength:'Das Passwort muss mindestens 8 Zeichen enthalten.',recoverySessionMissing:'Die Wiederherstellungssitzung fehlt.',passwordUpdated:'Passwort aktualisiert. Du kannst dich jetzt anmelden.',unableToUpdatePassword:'Passwort konnte nicht aktualisiert werden.',newPassword:'Neues Passwort',confirmPassword:'Passwort bestätigen',updatePassword:'Passwort aktualisieren',
+    smartMessenger:'Intelligente Nachrichten',online:'Online',flexible:'Flexibel',email:'E-Mail',client:'Kunde',clients:'Kunden',date:'Datum',clientsFormTitle:'Kunde',themeStyle:'STIL',optional:'optional',publicCookies:'Cookies',publicFAQ:'FAQ',publicPrivacy:'Datenschutz',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Hilfe'
+  },
+  Spanish:{
+    passwordMinLength:'La contraseña debe tener al menos 8 caracteres.',recoverySessionMissing:'Falta la sesión de recuperación.',passwordUpdated:'Contraseña actualizada. Ya puedes iniciar sesión.',unableToUpdatePassword:'No se pudo actualizar la contraseña.',newPassword:'Nueva contraseña',confirmPassword:'Confirmar contraseña',updatePassword:'Actualizar contraseña',
+    smartMessenger:'Mensajes inteligentes',online:'En línea',flexible:'Flexible',email:'Correo electrónico',client:'Cliente',clients:'Clientes',date:'Fecha',clientsFormTitle:'Cliente',themeStyle:'ESTILO',optional:'opcional',publicCookies:'Cookies',publicFAQ:'Preguntas frecuentes',publicPrivacy:'Privacidad',publicContact:'Contacto',publicContactKicker:'Contacto',publicHelp:'Ayuda'
+  },
+  Polish:{
+    passwordMinLength:'Hasło musi mieć co najmniej 8 znaków.',recoverySessionMissing:'Brak sesji odzyskiwania.',passwordUpdated:'Hasło zostało zaktualizowane. Możesz się teraz zalogować.',unableToUpdatePassword:'Nie udało się zaktualizować hasła.',newPassword:'Nowe hasło',confirmPassword:'Potwierdź hasło',updatePassword:'Zaktualizuj hasło',
+    smartMessenger:'Inteligentne wiadomości',online:'Online',flexible:'Elastyczny',email:'E-mail',client:'Klient',clients:'Klienci',date:'Data',clientsFormTitle:'Klient',themeStyle:'STYL',optional:'opcjonalnie',publicCookies:'Pliki cookie',publicFAQ:'FAQ',publicPrivacy:'Prywatność',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Pomoc'
+  },
+  Japanese:{
+    passwordMinLength:'パスワードは8文字以上で入力してください。',recoverySessionMissing:'パスワード再設定セッションがありません。',passwordUpdated:'パスワードを更新しました。これでサインインできます。',unableToUpdatePassword:'パスワードを更新できませんでした。',newPassword:'新しいパスワード',confirmPassword:'パスワードを確認',updatePassword:'パスワードを更新',
+    smartMessenger:'スマートメッセージ',online:'オンライン',flexible:'柔軟',email:'メールアドレス',client:'顧客',clients:'顧客',date:'日付',clientsFormTitle:'顧客',themeStyle:'スタイル',optional:'任意',publicCookies:'Cookie',publicFAQ:'よくある質問',publicPrivacy:'プライバシー',publicContact:'お問い合わせ',publicContactKicker:'お問い合わせ',publicHelp:'ヘルプ'
+  },
+  Korean:{
+    passwordMinLength:'비밀번호는 8자 이상이어야 합니다.',recoverySessionMissing:'복구 세션이 없습니다.',passwordUpdated:'비밀번호가 업데이트되었습니다. 이제 로그인할 수 있습니다.',unableToUpdatePassword:'비밀번호를 업데이트할 수 없습니다.',newPassword:'새 비밀번호',confirmPassword:'비밀번호 확인',updatePassword:'비밀번호 업데이트',
+    smartMessenger:'스마트 메시지',online:'온라인',flexible:'유연함',email:'이메일',client:'고객',clients:'고객',date:'날짜',clientsFormTitle:'고객',themeStyle:'스타일',optional:'선택 사항',publicCookies:'쿠키',publicFAQ:'자주 묻는 질문',publicPrivacy:'개인정보 보호',publicContact:'문의',publicContactKicker:'문의',publicHelp:'도움말'
+  },
+  Arabic:{
+    passwordMinLength:'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',recoverySessionMissing:'جلسة الاسترداد غير موجودة.',passwordUpdated:'تم تحديث كلمة المرور. يمكنك تسجيل الدخول الآن.',unableToUpdatePassword:'تعذر تحديث كلمة المرور.',newPassword:'كلمة المرور الجديدة',confirmPassword:'تأكيد كلمة المرور',updatePassword:'تحديث كلمة المرور',
+    smartMessenger:'الرسائل الذكية',online:'متصل',flexible:'مرن',email:'البريد الإلكتروني',client:'العميل',clients:'العملاء',date:'التاريخ',clientsFormTitle:'العميل',themeStyle:'النمط',optional:'اختياري',publicCookies:'ملفات تعريف الارتباط',publicFAQ:'الأسئلة الشائعة',publicPrivacy:'الخصوصية',publicContact:'اتصل بنا',publicContactKicker:'اتصل بنا',publicHelp:'المساعدة'
+  },
+  Chinese:{
+    passwordMinLength:'密码至少需要 8 个字符。',recoverySessionMissing:'缺少密码恢复会话。',passwordUpdated:'密码已更新。现在可以登录。',unableToUpdatePassword:'无法更新密码。',newPassword:'新密码',confirmPassword:'确认密码',updatePassword:'更新密码',
+    smartMessenger:'智能消息',online:'在线',flexible:'灵活',email:'电子邮箱',client:'客户',clients:'客户',date:'日期',clientsFormTitle:'客户',themeStyle:'样式',optional:'可选',publicCookies:'Cookie',publicFAQ:'常见问题',publicPrivacy:'隐私',publicContact:'联系我们',publicContactKicker:'联系我们',publicHelp:'帮助'
+  },
+  Portuguese:{
+    passwordMinLength:'A palavra-passe deve ter pelo menos 8 caracteres.',recoverySessionMissing:'A sessão de recuperação está em falta.',passwordUpdated:'Palavra-passe atualizada. Já pode iniciar sessão.',unableToUpdatePassword:'Não foi possível atualizar a palavra-passe.',newPassword:'Nova palavra-passe',confirmPassword:'Confirmar palavra-passe',updatePassword:'Atualizar palavra-passe',
+    smartMessenger:'Mensagens inteligentes',online:'Online',flexible:'Flexível',email:'E-mail',client:'Cliente',clients:'Clientes',date:'Data',clientsFormTitle:'Cliente',themeStyle:'ESTILO',optional:'opcional',publicCookies:'Cookies',publicFAQ:'Perguntas frequentes',publicPrivacy:'Privacidade',publicContact:'Contacto',publicContactKicker:'Contacto',publicHelp:'Ajuda'
+  },
+  Dutch:{
+    passwordMinLength:'Het wachtwoord moet minimaal 8 tekens bevatten.',recoverySessionMissing:'De herstelsessie ontbreekt.',passwordUpdated:'Wachtwoord bijgewerkt. Je kunt nu inloggen.',unableToUpdatePassword:'Het wachtwoord kon niet worden bijgewerkt.',newPassword:'Nieuw wachtwoord',confirmPassword:'Wachtwoord bevestigen',updatePassword:'Wachtwoord bijwerken',
+    smartMessenger:'Slimme berichten',online:'Online',flexible:'Flexibel',email:'E-mail',client:'Klant',clients:'Klanten',date:'Datum',clientsFormTitle:'Klant',themeStyle:'STIJL',optional:'optioneel',publicCookies:'Cookies',publicFAQ:'Veelgestelde vragen',publicPrivacy:'Privacy',publicContact:'Contact',publicContactKicker:'Contact',publicHelp:'Help'
+  },
+  Czech:{
+    passwordMinLength:'Heslo musí mít alespoň 8 znaků.',recoverySessionMissing:'Chybí relace pro obnovení.',passwordUpdated:'Heslo bylo aktualizováno. Nyní se můžete přihlásit.',unableToUpdatePassword:'Heslo se nepodařilo aktualizovat.',newPassword:'Nové heslo',confirmPassword:'Potvrdit heslo',updatePassword:'Aktualizovat heslo',
+    smartMessenger:'Chytré zprávy',online:'Online',flexible:'Flexibilní',email:'E-mail',client:'Klient',clients:'Klienti',date:'Datum',clientsFormTitle:'Klient',themeStyle:'STYL',optional:'volitelné',publicCookies:'Cookies',publicFAQ:'Časté dotazy',publicPrivacy:'Soukromí',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Nápověda'
+  },
+  Finnish:{
+    passwordMinLength:'Salasanassa on oltava vähintään 8 merkkiä.',recoverySessionMissing:'Palautusistunto puuttuu.',passwordUpdated:'Salasana päivitettiin. Voit nyt kirjautua sisään.',unableToUpdatePassword:'Salasanaa ei voitu päivittää.',newPassword:'Uusi salasana',confirmPassword:'Vahvista salasana',updatePassword:'Päivitä salasana',
+    smartMessenger:'Älykkäät viestit',online:'Verkossa',flexible:'Joustava',email:'Sähköposti',client:'Asiakas',clients:'Asiakkaat',date:'Päivämäärä',clientsFormTitle:'Asiakas',themeStyle:'TYYLI',optional:'valinnainen',publicCookies:'Evästeet',publicFAQ:'Usein kysytyt kysymykset',publicPrivacy:'Tietosuoja',publicContact:'Yhteystiedot',publicContactKicker:'Yhteystiedot',publicHelp:'Ohje'
+  },
+  Swedish:{
+    passwordMinLength:'Lösenordet måste innehålla minst 8 tecken.',recoverySessionMissing:'Återställningssessionen saknas.',passwordUpdated:'Lösenordet har uppdaterats. Du kan nu logga in.',unableToUpdatePassword:'Det gick inte att uppdatera lösenordet.',newPassword:'Nytt lösenord',confirmPassword:'Bekräfta lösenord',updatePassword:'Uppdatera lösenord',
+    smartMessenger:'Smarta meddelanden',online:'Online',flexible:'Flexibel',email:'E-post',client:'Kund',clients:'Kunder',date:'Datum',clientsFormTitle:'Kund',themeStyle:'STIL',optional:'valfritt',publicCookies:'Cookies',publicFAQ:'Vanliga frågor',publicPrivacy:'Integritet',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Hjälp'
+  },
+  Danish:{
+    passwordMinLength:'Adgangskoden skal indeholde mindst 8 tegn.',recoverySessionMissing:'Gendannelsessessionen mangler.',passwordUpdated:'Adgangskoden er opdateret. Du kan nu logge ind.',unableToUpdatePassword:'Adgangskoden kunne ikke opdateres.',newPassword:'Ny adgangskode',confirmPassword:'Bekræft adgangskode',updatePassword:'Opdater adgangskode',
+    smartMessenger:'Smarte beskeder',online:'Online',flexible:'Fleksibel',email:'E-mail',client:'Kunde',clients:'Kunder',date:'Dato',clientsFormTitle:'Kunde',themeStyle:'STIL',optional:'valgfrit',publicCookies:'Cookies',publicFAQ:'Ofte stillede spørgsmål',publicPrivacy:'Privatliv',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Hjælp'
+  },
+  Norwegian:{
+    passwordMinLength:'Passordet må ha minst 8 tegn.',recoverySessionMissing:'Gjenopprettingsøkten mangler.',passwordUpdated:'Passordet er oppdatert. Du kan nå logge inn.',unableToUpdatePassword:'Kunne ikke oppdatere passordet.',newPassword:'Nytt passord',confirmPassword:'Bekreft passord',updatePassword:'Oppdater passord',
+    smartMessenger:'Smarte meldinger',online:'På nett',flexible:'Fleksibel',email:'E-post',client:'Kunde',clients:'Kunder',date:'Dato',clientsFormTitle:'Kunde',themeStyle:'STIL',optional:'valgfritt',publicCookies:'Informasjonskapsler',publicFAQ:'Vanlige spørsmål',publicPrivacy:'Personvern',publicContact:'Kontakt',publicContactKicker:'Kontakt',publicHelp:'Hjelp'
+  },
+  Icelandic:{
+    passwordMinLength:'Lykilorðið verður að innihalda að minnsta kosti 8 stafi.',recoverySessionMissing:'Endurheimtarlota vantar.',passwordUpdated:'Lykilorð uppfært. Þú getur nú skráð þig inn.',unableToUpdatePassword:'Ekki tókst að uppfæra lykilorðið.',newPassword:'Nýtt lykilorð',confirmPassword:'Staðfesta lykilorð',updatePassword:'Uppfæra lykilorð',
+    smartMessenger:'Snjallskilaboð',online:'Á netinu',flexible:'Sveigjanlegt',email:'Netfang',client:'Viðskiptavinur',clients:'Viðskiptavinir',date:'Dagsetning',clientsFormTitle:'Viðskiptavinur',themeStyle:'STÍLL',optional:'valfrjálst',publicCookies:'Vafrakökur',publicFAQ:'Algengar spurningar',publicPrivacy:'Persónuvernd',publicContact:'Hafa samband',publicContactKicker:'Hafa samband',publicHelp:'Hjálp'
+  }
+};
+Object.entries(FINAL_USER_VISIBLE_LOCALIZATION).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
