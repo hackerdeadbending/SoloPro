@@ -1448,7 +1448,6 @@ Object.entries(FINAL_CORE_UI_PATCH).forEach(([language,values])=>Object.assign(L
 
 const FINAL_USER_VISIBLE_LOCALIZATION={
   English:{incomeExpensesTax:'Income, Expenses & Taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
-  Ukrainian:{incomeExpensesTax:'Доходи, витрати та податки',incomeExpensesTaxes:'Доходи, витрати та податки'},
   Italian:{incomeExpensesTax:'Entrate, spese e imposte',incomeExpensesTaxes:'Entrate, spese e imposte'},
   French:{incomeExpensesTax:'Revenus, dépenses et impôts',incomeExpensesTaxes:'Revenus, dépenses et impôts'},
   German:{incomeExpensesTax:'Einnahmen, Ausgaben & Steuern',incomeExpensesTaxes:'Einnahmen, Ausgaben & Steuern'},
