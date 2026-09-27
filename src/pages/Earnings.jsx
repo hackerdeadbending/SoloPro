@@ -48,7 +48,7 @@ export default function Earnings(){
   </div>
 
   <div className="panel" style={{marginBottom:18}}>
-   <div className="panel-head"><div><h2>{copy.taxReserve}</h2><p>{app.taxMode==='reserve'?copy.taxOn:copy.taxOff}</p></div><button className={app.taxMode==='reserve'?'primary':'ghost-btn'} onClick={()=>app.update({taxMode:app.taxMode==='reserve'?'off':'reserve'})}>{app.taxMode==='reserve'?'ON':'OFF'}</button></div>
+   <div className="panel-head"><div><h2>{copy.taxReserve}</h2><p>{app.taxMode==='reserve'?copy.taxOn:copy.taxOff}</p></div><button className={app.taxMode==='reserve'?'primary':'ghost-btn'} onClick={()=>app.update({taxMode:app.taxMode==='reserve'?'off':'reserve'})}>{app.taxMode==='reserve'?t('taxModeOn'):t('taxModeOff')}</button></div>
    <small>{copy.taxHint}</small>
   </div>
 
