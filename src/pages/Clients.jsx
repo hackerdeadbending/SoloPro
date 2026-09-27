@@ -116,7 +116,7 @@ export default function Clients(){
 }
 
 function ClientDetail({client,onClose}){
- const app=useApp();
+ const app=useApp(); const t=createTranslator(app.language);
  const [amount,setAmount]=useState('');
  const [service,setService]=useState('');
  const [cost,setCost]=useState('');
