@@ -202,7 +202,17 @@ export function AppStateProvider({children}){
   });
 
   useEffect(()=>{
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+    try{
+      if(state.account?.authenticated){
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+      }else{
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('solopro-state-v3');
+      }
+    }catch{
+      // Storage can be unavailable or quota-restricted (for example Safari
+      // private mode). The app remains fully usable in memory.
+    }
   },[state]);
 
   useEffect(()=>{
