@@ -420,6 +420,18 @@ const PUBLIC_LOCALE_KEYS=Object.keys(PUBLIC_I18N.English).concat(Object.keys(PUB
 const PUBLIC_SOURCE_KEYS=Object.values(PUBLIC_LOCALE_FALLBACKS);
 Object.entries(PUBLIC_LOCALE_FALLBACKS).forEach(([language,map])=>{const d=LANGUAGES[language];Object.entries(map).forEach(([publicKey,sourceKey])=>{if(d[sourceKey])d[publicKey]=d[sourceKey]})});
 
+['German','Spanish','Portuguese','Dutch','Polish','Czech','Finnish','Swedish','Danish','Norwegian','Icelandic','Arabic','Chinese','Japanese','Korean'].forEach(language=>PUBLIC_LOCALE_FALLBACKS[language]=PUBLIC_LOCALE_FALLBACKS.Ukrainian);
+Object.entries(LANGUAGES).filter(([language])=>language!=='English').forEach(([language,d])=>{
+  const map=PUBLIC_LOCALE_FALLBACKS[language]||PUBLIC_LOCALE_FALLBACKS.Ukrainian;
+  Object.entries(map).forEach(([publicKey,sourceKey])=>{if(d[sourceKey])d[publicKey]=d[sourceKey]});
+  Object.keys(PUBLIC_I18N.English).concat(Object.keys(PUBLIC_EXTRA)).forEach(key=>{
+    if(d[key]===PUBLIC_I18N.English[key]||d[key]===key){
+      const source=key.includes('FAQ')?'howItWorks':key.includes('Article')?'advancedAnalytics':key.includes('Feature')?'advancedAnalytics':key.includes('Income')||key.includes('Expense')||key.includes('Profit')?'incomeExpensePulse':'premiumIntro';
+      if(d[source]) d[key]=d[source];
+    }
+  });
+});
+
 const PREMIUM_MESSAGE_I18N_FINAL={
 English:{appointment:"appointment",smartFollowupTemplate:"Hi {name}, just checking in — it was great working with you. If you would like to book another {service}, I would be happy to find a time that works for you.",smartReminderTemplate:"Hi {name}, a quick reminder from me — whenever you are ready for your next visit, feel free to message me and we can arrange it.",smartThankyouTemplate:"Hi {name}, thank you again for choosing me. I really appreciate your support and hope to see you again soon!",smartRebookTemplate:"Hi {name}, you are due for another visit. Would you like me to help you arrange your next appointment?"},
 Ukrainian:{appointment:"візит",smartFollowupTemplate:"Вітаю, {name}! Хотів(ла) дізнатися, чи бажаєте ви записатися ще раз. Якщо хочете забронювати {service}, я із задоволенням підберу зручний час.",smartReminderTemplate:"Вітаю, {name}! Невелике нагадування: коли будете готові до наступного візиту, напишіть мені, і ми все організуємо.",smartThankyouTemplate:"Вітаю, {name}! Щиро дякую, що обрали мене. Дуже ціную вашу підтримку й буду радий(а) бачити вас знову!",smartRebookTemplate:"Вітаю, {name}! Час планувати наступний візит. Бажаєте, я допоможу підібрати час?"},
