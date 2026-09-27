@@ -1468,7 +1468,7 @@ const FINAL_USER_VISIBLE_LOCALIZATION={
   Chinese:{incomeExpensesTax:'收入、支出和税费',incomeExpensesTaxes:'收入、支出和税费'},
 
   Ukrainian:{
-    passwordMinLength:'Пароль має містити щонайменше 8 символів.',recoverySessionMissing:'Сеанс відновлення відсутній.',passwordUpdated:'Пароль оновлено. Тепер ви можете увійти.',unableToUpdatePassword:'Не вдалося оновити пароль.',newPassword:'Новий пароль',confirmPassword:'Підтвердження пароля',updatePassword:'Оновити пароль',
+    passwordMinLength:'Пароль має містити щонайменше 8 символів.',recoverySessionMissing:'Сеанс відновлення відсутній.',passwordUpdated:'Пароль оновлено. Тепер ви можете увійти.',unableToUpdatePassword:'Не вдалося оновити пароль.',newPassword:'Новий пароль',confirmPassword:'Підтвердження пароля',updatePassword:'Оновити пароль',incomeExpensesTax:'Доходи, витрати та податки',incomeExpensesTaxes:'Доходи, витрати та податки',
     smartMessenger:'Розумні повідомлення',online:'Онлайн',flexible:'Гнучкий',email:'Електронна пошта',client:'Клієнт',clients:'Клієнти',date:'Дата',clientsFormTitle:'Клієнт',themeStyle:'СТИЛЬ',optional:'необов’язково',publicCookies:'Файли cookie',publicFAQ:'Поширені запитання',publicPrivacy:'Конфіденційність',publicContact:'Контакти',publicContactKicker:'Контакти',publicHelp:'Допомога'
   },
   Italian:{
