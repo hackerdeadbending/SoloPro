@@ -15,5 +15,5 @@ export default function AdBanner(){
     if(slot){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch{}}
   },[app.premiumActive,app.isAdmin,client,slot]);
   if(app.premiumActive||app.isAdmin||!client)return null;
-  return slot ? <div className="ad-banner" aria-label={t('advertisement')}><ins className="adsbygoogle" style={{display:'block'}} data-ad-client={client} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true"/></div> : <div className="ad-banner ad-auto-placeholder" aria-label="Advertisement"/>;
+  return slot ? <div className="ad-banner" aria-label={t('advertisement')}><ins className="adsbygoogle" style={{display:'block'}} data-ad-client={client} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true"/></div> : <div className="ad-banner ad-auto-placeholder" aria-label={t('advertisement')}/>;
 }
