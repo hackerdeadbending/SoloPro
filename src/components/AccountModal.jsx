@@ -110,7 +110,7 @@ export default function AccountModal({open,onClose,required=false}){
      : mode==='signup'
        ? t('createAccount')
        : mode==='forgot'
-         ? 'Reset your password'
+         ? t('resetYourPassword')
          : t('signIn');
 
  return (
@@ -136,8 +136,7 @@ export default function AccountModal({open,onClose,required=false}){
            </span>
 
            <p className="modal-sub">
-             Your account is protected by secure cloud authentication.
-             Premium and admin status are verified server-side.
+             {t('accountProtection')}
            </p>
 
            <button
