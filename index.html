@@ -14,7 +14,19 @@
       box.style.display='block';
     }catch(_){}
   }
-  window.addEventListener('error',function(e){show('JavaScript error:',e.error||e.message);});
+  window.addEventListener('error',function(e){
+  try{
+    var err=e.error;
+    show('JavaScript error:',[
+      'name: '+String(err&&err.name||''),
+      'message: '+String(err&&err.message||e.message||''),
+      'filename: '+String(e.filename||''),
+      'line: '+String(e.lineno||''),
+      'column: '+String(e.colno||''),
+      'stack: '+String(err&&err.stack||'')
+    ].join('\\n'));
+  }catch(_){show('JavaScript error:',e.message||'Unknown error');}
+});
   window.addEventListener('unhandledrejection',function(e){show('Unhandled promise rejection:',e.reason);});
 })();
 </script><script type="module" src="/src/main.jsx"></script></body></html>
