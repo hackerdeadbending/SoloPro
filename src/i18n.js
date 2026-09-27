@@ -1447,26 +1447,45 @@ Icelandic:{needHelp:'Þarftu aðstoð?',openSupport:'Opna aðstoð',premiumAcces
 Object.entries(FINAL_CORE_UI_PATCH).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
 const FINAL_USER_VISIBLE_LOCALIZATION={
-  English:{incomeExpensesTax:'Income, Expenses & Taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
-  Italian:{incomeExpensesTax:'Entrate, spese e imposte',incomeExpensesTaxes:'Entrate, spese e imposte'},
-  French:{incomeExpensesTax:'Revenus, dépenses et impôts',incomeExpensesTaxes:'Revenus, dépenses et impôts'},
-  German:{incomeExpensesTax:'Einnahmen, Ausgaben & Steuern',incomeExpensesTaxes:'Einnahmen, Ausgaben & Steuern'},
-  Spanish:{incomeExpensesTax:'Ingresos, gastos e impuestos',incomeExpensesTaxes:'Ingresos, gastos e impuestos'},
-  Portuguese:{incomeExpensesTax:'Receitas, despesas e impostos',incomeExpensesTaxes:'Receitas, despesas e impostos'},
-  Dutch:{incomeExpensesTax:'Inkomsten, uitgaven en belastingen',incomeExpensesTaxes:'Inkomsten, uitgaven en belastingen'},
-  Polish:{incomeExpensesTax:'Przychody, wydatki i podatki',incomeExpensesTaxes:'Przychody, wydatki i podatki'},
-  Czech:{incomeExpensesTax:'Příjmy, výdaje a daně',incomeExpensesTaxes:'Příjmy, výdaje a daně'},
-  Finnish:{incomeExpensesTax:'Tulot, menot ja verot',incomeExpensesTaxes:'Tulot, menot ja verot'},
-  Swedish:{incomeExpensesTax:'Intäkter, utgifter och skatter',incomeExpensesTaxes:'Intäkter, utgifter och skatt'},
-  Danish:{incomeExpensesTax:'Indtægter, udgifter og skatter',incomeExpensesTaxes:'Indtægter, udgifter og skat'},
-  Norwegian:{incomeExpensesTax:'Inntekter, utgifter og skatter',incomeExpensesTaxes:'Inntekter, utgifter og skatt'},
-  Icelandic:{incomeExpensesTax:'Tekjur, gjöld og skattar',incomeExpensesTaxes:'Tekjur, gjöld og skattar'},
-  Japanese:{incomeExpensesTax:'収入・支出・税金',incomeExpensesTaxes:'収入・支出・税金'},
-  Korean:{incomeExpensesTax:'수입, 지출 및 세금',incomeExpensesTaxes:'수입, 지출 및 세금'},
-  Arabic:{incomeExpensesTax:'الدخل والمصروفات والضرائب',incomeExpensesTaxes:'الدخل والمصروفات والضرائب'},
-  Chinese:{incomeExpensesTax:'收入、支出和税费',incomeExpensesTaxes:'收入、支出和税费'},
+  English:{
+    currentIncome:'Current income',currentExpenses:'Current expenses',currentTax:'Current tax',incomeExpensesTax:'Income, Expenses & Taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
+  Italian:{
+    currentIncome:'Entrate attuali',currentExpenses:'Spese attuali',currentTax:'Imposte attuali',incomeExpensesTax:'Entrate, spese e imposte',incomeExpensesTaxes:'Entrate, spese e imposte'},
+  French:{
+    currentIncome:'Revenus actuels',currentExpenses:'Dépenses actuelles',currentTax:'Impôts actuels',incomeExpensesTax:'Revenus, dépenses et impôts',incomeExpensesTaxes:'Revenus, dépenses et impôts'},
+  German:{
+    currentIncome:'Aktuelle Einnahmen',currentExpenses:'Aktuelle Ausgaben',currentTax:'Aktuelle Steuern',incomeExpensesTax:'Einnahmen, Ausgaben & Steuern',incomeExpensesTaxes:'Einnahmen, Ausgaben & Steuern'},
+  Spanish:{
+    currentIncome:'Ingresos actuales',currentExpenses:'Gastos actuales',currentTax:'Impuestos actuales',incomeExpensesTax:'Ingresos, gastos e impuestos',incomeExpensesTaxes:'Ingresos, gastos e impuestos'},
+  Portuguese:{
+    currentIncome:'Receitas atuais',currentExpenses:'Despesas atuais',currentTax:'Impostos atuais',incomeExpensesTax:'Receitas, despesas e impostos',incomeExpensesTaxes:'Receitas, despesas e impostos'},
+  Dutch:{
+    currentIncome:'Huidige inkomsten',currentExpenses:'Huidige uitgaven',currentTax:'Huidige belastingen',incomeExpensesTax:'Inkomsten, uitgaven en belastingen',incomeExpensesTaxes:'Inkomsten, uitgaven en belastingen'},
+  Polish:{
+    currentIncome:'Bieżące przychody',currentExpenses:'Bieżące wydatki',currentTax:'Bieżące podatki',incomeExpensesTax:'Przychody, wydatki i podatki',incomeExpensesTaxes:'Przychody, wydatki i podatki'},
+  Czech:{
+    currentIncome:'Aktuální příjmy',currentExpenses:'Aktuální výdaje',currentTax:'Aktuální daně',incomeExpensesTax:'Příjmy, výdaje a daně',incomeExpensesTaxes:'Příjmy, výdaje a daně'},
+  Finnish:{
+    currentIncome:'Nykyiset tulot',currentExpenses:'Nykyiset menot',currentTax:'Nykyiset verot',incomeExpensesTax:'Tulot, menot ja verot',incomeExpensesTaxes:'Tulot, menot ja verot'},
+  Swedish:{
+    currentIncome:'Aktuella intäkter',currentExpenses:'Aktuella utgifter',currentTax:'Aktuella skatter',incomeExpensesTax:'Intäkter, utgifter och skatter',incomeExpensesTaxes:'Intäkter, utgifter och skatt'},
+  Danish:{
+    currentIncome:'Aktuelle indtægter',currentExpenses:'Aktuelle udgifter',currentTax:'Aktuelle skatter',incomeExpensesTax:'Indtægter, udgifter og skatter',incomeExpensesTaxes:'Indtægter, udgifter og skat'},
+  Norwegian:{
+    currentIncome:'Gjeldende inntekter',currentExpenses:'Gjeldende utgifter',currentTax:'Gjeldende skatter',incomeExpensesTax:'Inntekter, utgifter og skatter',incomeExpensesTaxes:'Inntekter, utgifter og skatt'},
+  Icelandic:{
+    currentIncome:'Núverandi tekjur',currentExpenses:'Núverandi gjöld',currentTax:'Núverandi skattar',incomeExpensesTax:'Tekjur, gjöld og skattar',incomeExpensesTaxes:'Tekjur, gjöld og skattar'},
+  Japanese:{
+    currentIncome:'現在の収入',currentExpenses:'現在の支出',currentTax:'現在の税金',incomeExpensesTax:'収入・支出・税金',incomeExpensesTaxes:'収入・支出・税金'},
+  Korean:{
+    currentIncome:'현재 수입',currentExpenses:'현재 지출',currentTax:'현재 세금',incomeExpensesTax:'수입, 지출 및 세금',incomeExpensesTaxes:'수입, 지출 및 세금'},
+  Arabic:{
+    currentIncome:'الدخل الحالي',currentExpenses:'المصروفات الحالية',currentTax:'الضرائب الحالية',incomeExpensesTax:'الدخل والمصروفات والضرائب',incomeExpensesTaxes:'الدخل والمصروفات والضرائب'},
+  Chinese:{
+    currentIncome:'当前收入',currentExpenses:'当前支出',currentTax:'当前税费',incomeExpensesTax:'收入、支出和税费',incomeExpensesTaxes:'收入、支出和税费'},
 
   Ukrainian:{
+    currentIncome:'Поточний дохід',currentExpenses:'Поточні витрати',currentTax:'Поточні податки',
     passwordMinLength:'Пароль має містити щонайменше 8 символів.',recoverySessionMissing:'Сеанс відновлення відсутній.',passwordUpdated:'Пароль оновлено. Тепер ви можете увійти.',unableToUpdatePassword:'Не вдалося оновити пароль.',newPassword:'Новий пароль',confirmPassword:'Підтвердження пароля',updatePassword:'Оновити пароль',incomeExpensesTax:'Доходи, витрати та податки',incomeExpensesTaxes:'Доходи, витрати та податки',
     smartMessenger:'Розумні повідомлення',online:'Онлайн',flexible:'Гнучкий',email:'Електронна пошта',client:'Клієнт',clients:'Клієнти',date:'Дата',clientsFormTitle:'Клієнт',themeStyle:'СТИЛЬ',optional:'необов’язково',publicCookies:'Файли cookie',publicFAQ:'Поширені запитання',publicPrivacy:'Конфіденційність',publicContact:'Контакти',publicContactKicker:'Контакти',publicHelp:'Допомога'
   },
