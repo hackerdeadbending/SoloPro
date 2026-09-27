@@ -20,70 +20,71 @@ async function downloadPdf(lines){
     let y=margin;
     lines.slice(p,p+maxLines).forEach(line=>{
       const text=String(line??'');
-      const chunks=[];let rest=text;
+      let rest=text;
       while(rest.length){
-        let lo=1,hi=rest.length,best=rest.length;
+        let lo=1,hi=rest.length,best=1;
         while(lo<=hi){
           const mid=Math.floor((lo+hi)/2);
           if(ctx.measureText(rest.slice(0,mid)).width<=pageW-margin*2){best=mid;lo=mid+1;}else hi=mid-1;
         }
-        chunks.push(rest.slice(0,best));rest=rest.slice(best);
+        ctx.fillText(rest.slice(0,best),margin,y);
+        y+=lineH;
+        rest=rest.slice(best);
       }
-      if(!chunks.length)chunks.push('');
-      chunks.forEach(chunk=>{ctx.fillText(chunk,margin,y);y+=lineH;});
+      if(!text.length)y+=lineH;
     });
-    pages.push(canvas.toDataURL('image/jpeg',0.92));
+    pages.push(canvas.toDataURL('image/jpeg',0.95));
   }
 
+  const encoder=new TextEncoder();
+  const objects=[];
+  const imageRefs=[];
   const b64=s=>atob(s.split(',')[1]);
-  const objects=[];const imageRefs=[];
   pages.forEach((data,i)=>{
     const raw=b64(data);
     const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));
     const pageObj=3+i*3,contentObj=4+i*3,imgObj=5+i*3;
-    imageRefs.push({imgObj,contentObj,pageObj,bytes});
+    imageRefs.push({pageObj,contentObj,imgObj,bytes});
   });
 
-  const pageKids=imageRefs.map(x=>x.pageObj+' 0 R').join(' ');
-  objects.push('1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj');
-  objects.push(`2 0 obj<< /Type /Pages /Kids [${pageKids}] /Count ${imageRefs.length} >>endobj`);
+  objects.push('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj');
+  objects.push(`2 0 obj << /Type /Pages /Kids [${imageRefs.map(x=>x.pageObj+' 0 R').join(' ')}] /Count ${imageRefs.length} >> endobj`);
 
   imageRefs.forEach(x=>{
-    objects.push(`${x.pageObj} 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 ${x.imgObj} 0 R >> >> >> /Contents ${x.contentObj} 0 R >>endobj`);
     const stream='q 595 0 0 842 0 0 cm /Im1 Do Q';
-    objects.push({header:`${x.contentObj} 0 obj<< /Length ${stream.length} >>stream\n`,stream:stream+'\nendstream endobj'});
-    objects.push({header:`${x.imgObj} 0 obj<< /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${x.bytes.length} >>stream\n`,bytes:x.bytes,footer:'\nendstream endobj'});
+    objects.push(`${x.pageObj} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 ${x.imgObj} 0 R >> >> /Contents ${x.contentObj} 0 R >> endobj`);
+    objects.push({header:`${x.contentObj} 0 obj << /Length ${stream.length} >> stream\n`,stream:`${stream}\nendstream endobj\n`});
+    objects.push({header:`${x.imgObj} 0 obj << /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${x.bytes.length} >> stream\n`,bytes:x.bytes,footer:'\nendstream endobj\n'});
   });
 
-  const encoder=new TextEncoder();
   const chunks=[encoder.encode('%PDF-1.4\n')];
-  const offsets=[0];let length=chunks[0].length;
-  const addText=s=>{const b=encoder.encode(s);chunks.push(b);length+=b.length;};
-  const addBytes=b=>{chunks.push(b);length+=b.length;};
-  for(const o of objects){
+  const offsets=[0];
+  let length=chunks[0].length;
+  const addText=value=>{const b=encoder.encode(value);chunks.push(b);length+=b.length;};
+  const addBytes=value=>{chunks.push(value);length+=value.length;};
+
+  for(const obj of objects){
     offsets.push(length);
-    if(typeof o==='string')addText(o+'\n');
+    if(typeof obj==='string') addText(obj+'\n');
     else{
-      addText(o.header);
-      if(o.bytes)addBytes(o.bytes);
-      if(o.stream)addText(o.stream);
-      if(o.footer)addText(o.footer);
+      addText(obj.header);
+      addBytes(obj.bytes);
+      addText(obj.footer||obj.stream||'');
     }
   }
 
-  const xref=length;
-  let trailer=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
-  for(let i=1;i<offsets.length;i++)trailer+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
-  trailer+=`trailer<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  addText(trailer);
+  const xrefOffset=length;
+  let xref=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
+  for(let i=1;i<offsets.length;i++) xref+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+  xref+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+  addText(xref);
 
   const blob=new Blob(chunks,{type:'application/pdf'});
-  const filename='solopro-financial-tax-report.pdf';
-  const file=new File([blob],filename,{type:'application/pdf'});
+  const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
 
   if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
     try{
-      await navigator.share({title:'SoloPro financial and tax report',files:[file]});
+      await navigator.share({title:'SoloPro — filled tax declaration',files:[file]});
       return;
     }catch(err){
       if(err?.name==='AbortError') return;
@@ -93,16 +94,14 @@ async function downloadPdf(lines){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=filename;
-  a.target='_blank';
+  a.download=file.name;
   a.rel='noopener';
   a.style.display='none';
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
-}
-export default function Tax(){const app=useApp();const t=createTranslator(app.language); const tc=(key,base='')=>taxCopy(app.language,key,base);const [notes,setNotes]=useState('');const [noteType,setNoteType]=useState('general');const [checks,setChecks]=useState({reconciled:false,expenses:false,receipts:false,deadlines:false});const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);const report=useMemo(()=>{const now=new Date();const inMonth=x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();};const extraIncome=(Array.isArray(app.financialIncome)?app.financialIncome:[]).filter(inMonth);const extraExpenses=(Array.isArray(app.financialExpenses)?app.financialExpenses:[]).filter(inMonth);const gross=app.monthlyServices.reduce((s,x)=>s+Number(x.amount||0),0)+extraIncome.reduce((s,x)=>s+Number(x.amount||0),0);const variable=app.monthlyServices.reduce((s,x)=>s+Number(x.materialCost||0)+Number(x.extraExpense||0),0)+extraExpenses.reduce((s,x)=>s+Number(x.amount||0),0);const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);const costs=variable+fixed;const tax=app.taxMode==='reserve'?Math.max(0,gross-variable)*Number(app.taxRate||0):0;return{gross,costs,tax,net:gross-costs-tax};},[app.monthlyServices,app.financialIncome,app.financialExpenses,app.fixedExpenses,app.fixedExpensePeriod,app.taxMode,app.taxRate]);const download=()=>{
+}export default function Tax(){const app=useApp();const t=createTranslator(app.language); const tc=(key,base='')=>taxCopy(app.language,key,base);const [notes,setNotes]=useState('');const [noteType,setNoteType]=useState('general');const [checks,setChecks]=useState({reconciled:false,expenses:false,receipts:false,deadlines:false});const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);const report=useMemo(()=>{const now=new Date();const inMonth=x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();};const extraIncome=(Array.isArray(app.financialIncome)?app.financialIncome:[]).filter(inMonth);const extraExpenses=(Array.isArray(app.financialExpenses)?app.financialExpenses:[]).filter(inMonth);const gross=app.monthlyServices.reduce((s,x)=>s+Number(x.amount||0),0)+extraIncome.reduce((s,x)=>s+Number(x.amount||0),0);const variable=app.monthlyServices.reduce((s,x)=>s+Number(x.materialCost||0)+Number(x.extraExpense||0),0)+extraExpenses.reduce((s,x)=>s+Number(x.amount||0),0);const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);const costs=variable+fixed;const tax=app.taxMode==='reserve'?Math.max(0,gross-variable)*Number(app.taxRate||0):0;return{gross,costs,tax,net:gross-costs-tax};},[app.monthlyServices,app.financialIncome,app.financialExpenses,app.fixedExpenses,app.fixedExpensePeriod,app.taxMode,app.taxRate]);const download=()=>{
   const rc=REPORT_COPY[app.country.language]||REPORT_COPY.English;
   const typeLabels={general:taxCopy(app.country.language,'general','General'),deductions:taxCopy(app.country.language,'deductions','Deductions'),receipts:taxCopy(app.country.language,'receipts','Receipts'),questions:taxCopy(app.country.language,'questions','Questions')};
   const now=new Date();
