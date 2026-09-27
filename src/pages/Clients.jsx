@@ -20,7 +20,7 @@ export default function Clients(){
     <p className="sub">{t('clientsHeroSub')}</p>
    </div>
    <button className="primary" onClick={()=>setOpen(true)}>
-    <Icon name="plus"/>Add client
+    <Icon name="plus"/>{t('addClient')}
    </button>
   </div>
 
@@ -89,11 +89,11 @@ export default function Clients(){
 
     <div className="two-col">
      <label>
-      Email
+      {t('email')}
       <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/>
      </label>
      <label>
-      Phone
+      {t('phone')}
       <input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})}/>
      </label>
     </div>
@@ -147,7 +147,7 @@ function ClientDetail({client,onClose}){
    setExtra('');
   }}>
    <label>
-    New service
+    {t('newService')}
     <input required value={service} onChange={e=>setService(e.target.value)} placeholder={t("service")}/>
    </label>
 
@@ -163,7 +163,7 @@ function ClientDetail({client,onClose}){
    </div>
 
    <label>
-    Extra expense
+    {t('extraExpense')}
     <input type="number" value={extra} onChange={e=>setExtra(e.target.value)}/>
    </label>
 
