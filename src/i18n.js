@@ -1523,6 +1523,21 @@ const FINAL_USER_VISIBLE_LOCALIZATION={
 Object.entries(FINAL_USER_VISIBLE_LOCALIZATION).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
 
+const FINAL_USER_VISIBLE_TERMS={
+  Italian:{email:'Posta elettronica',online:'In linea',publicFAQ:'Domande frequenti',publicPrivacy:'Privacy'},
+  French:{client:'Client',clients:'Clients',date:'Date',flexible:'Flexible',clientsFormTitle:'Client',publicFAQ:'Questions fréquentes',publicContact:'Contact',publicCookies:'Cookies',publicContactKicker:'Contact'},
+  German:{online:'Online',optional:'optional',publicFAQ:'Häufige Fragen',publicCookies:'Cookies'},
+  Spanish:{flexible:'Flexible',publicCookies:'Cookies'},
+  Polish:{online:'Online',publicFAQ:'Najczęstsze pytania'},
+  Portuguese:{online:'Online',publicCookies:'Cookies'},
+  Dutch:{online:'Online',publicContact:'Contact',publicPrivacy:'Privacy',publicCookies:'Cookies',publicHelp:'Help',publicContactKicker:'Contact'},
+  Czech:{online:'Online',publicCookies:'Cookies'},
+  Swedish:{online:'Online',publicCookies:'Cookies'},
+  Danish:{online:'Online',publicCookies:'Cookies'}
+};
+Object.entries(FINAL_USER_VISIBLE_TERMS).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
+
 function resolveLanguage(language){
   const raw=String(language||'English').trim();
   if(LANGUAGES[raw]) return raw;
