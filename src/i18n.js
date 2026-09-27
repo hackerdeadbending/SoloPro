@@ -941,6 +941,55 @@ const FIRST_HALF_REFINEMENTS={
 };
 Object.entries(FIRST_HALF_REFINEMENTS).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
+const FIRST_HALF_FINAL_LABELS={
+  "Ukrainian": {
+    "taxModeOn": "УВІМК.",
+    "taxModeOff": "ВИМК.",
+    "premiumActiveShort": "Premium активний"
+  },
+  "Italian": {
+    "taxModeOn": "ATTIVA",
+    "taxModeOff": "DISATTIVATA",
+    "premiumActiveShort": "Premium attivo"
+  },
+  "French": {
+    "taxModeOn": "ACTIVÉ",
+    "taxModeOff": "DÉSACTIVÉ",
+    "premiumActiveShort": "Premium actif"
+  },
+  "German": {
+    "taxModeOn": "AN",
+    "taxModeOff": "AUS",
+    "premiumActiveShort": "Premium aktiv"
+  },
+  "Spanish": {
+    "taxModeOn": "ACTIVADA",
+    "taxModeOff": "DESACTIVADA",
+    "premiumActiveShort": "Premium activo"
+  },
+  "Portuguese": {
+    "taxModeOn": "ATIVA",
+    "taxModeOff": "DESATIVADA",
+    "premiumActiveShort": "Premium ativo"
+  },
+  "Dutch": {
+    "taxModeOn": "AAN",
+    "taxModeOff": "UIT",
+    "premiumActiveShort": "Premium actief"
+  },
+  "Polish": {
+    "taxModeOn": "WŁ.",
+    "taxModeOff": "WYŁ.",
+    "premiumActiveShort": "Premium aktywne"
+  },
+  "Czech": {
+    "taxModeOn": "ZAP.",
+    "taxModeOff": "VYP.",
+    "premiumActiveShort": "Premium aktivní"
+  }
+};
+Object.entries(FIRST_HALF_FINAL_LABELS).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
+
 Object.entries(FINAL_UI_PATCHES).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
 // Apply first-half refinements last so they cannot be overwritten by legacy UI patches.
