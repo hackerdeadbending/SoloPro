@@ -84,7 +84,24 @@ async function downloadPdf(lines,iosWindow,isIOS){
 
   const url=URL.createObjectURL(blob);
   if(isIOS){
-    window.location.href=url;
+    try{
+      if(typeof navigator.share==='function'&&typeof navigator.canShare==='function'&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'SoloPro tax report'});
+        return;
+      }
+    }catch(_){}
+    try{
+      const a=document.createElement('a');
+      a.href=url;
+      a.download=file.name;
+      a.target='_blank';
+      a.rel='noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }catch(_){
+      try{window.open(url,'_blank','noopener');}catch(__){}
+    }
     setTimeout(()=>URL.revokeObjectURL(url),300000);
     return;
   }
