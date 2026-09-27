@@ -57,6 +57,7 @@ export default function AccountModal({open,onClose,required=false}){
        });
 
        if(result?.needsConfirmation){
+         setConfirmationPending(true);
          setMessage(t('accountCreatedCheckEmail'));
          setMode('signin');
          return;
