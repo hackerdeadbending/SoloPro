@@ -1,2 +1,20 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><meta name="theme-color" content="#121214"/><meta name="description" content="SoloPro — financial and business tools for freelancers, self-employed professionals and independent workers."/><meta name="google-site-verification" content="rdq4g49LP1gsseZr4aKetYDsH8ZraK7GdXllO5AXKms"/><meta property="og:title" content="SoloPro — Business tools for independent professionals"/><meta property="og:description" content="Track income, costs, tax reserves, clients and business performance in one focused workspace."/><meta property="og:type" content="website"/><link rel="canonical" href="https://solopro.vercel.app/"/><meta name="robots" content="index,follow"/><title>SoloPro — Financial Workspace for Freelancers &amp; Self-Employed</title><!-- production rebuild from verified working 708576c --></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><meta name="theme-color" content="#121214"/><meta name="description" content="SoloPro — financial and business tools for freelancers, self-employed professionals and independent workers."/><meta name="google-site-verification" content="rdq4g49LP1gsseZr4aKetYDsH8ZraK7GdXllO5AXKms"/><meta property="og:title" content="SoloPro — Business tools for independent professionals"/><meta property="og:description" content="Track income, costs, tax reserves, clients and business performance in one focused workspace."/><meta property="og:type" content="website"/><link rel="canonical" href="https://solopro.vercel.app/"/><meta name="robots" content="index,follow"/><title>SoloPro — Financial Workspace for Freelancers &amp; Self-Employed</title><!-- production rebuild from verified working 708576c --></head><body><div id="root"></div><script>
+(function(){
+  function show(label, value){
+    try{
+      var box=document.getElementById('boot-error');
+      if(!box){
+        box=document.createElement('pre');
+        box.id='boot-error';
+        box.style.cssText='position:fixed;inset:0;z-index:2147483647;margin:0;padding:24px;overflow:auto;background:#121214;color:#fff;font:14px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;white-space:pre-wrap';
+        document.body.appendChild(box);
+      }
+      box.textContent='SoloPro startup error\\n\\n'+label+'\\n'+String(value&&value.stack||value||'Unknown error');
+      box.style.display='block';
+    }catch(_){}
+  }
+  window.addEventListener('error',function(e){show('JavaScript error:',e.error||e.message);});
+  window.addEventListener('unhandledrejection',function(e){show('Unhandled promise rejection:',e.reason);});
+})();
+</script><script type="module" src="/src/main.jsx"></script></body></html>
