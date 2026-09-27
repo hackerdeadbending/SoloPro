@@ -425,10 +425,10 @@ French:{publicFeatures:'advancedAnalytics',publicPricing:'monthly',publicFAQ:'sm
 };
 const PUBLIC_LOCALE_KEYS=Object.keys(PUBLIC_I18N.English).concat(Object.keys(PUBLIC_EXTRA));
 const PUBLIC_SOURCE_KEYS=Object.values(PUBLIC_LOCALE_FALLBACKS);
-Object.entries(PUBLIC_LOCALE_FALLBACKS).forEach(([language,map])=>{const d=LANGUAGES[language]||LANGUAGES.Ukrainian;Object.entries(map).forEach(([publicKey,sourceKey])=>{if(d&&d[sourceKey])d[publicKey]=d[sourceKey]})});
+Object.entries(PUBLIC_LOCALE_FALLBACKS).forEach(([language,map])=>{const d=LANGUAGES[language];Object.entries(map).forEach(([publicKey,sourceKey])=>{if(d[sourceKey])d[publicKey]=d[sourceKey]})});
 
 ['German','Spanish','Portuguese','Dutch','Polish','Czech','Finnish','Swedish','Danish','Norwegian','Icelandic','Arabic','Chinese','Japanese','Korean'].forEach(language=>PUBLIC_LOCALE_FALLBACKS[language]=PUBLIC_LOCALE_FALLBACKS.Ukrainian);
-Object.entries(LANGUAGES).filter(([language])=>language!=='English').forEach(([language,d])=>{if(!d)return;
+Object.entries(LANGUAGES).filter(([language])=>language!=='English').forEach(([language,d])=>{
   const map=PUBLIC_LOCALE_FALLBACKS[language]||PUBLIC_LOCALE_FALLBACKS.Ukrainian;
   Object.entries(map).forEach(([publicKey,sourceKey])=>{if(d[sourceKey])d[publicKey]=d[sourceKey]});
   Object.keys(PUBLIC_I18N.English).concat(Object.keys(PUBLIC_EXTRA)).forEach(key=>{
@@ -464,8 +464,7 @@ const PUBLIC_CORE_TO_KEYS={
 features:'publicFeatures',pricing:'publicPricing',faq:'publicFAQ',resources:'publicResources',try:'publicTry',about:'publicAbout',contact:'publicContact',privacy:'publicPrivacy',terms:'publicTerms',cookies:'publicCookies',kicker:'publicKicker',hero:'publicHero',desc:'publicHeroText',explore:'publicExplore',overview:'publicEverything',workflow:'publicWorkflow',plans:'publicPlans',help:'publicHelp',aboutTitle:'publicAboutTitle',disclaimer:'publicDisclaimer',income:'publicIncome',expense:'publicExpense',profit:'publicProfit',tax:'publicTax',clients:'publicClients',reports:'publicReports',article:'publicArticle1'
 };
 Object.entries(PUBLIC_CORE_LOCALES).forEach(([language,core])=>{
- const d=LANGUAGES[language]||LANGUAGES.Ukrainian;
- if(!d||!core)return;
+ const d=LANGUAGES[language];
  Object.entries(PUBLIC_CORE_TO_KEYS).forEach(([coreKey,publicKey])=>{d[publicKey]=core[coreKey]});
  d.publicIncomeText=core.desc;d.publicExpenseText=core.desc;d.publicProfitText=core.desc;d.publicTaxText=core.desc;d.publicClientsText=core.desc;d.publicReportsText=core.desc;
  d.publicFeatureKicker=core.features;d.publicFeatureHero=core.hero;d.publicFeatureIntro=core.desc;d.publicWorkflowText=core.desc;d.publicWorkflowEnd=core.workflow;
