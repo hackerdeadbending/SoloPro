@@ -1,6 +1,28 @@
 import {createContext,useContext,useMemo} from 'react';
 import {useApp} from './AppState';
+
 export const ReferralContext=createContext(null);
+
+function getReferralCode(){
+  try{
+    const stored=localStorage.getItem('solopro-referral-code');
+    if(stored) return stored;
+  }catch{}
+
+  const code=
+    globalThis.crypto?.randomUUID?.().replaceAll('-','').slice(0,12)||
+    `${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}`;
+
+  try{
+    localStorage.setItem('solopro-referral-code',code);
+  }catch{
+    // Safari/private contexts may block persistent storage.
+    // The generated code can still be used for the current session.
+  }
+
+  return code;
+}
+
 export function ReferralProvider({children}){
  const app=useApp();
  const count=Number(app.securityProfile?.referral_verified_count ?? 0);
@@ -9,9 +31,7 @@ export function ReferralProvider({children}){
  const milestones=Math.floor(count/7);
  const referralLink=useMemo(()=>{
    const serverCode=String(app.securityProfile?.referral_code||'').trim();
-   if(serverCode) return `${window.location.origin}/?ref=${encodeURIComponent(serverCode)}`;
-   let code=localStorage.getItem('solopro-referral-code');
-   if(!code){code=globalThis.crypto?.randomUUID?.().replaceAll('-','').slice(0,12)||`${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}`;localStorage.setItem('solopro-referral-code',code);}
+   const code=serverCode||getReferralCode();
    return `${window.location.origin}/?ref=${encodeURIComponent(code)}`;
  },[app.securityProfile?.referral_code]);
  const unlockedThemes=useMemo(()=>['skulls','ships','money'].slice(0,Math.min(milestones,3)),[milestones]);
@@ -20,4 +40,5 @@ export function ReferralProvider({children}){
  const referral={count,invited,milestones,next,unlockedThemes,discounts:monthlyDiscounts,monthlyDiscounts,premiumActive:app.premiumActive,isAdmin:app.isAdmin,recordInvite:app.recordInvite,recordReferral:app.recordReferral,referralLink};
  return <ReferralContext.Provider value={referral}>{children}</ReferralContext.Provider>
 }
+
 export function useReferral(){return useContext(ReferralContext)}
