@@ -45,7 +45,7 @@ export default function InviteModal({open,onClose,clientName=''}){
     <div className="referral-progress">
       <div><strong>{invited} {t('invitesSent')}</strong><span>{count} / 7 {t('verifiedProgress')}</span></div>
       <div className="progress-track"><i style={{width:`${Math.min(100,(count%7)/7*100)}%`}}/></div>
-      <small>{count%7===0&&count>0?'Reward earned. Start the next group of 7.':`${next} verified new user${next===1?'':'s'} needed for the next ${rewardPrice} month.`}</small>
+      <small>{count%7===0&&count>0?t('rewardEarnedNext'):t(next===1?'verifiedNewUserNeeded':'verifiedNewUsersNeeded').replace('{count}',String(next)).replace('{price}',rewardPrice)}</small>
     </div>
     <p className="modal-sub">{t('referralOnlyNew')}</p>
     <div className="referral-steps">
