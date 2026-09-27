@@ -15,7 +15,8 @@ export default function AccountModal({open,onClose,required=false}){
  const [confirm,setConfirm]=useState('');
  const [agreed,setAgreed]=useState(false);
  const [message,setMessage]=useState('');
- const [busy,setBusy]=useState(false);\n const [confirmationPending,setConfirmationPending]=useState(false);
+ const [busy,setBusy]=useState(false);
+ const [confirmationPending,setConfirmationPending]=useState(false);
 
  useEffect(()=>{
    if(open){
@@ -24,7 +25,8 @@ export default function AccountModal({open,onClose,required=false}){
      setPassword('');
      setConfirm('');
      setMessage('');
-     setAgreed(false);\n     setConfirmationPending(false);
+     setAgreed(false);
+     setConfirmationPending(false);
    }
  },[open]);
 
@@ -34,7 +36,8 @@ export default function AccountModal({open,onClose,required=false}){
    setBusy(true);
 
    try{
-     if(mode==='signup'){\n       setConfirmationPending(false);
+     if(mode==='signup'){
+       setConfirmationPending(false);
        if(!name.trim()||!email.trim()||password.length<8){
          throw new Error(t('errorSignupFields'));
        }
@@ -62,7 +65,8 @@ export default function AccountModal({open,onClose,required=false}){
        setMessage(t('accountCreatedSuccessfully'));
        onClose?.();
 
-     }else if(mode==='forgot'){\n       setConfirmationPending(false);
+     }else if(mode==='forgot'){
+       setConfirmationPending(false);
 
        if(!email.trim()){
          throw new Error(t('enterAccountEmail'));
