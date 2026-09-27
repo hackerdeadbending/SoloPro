@@ -82,16 +82,34 @@ async function downloadPdf(lines){
   const blob=new Blob(chunks,{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
 
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=file.name;
-  a.rel='noopener';
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  try{
+    if(isIOS&&navigator.share){
+      const canShare=typeof navigator.canShare==='function'?navigator.canShare({files:[file]}):true;
+      if(canShare){
+        await navigator.share({files:[file],title:'SoloPro tax report'});
+        return;
+      }
+    }
+  }catch(_){}
+  try{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=file.name;
+    a.rel='noopener';
+    a.style.display='none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(_){
+    try{
+      const url=URL.createObjectURL(blob);
+      window.open(url,'_blank','noopener,noreferrer');
+      setTimeout(()=>URL.revokeObjectURL(url),60000);
+    }catch(_){}
+  }
 }export default function Tax(){const app=useApp();const t=createTranslator(app.language); const tc=(key,base='')=>taxCopy(app.language,key,base);const [notes,setNotes]=useState('');const [noteType,setNoteType]=useState('general');const [checks,setChecks]=useState({reconciled:false,expenses:false,receipts:false,deadlines:false});const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);const report=useMemo(()=>{const now=new Date();const inMonth=x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();};const extraIncome=(Array.isArray(app.financialIncome)?app.financialIncome:[]).filter(inMonth);const extraExpenses=(Array.isArray(app.financialExpenses)?app.financialExpenses:[]).filter(inMonth);const gross=app.monthlyServices.reduce((s,x)=>s+Number(x.amount||0),0)+extraIncome.reduce((s,x)=>s+Number(x.amount||0),0);const variable=app.monthlyServices.reduce((s,x)=>s+Number(x.materialCost||0)+Number(x.extraExpense||0),0)+extraExpenses.reduce((s,x)=>s+Number(x.amount||0),0);const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);const costs=variable+fixed;const tax=app.taxMode==='reserve'?Math.max(0,gross-variable)*Number(app.taxRate||0):0;return{gross,costs,tax,net:gross-costs-tax};},[app.monthlyServices,app.financialIncome,app.financialExpenses,app.fixedExpenses,app.fixedExpensePeriod,app.taxMode,app.taxRate]);const download=()=>{
   const rc=REPORT_COPY[app.country.language]||REPORT_COPY.English;
   const typeLabels={general:taxCopy(app.country.language,'general','General'),deductions:taxCopy(app.country.language,'deductions','Deductions'),receipts:taxCopy(app.country.language,'receipts','Receipts'),questions:taxCopy(app.country.language,'questions','Questions')};
