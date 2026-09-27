@@ -82,15 +82,6 @@ async function downloadPdf(lines){
   const blob=new Blob(chunks,{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
 
-  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-    try{
-      await navigator.share({title:'SoloPro — filled tax declaration',files:[file]});
-      return;
-    }catch(err){
-      if(err?.name==='AbortError') return;
-    }
-  }
-
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
