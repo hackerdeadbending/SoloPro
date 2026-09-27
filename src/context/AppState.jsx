@@ -523,7 +523,8 @@ export function AppStateProvider({children}){
   function deleteClient(id){
     setState(prev=>({
       ...prev,
-      clients:prev.clients.filter(c=>c.id!==id)
+      clients:prev.clients.filter(c=>c.id!==id),
+      services:prev.services.filter(s=>s.clientId!==id)
     }));
   }
 
