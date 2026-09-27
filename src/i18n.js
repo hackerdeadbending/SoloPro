@@ -1447,7 +1447,7 @@ Icelandic:{needHelp:'Þarftu aðstoð?',openSupport:'Opna aðstoð',premiumAcces
 Object.entries(FINAL_CORE_UI_PATCH).forEach(([language,values])=>Object.assign(LANGUAGES[language],values));
 
 const FINAL_USER_VISIBLE_LOCALIZATION={
-  English:{incomeExpensesTax:'Income, expenses & tax'},
+  English:{incomeExpensesTax:'Income, expenses & taxes',incomeExpensesTaxes:'Income, expenses & taxes'},
   Ukrainian:{incomeExpensesTax:'Доходи, витрати та податки'},
   Italian:{incomeExpensesTax:'Entrate, spese e imposte'},
   French:{incomeExpensesTax:'Revenus, dépenses et impôts'},
