@@ -99,7 +99,7 @@ export default function Clients(){
     </div>
 
     <label>
-     Notes
+     {t('notes')}
      <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/>
     </label>
 
@@ -153,11 +153,11 @@ function ClientDetail({client,onClose}){
 
    <div className="two-col">
     <label>
-     Revenue
+     {t('revenue')}
      <input required type="number" value={amount} onChange={e=>setAmount(e.target.value)}/>
     </label>
     <label>
-     Materials
+     {t('materials')}
      <input type="number" value={cost} onChange={e=>setCost(e.target.value)}/>
     </label>
    </div>
