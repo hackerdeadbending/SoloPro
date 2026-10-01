@@ -288,3 +288,6 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     font-variant-numeric:tabular-nums;
   }
 }
+
+/* Additional income/expense dialogs: identical geometry on every device. */
+.earnings-entry-modal{width:min(500px,100%);min-width:0}.earnings-entry-modal .earnings-entry-form,.earnings-entry-modal .earnings-entry-form label{width:100%;min-width:0}.earnings-entry-modal .earnings-entry-form input{width:100%;max-width:100%;box-sizing:border-box}@media(max-width:760px){.earnings-entry-modal{width:100%;max-width:100%;padding:14px}.earnings-entry-modal .modal-head{gap:10px}.earnings-entry-modal .modal-head h3{min-width:0;overflow-wrap:anywhere}}
