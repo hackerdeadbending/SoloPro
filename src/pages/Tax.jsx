@@ -10,107 +10,83 @@ function pdfEscape(s){return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\('
 async function downloadPdf(lines){
   const pageW=1240,pageH=1754,margin=90,lineH=34,maxLines=Math.floor((pageH-margin*2)/lineH);
   const pages=[];
+  const encodeAscii=value=>{
+    const text=String(value);
+    const bytes=new Uint8Array(text.length);
+    for(let i=0;i<text.length;i++)bytes[i]=text.charCodeAt(i)&255;
+    return bytes;
+  };
+  const concatBytes=(parts)=>{
+    const total=parts.reduce((sum,part)=>sum+part.length,0);
+    const out=new Uint8Array(total);
+    let offset=0;
+    parts.forEach(part=>{out.set(part,offset);offset+=part.length;});
+    return out;
+  };
+  const compress=async bytes=>{
+    if(typeof CompressionStream==='undefined')throw new Error('PDF compression is not available');
+    const stream=new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  };
   for(let p=0;p<lines.length;p+=maxLines){
     const canvas=document.createElement('canvas');
-    canvas.width=pageW;
-    canvas.height=pageH;
-    const ctx=canvas.getContext('2d');
-    if(!ctx) throw new Error('Canvas is not available');
-    ctx.fillStyle='#fff';
-    ctx.fillRect(0,0,pageW,pageH);
-    ctx.fillStyle='#111';
-    ctx.font='22px sans-serif';
-    ctx.textBaseline='top';
+    canvas.width=pageW;canvas.height=pageH;
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});
+    if(!ctx)throw new Error('Canvas is not available');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,pageW,pageH);
+    ctx.fillStyle='#111';ctx.font='22px sans-serif';ctx.textBaseline='top';
     let y=margin;
     lines.slice(p,p+maxLines).forEach(line=>{
-      const text=String(line??'');
-      let rest=text;
+      const text=String(line??'');let rest=text;
       while(rest.length){
         let lo=1,hi=rest.length,best=1;
         while(lo<=hi){
           const mid=Math.floor((lo+hi)/2);
           if(ctx.measureText(rest.slice(0,mid)).width<=pageW-margin*2){best=mid;lo=mid+1;}else hi=mid-1;
         }
-        ctx.fillText(rest.slice(0,best),margin,y);
-        y+=lineH;
-        rest=rest.slice(best);
+        ctx.fillText(rest.slice(0,best),margin,y);y+=lineH;rest=rest.slice(best);
       }
       if(!text.length)y+=lineH;
     });
-    const dataUrl=canvas.toDataURL('image/jpeg',0.92);
-    if(!dataUrl || dataUrl.indexOf(',')<0) throw new Error('JPEG encoding failed');
-    pages.push(dataUrl.slice(dataUrl.indexOf(',')+1));
+    const image=ctx.getImageData(0,0,pageW,pageH).data;
+    const rgb=new Uint8Array(pageW*pageH*3);let ri=0;
+    for(let i=0;i<image.length;i+=4){rgb[ri++]=image[i];rgb[ri++]=image[i+1];rgb[ri++]=image[i+2];}
+    pages.push(await compress(rgb));
   }
-
-  const decodeBase64=(base64)=>{
-    const raw=atob(base64);
-    const bytes=new Uint8Array(raw.length);
-    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
-    return bytes;
-  };
-  const encoder=new TextEncoder();
-  const objects=[];
-  const imageRefs=[];
-  for(let i=0;i<pages.length;i++){
-    const bytes=decodeBase64(pages[i]);
-    const pageObj=3+i*3,contentObj=4+i*3,imgObj=5+i*3;
-    imageRefs.push({pageObj,contentObj,imgObj,bytes});
-  }
-  objects.push('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj');
-  objects.push(`2 0 obj << /Type /Pages /Kids [${imageRefs.map(x=>x.pageObj+' 0 R').join(' ')}] /Count ${imageRefs.length} >> endobj`);
-  imageRefs.forEach(x=>{
-    const stream='q 595 0 0 842 0 0 cm /Im1 Do Q';
-    objects.push(`${x.pageObj} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 ${x.imgObj} 0 R >> >> /Contents ${x.contentObj} 0 R >> endobj`);
-    objects.push({header:`${x.contentObj} 0 obj << /Length ${stream.length} >> stream\\n`,stream:`${stream}\\nendstream endobj\\n`});
-    objects.push({header:`${x.imgObj} 0 obj << /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${x.bytes.length} >> stream\\n`,bytes:x.bytes,footer:'\\nendstream endobj\\n'});
+  const objects=[];const pageRefs=[];
+  pages.forEach((compressed,i)=>{
+    const pageObj=3+i*3,contentObj=4+i*3,imageObj=5+i*3;
+    pageRefs.push({pageObj,contentObj,imageObj,compressed});
   });
-
-  const chunks=[encoder.encode('%PDF-1.4\\n')];
-  const offsets=[0];
-  let length=chunks[0].length;
-  const addText=value=>{const b=encoder.encode(value);chunks.push(b);length+=b.length;};
-  const addBytes=value=>{chunks.push(value);length+=value.length;};
+  objects.push(encodeAscii('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n'));
+  objects.push(encodeAscii(\`2 0 obj << /Type /Pages /Kids [\${pageRefs.map(x=>x.pageObj+' 0 R').join(' ')}] /Count \${pageRefs.length} >> endobj\n\`));
+  pageRefs.forEach(x=>{
+    const stream='q 595 0 0 842 0 0 cm /Im1 Do Q\n';
+    objects.push(encodeAscii(\`\${x.pageObj} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 \${x.imageObj} 0 R >> >> /Contents \${x.contentObj} 0 R >> endobj\n\`));
+    objects.push(encodeAscii(\`\${x.contentObj} 0 obj << /Length \${stream.length} >> stream\n\${stream}endstream endobj\n\`));
+    objects.push({header:encodeAscii(\`\${x.imageObj} 0 obj << /Type /XObject /Subtype /Image /Width \${pageW} /Height \${pageH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode /Length \${x.compressed.length} >> stream\n\`),bytes:x.compressed,footer:encodeAscii('\nendstream endobj\n')});
+  });
+  const header=encodeAscii('%PDF-1.4\n');const chunks=[header];const offsets=[0];let length=header.length;
   for(const obj of objects){
     offsets.push(length);
-    if(typeof obj==='string') addText(obj+'\\n');
-    else{
-      addText(obj.header);
-      addBytes(obj.bytes);
-      addText(obj.footer||obj.stream||'');
-    }
+    if(obj.bytes){chunks.push(obj.header);length+=obj.header.length;chunks.push(obj.bytes);length+=obj.bytes.length;chunks.push(obj.footer);length+=obj.footer.length;}
+    else{chunks.push(obj);length+=obj.length;}
   }
-  const xrefOffset=length;
-  let xref=`xref\\n0 ${objects.length+1}\\n0000000000 65535 f \\n`;
-  for(let i=1;i<offsets.length;i++) xref+=String(offsets[i]).padStart(10,'0')+' 00000 n \\n';
-  xref+=`trailer\\n<< /Size ${objects.length+1} /Root 1 0 R >>\\nstartxref\\n${xrefOffset}\\n%%EOF`;
-  addText(xref);
-
-  const totalLength=chunks.reduce((n,x)=>n+x.length,0);
-  const pdfBytes=new Uint8Array(totalLength);
-  let offset=0;
-  chunks.forEach(chunk=>{pdfBytes.set(chunk,offset);offset+=chunk.length;});
-  const iosDevice=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  const blob=new Blob([pdfBytes],{type:'application/pdf'});
-  if(iosDevice){
-    const url=URL.createObjectURL(blob);
-    window.location.href=url;
-    setTimeout(()=>URL.revokeObjectURL(url),120000);
-    return;
-  }
+  const xrefOffset=length;let xref=\`xref\n0 \${objects.length+1}\n0000000000 65535 f \n\`;
+  for(let i=1;i<offsets.length;i++)xref+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+  xref+=\`trailer\n<< /Size \${objects.length+1} /Root 1 0 R >>\nstartxref\n\${xrefOffset}\n%%EOF\`;
+  const xrefBytes=encodeAscii(xref);chunks.push(xrefBytes);length+=xrefBytes.length;
+  const pdfBytes=concatBytes(chunks);const blob=new Blob([pdfBytes],{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
   const url=URL.createObjectURL(blob);
-  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-    try{await navigator.share({files:[file],title:'SoloPro tax report',text:'SoloPro tax report'});URL.revokeObjectURL(url);return;}catch(error){if(error&&error.name==='AbortError'){URL.revokeObjectURL(url);return;}}
+  const iosDevice=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(iosDevice){window.location.href=url;setTimeout(()=>URL.revokeObjectURL(url),120000);return;}
+  if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+    try{await navigator.share({files:[file],title:'SoloPro tax report',text:'SoloPro tax report'});URL.revokeObjectURL(url);return;}
+    catch(error){if(error&&error.name==='AbortError'){URL.revokeObjectURL(url);return;}}
   }
-  const link=document.createElement('a');
-  link.href=url;
-  link.download=file.name;
-  link.rel='noopener';
-  link.style.display='none';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  const link=document.createElement('a');link.href=url;link.download=file.name;link.rel='noopener';link.style.display='none';
+  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 export default function Tax(){const app=useApp();const t=createTranslator(app.language); const tc=(key,base='')=>taxCopy(app.language,key,base);const [notes,setNotes]=useState('');const [noteType,setNoteType]=useState('general');const [checks,setChecks]=useState({reconciled:false,expenses:false,receipts:false,deadlines:false});const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);const report=useMemo(()=>{const now=new Date();const inMonth=x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();};const extraIncome=(Array.isArray(app.financialIncome)?app.financialIncome:[]).filter(inMonth);const extraExpenses=(Array.isArray(app.financialExpenses)?app.financialExpenses:[]).filter(inMonth);const gross=app.monthlyServices.reduce((s,x)=>s+Number(x.amount||0),0)+extraIncome.reduce((s,x)=>s+Number(x.amount||0),0);const variable=app.monthlyServices.reduce((s,x)=>s+Number(x.materialCost||0)+Number(x.extraExpense||0),0)+extraExpenses.reduce((s,x)=>s+Number(x.amount||0),0);const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);const costs=variable+fixed;const tax=app.taxMode==='reserve'?Math.max(0,gross-variable)*Number(app.taxRate||0):0;return{gross,costs,tax,net:gross-costs-tax};},[app.monthlyServices,app.financialIncome,app.financialExpenses,app.fixedExpenses,app.fixedExpensePeriod,app.taxMode,app.taxRate]);const download=()=>{
   const rc=REPORT_COPY[app.country.language]||REPORT_COPY.English;
