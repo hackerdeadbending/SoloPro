@@ -9,6 +9,27 @@ const EARNINGS_COPY={  English:{"eyebrow":"EARNINGS","invite":"Invite","addServi
 };
 const emptyService={service:'',amount:'',materialCost:'',extraExpense:'',clientId:'',recurring:false};
 const emptyEntry={label:'',amount:'',date:new Date().toISOString().slice(0,10)};
+const ENTRY_PLACEHOLDERS={
+ English:{income:'Part-time job',expense:'Car insurance'},
+ Italian:{income:'Lavoro part-time',expense:'Assicurazione auto'},
+ French:{income:'Travail à temps partiel',expense:'Assurance auto'},
+ German:{income:'Teilzeitjob',expense:'Autoversicherung'},
+ Spanish:{income:'Trabajo a tiempo parcial',expense:'Seguro del coche'},
+ Polish:{income:'Praca na część etatu',expense:'Ubezpieczenie auta'},
+ Japanese:{income:'パートの仕事',expense:'自動車保険'},
+ Korean:{income:'파트타임 일',expense:'자동차 보험'},
+ Ukrainian:{income:'Робота неповний день',expense:'Автострахування'},
+ Portuguese:{income:'Trabalho em part-time',expense:'Seguro automóvel'},
+ Dutch:{income:'Parttimebaan',expense:'Autoverzekering'},
+ Danish:{income:'Deltidsjob',expense:'Bilforsikring'},
+ Finnish:{income:'Osa-aikatyö',expense:'Autovakuutus'},
+ Swedish:{income:'Deltidsjobb',expense:'Bilförsäkring'},
+ Norwegian:{income:'Deltidsjobb',expense:'Bilforsikring'},
+ Icelandic:{income:'Hlutastarf',expense:'Bílatrygging'},
+ Czech:{income:'Práce na částečný úvazek',expense:'Pojištění auta'},
+ Arabic:{income:'عمل بدوام جزئي',expense:'تأمين السيارة'},
+ Chinese:{income:'兼职工作',expense:'汽车保险'}
+};
 
 export default function Earnings(){
  const app=useApp();
@@ -74,7 +95,7 @@ export default function Earnings(){
 
   <InviteModal open={inviteOpen} onClose={()=>setInviteOpen(false)}/>
   <Modal open={entryOpen} onClose={()=>setEntryOpen(false)} title={`${editing?copy.edit:copy.add} ${entryType==='income'?copy.income:copy.expense}`}>
-   <form onSubmit={saveEntry} className="form-stack"><label>{entryType==='income'?copy.incomeQuestion:copy.expenseQuestion}<input required value={entry.label} onChange={e=>setEntry({...entry,label:e.target.value})} placeholder={entryType==='income'?'Part-time job':'Car insurance'}/></label><label>{copy.amount}<input required type="number" min="0" step="0.01" value={entry.amount} onChange={e=>setEntry({...entry,amount:e.target.value})} placeholder="100"/></label><label>{copy.date}<input required type="date" value={entry.date} onChange={e=>setEntry({...entry,date:e.target.value})}/></label><button className="primary full">{editing?copy.saveService:copy.add}</button></form>
+   <form onSubmit={saveEntry} className="form-stack earnings-entry-form"><label>{entryType==='income'?copy.incomeQuestion:copy.expenseQuestion}<input required value={entry.label} onChange={e=>setEntry({...entry,label:e.target.value})} placeholder={entryType==='income'?ENTRY_PLACEHOLDERS[app.language]||ENTRY_PLACEHOLDERS.English.income:ENTRY_PLACEHOLDERS[app.language]||ENTRY_PLACEHOLDERS.English.expense}/></label><label>{copy.amount}<input required type="number" min="0" step="0.01" value={entry.amount} onChange={e=>setEntry({...entry,amount:e.target.value})} placeholder="100"/></label><label>{copy.date}<input required type="date" value={entry.date} onChange={e=>setEntry({...entry,date:e.target.value})}/></label><button className="primary full">{editing?copy.saveService:copy.add}</button></form>
   </Modal>
   <Modal open={open} onClose={()=>setOpen(false)} title={copy.addService}>
    <form onSubmit={submitService} className="form-stack"><label>{copy.serviceName}<input required value={form.service} onChange={e=>setForm({...form,service:e.target.value})} placeholder="Service"/></label><label>{copy.attachClient}<select value={form.clientId} onChange={e=>setForm({...form,clientId:e.target.value})}><option value="">{copy.noClient}</option>{app.clients.map(c=><option value={c.id} key={c.id}>{c.name}</option>)}</select></label><label>{copy.revenue}<input required type="number" min="0" step="0.01" value={form.amount} onChange={e=>setForm({...form,amount:e.target.value})} placeholder="85"/></label><div className="two-col"><label>{copy.materials}<input type="number" min="0" step="0.01" value={form.materialCost} onChange={e=>setForm({...form,materialCost:e.target.value})} placeholder="12"/></label><label>{copy.extraExpense}<input type="number" min="0" step="0.01" value={form.extraExpense} onChange={e=>setForm({...form,extraExpense:e.target.value})} placeholder="0"/></label></div><label className="check-row template-toggle"><input type="checkbox" checked={form.recurring} onChange={e=>setForm({...form,recurring:e.target.checked})}/> {copy.saveTemplate}</label><button className="primary full">{copy.saveService}</button></form>
