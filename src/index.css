@@ -266,3 +266,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 @media(max-width:760px){.referral-flow{grid-template-columns:1fr}.referral-cta{align-items:stretch;flex-direction:column}.referral-cta .primary{width:100%}.referral-page .referral-command{padding:15px}.referral-command-main{gap:11px}.referral-orb{width:40px;height:40px;flex-basis:40px}.referral-command h2{font-size:15px}.referral-copy-row{flex-direction:row}.referral-copy-row button{min-width:82px}.referral-page .stat-card{min-height:78px}}
 
 .account-modal-forgot .form-stack{margin-top:0}.account-modal-forgot .account-forgot{margin-top:10px}.account-modal-forgot .account-message{margin-top:2px}
+/* Mobile financial stat cards: keep large localized amounts inside their cards */
+@media(max-width:760px){
+  .stat-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;}
+  .stat-card{min-width:0;overflow:hidden;padding:12px;}
+  .stat-card span{min-width:0;overflow-wrap:anywhere;line-height:1.25;}
+  .stat-card strong{min-width:0;max-width:100%;font-size:clamp(14px,4.5vw,18px);line-height:1.15;overflow-wrap:anywhere;word-break:break-word;white-space:normal;}
+}
