@@ -35,7 +35,12 @@ Ukrainian:{status:'статус',serviceMaterialExpenses:'Витрати на п
 const getReportCopy=(language)=>({...REPORT_COPY.English,...REPORT_COPY[language],...REPORT_SECTION_COPY.English,...REPORT_SECTION_COPY[language]||{},...REPORT_DETAIL_COPY.English,...REPORT_DETAIL_COPY[language]||{}});
 
 function pdfEscape(s){return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)').replace(/[^\x20-\x7E]/g,'?');}
+let taxPdfExportInProgress=false;
+
 async function downloadPdf(lines,language='English',title='SoloPro tax report'){
+  if(taxPdfExportInProgress)return;
+  taxPdfExportInProgress=true;
+  try{
   const decodeBase64=value=>{
     const raw=atob(value);
     const bytes=new Uint8Array(raw.length);
@@ -128,6 +133,9 @@ async function downloadPdf(lines,language='English',title='SoloPro tax report'){
   link.click();
   link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }finally{
+    taxPdfExportInProgress=false;
+  }
 }
 export default function Tax(){const app=useApp();const t=createTranslator(app.language); const tc=(key,base='')=>taxCopy(app.language,key,base);const [notes,setNotes]=useState('');const [noteType,setNoteType]=useState('general');const [checks,setChecks]=useState({reconciled:false,expenses:false,receipts:false,deadlines:false});const money=n=>new Intl.NumberFormat(app.country.locale,{style:'currency',currency:currencyCodeFor(app.country),maximumFractionDigits:2}).format(n||0);const report=useMemo(()=>{const now=new Date();const inMonth=x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();};const extraIncome=(Array.isArray(app.financialIncome)?app.financialIncome:[]).filter(inMonth);const extraExpenses=(Array.isArray(app.financialExpenses)?app.financialExpenses:[]).filter(inMonth);const gross=app.monthlyServices.reduce((s,x)=>s+Number(x.amount||0),0)+extraIncome.reduce((s,x)=>s+Number(x.amount||0),0);const variable=app.monthlyServices.reduce((s,x)=>s+Number(x.materialCost||0)+Number(x.extraExpense||0),0)+extraExpenses.reduce((s,x)=>s+Number(x.amount||0),0);const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);const costs=variable+fixed;const tax=app.taxMode==='reserve'?Math.max(0,gross-variable)*Number(app.taxRate||0):0;return{gross,costs,tax,net:gross-costs-tax};},[app.monthlyServices,app.financialIncome,app.financialExpenses,app.fixedExpenses,app.fixedExpensePeriod,app.taxMode,app.taxRate]);const download=()=>{
   const rc=getReportCopy(app.country.language);
@@ -181,6 +189,7 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   lines.push('', rc.additionalExpenses);
   if(extraExpenses.length)extraExpenses.forEach((x,i)=>lines.push(`${i+1}. ${x.label||x.name||'—'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
   lines.push('', rc.notesSection, `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', rc.checklistSection, `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', rc.disclaimer);
+  if(taxPdfExportInProgress)return;
   void downloadPdf(lines,app.country.language,rc.title).catch((error)=>{
     try{alert('SoloPro: не удалось создать PDF. '+(error&&error.message?error.message:'Попробуйте ещё раз.'));}catch(_){ }
   });
