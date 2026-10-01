@@ -148,6 +148,8 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   });
   const serviceCosts=services.reduce((sum,x)=>sum+Number(x.materialCost||0)+Number(x.extraExpense||0),0);
   const fixed=app.fixedExpensePeriod==='weekly'?Number(app.fixedExpenses||0)*52/12:Number(app.fixedExpenses||0);
+  const countryCode=app.countryCode||app.country?.code;
+  const countryLabel=countryCode&&typeof Intl.DisplayNames==='function'?new Intl.DisplayNames([app.country.locale],{type:'region'}).of(countryCode)||app.country.name:app.country.name;
   const lines=[
     rc.title,'',
     `${rc.period}: ${periodLabel}`,
@@ -155,7 +157,7 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
     rc.taxpayer,
     `${rc.name}: ${app.user.name||'—'}`,
     `${rc.workEmail}: ${app.user.email||'—'}`,
-    `${rc.country}: ${app.country.name}${app.stateProfile?` / ${app.stateProfile.name}`:''}`,'',
+    `${rc.country}: ${countryLabel}${app.stateProfile?` / ${app.stateProfile.name}`:''}`,'',
     rc.summary,
     `${rc.revenue}: ${money(report.gross)}`,
     `${rc.costs}: ${money(report.costs)}`,
