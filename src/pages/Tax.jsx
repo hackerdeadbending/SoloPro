@@ -32,7 +32,7 @@ Korean:{status:'상태',serviceMaterialExpenses:'서비스/재료 비용',fixedE
 Chinese:{status:'状态',serviceMaterialExpenses:'服务/材料费用',fixedExpenses:'固定支出',taxCalculationMode:'税务计算方式',reservePlanning:'准备金规划',manualExpense:'手动支出'},
 Ukrainian:{status:'статус',serviceMaterialExpenses:'Витрати на послуги/матеріали',fixedExpenses:'Фіксовані витрати',taxCalculationMode:'Режим розрахунку податку',reservePlanning:'Планування резерву',manualExpense:'Ручна витрата'}
 };
-const getReportCopy=(language)=>({...REPORT_COPY.English,...REPORT_COPY[language],...REPORT_SECTION_COPY.English,...REPORT_SECTION_COPY[language]||{}},...REPORT_DETAIL_COPY.English,...REPORT_DETAIL_COPY[language]||{}});
+const getReportCopy=(language)=>({...REPORT_COPY.English,...REPORT_COPY[language],...REPORT_SECTION_COPY.English,...REPORT_SECTION_COPY[language]||{},...REPORT_DETAIL_COPY.English,...REPORT_DETAIL_COPY[language]||{}});
 
 function pdfEscape(s){return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)').replace(/[^\x20-\x7E]/g,'?');}
 async function downloadPdf(lines,language='English',title='SoloPro tax report'){
