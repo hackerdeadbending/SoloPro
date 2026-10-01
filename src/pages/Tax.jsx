@@ -90,15 +90,15 @@ async function downloadPdf(lines,iosWindow,isIOS){
         return;
       }
     }catch(_){}
+    if(iosWindow){
+      try{
+        iosWindow.location.href=url;
+        setTimeout(()=>URL.revokeObjectURL(url),300000);
+        return;
+      }catch(_){}
+    }
     try{
-      const a=document.createElement('a');
-      a.href=url;
-      a.download=file.name;
-      a.target='_blank';
-      a.rel='noopener';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      window.location.href=url;
     }catch(_){
       try{window.open(url,'_blank','noopener');}catch(__){}
     }
