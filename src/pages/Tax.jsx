@@ -64,7 +64,7 @@ async function downloadPdf(lines,language='English',title='SoloPro tax report'){
   }else fontBytes=decodeBase64(NOTO_SANS_REGULAR_BASE64);
   const pdfDoc=await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
-  const font=await pdfDoc.embedFont(fontBytes,{subset:true});
+  const font=await pdfDoc.embedFont(fontBytes,{subset:!remoteFonts[language]});
   pdfDoc.setTitle(title);
   pdfDoc.setAuthor('SoloPro');
   pdfDoc.setSubject(title);
