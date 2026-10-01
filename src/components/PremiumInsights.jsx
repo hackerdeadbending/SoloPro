@@ -96,16 +96,5 @@ export default function PremiumInsights(){
    </div>
   </div>
 
-  <div className="premium-message-tool">
-   <div><div className="eyebrow">{t('clientQuickAction')}</div><h3>{t('smartClientMessage')}</h3><p>{t('smartClientMessageSub')}</p></div>
-   {clients.length===0?<div className="notice">{t('addClientForMessages')}</div>:<>
-    <div className="two-col">
-     <label>{t('client')}<select value={clientId} onChange={e=>{setClientId(e.target.value);setCopied(false)}}><option value="">{t('chooseClient')}</option>{clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-     <label>{t('messageType')}<select value={messageType} onChange={e=>{setMessageType(e.target.value);setCopied(false)}}><option value="followup">{t('followup')}</option><option value="reminder">{t('reminder')}</option><option value="rebook">{t('rebook')}</option><option value="thankyou">{t('thankyou')}</option></select></label>
-    </div>
-    {message&&<textarea readOnly value={message} rows="4"/>}
-    <button className="ghost-btn" disabled={!message} onClick={async()=>{try{await navigator.clipboard.writeText(message);setCopied(true)}catch{setCopied(false)}}}>{copied?t('copied'):t('copyMessage')}</button>
-   </>}
-  </div>
  </section>;
 }
