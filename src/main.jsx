@@ -7,7 +7,6 @@ import './custom-theme.css';
 import './mobile-auth.css';
 import {AppStateProvider} from './context/AppState.jsx';
 import {ReferralProvider} from './context/ReferralEngine.jsx';
-import AchievementToasts from './components/AchievementToasts.jsx';
 import './utils/guestPersistence.js';
 
-ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><BrowserRouter><AppStateProvider><ReferralProvider><AchievementToasts/><App/></ReferralProvider></AppStateProvider></BrowserRouter></React.StrictMode>);
+ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><BrowserRouter><AppStateProvider><ReferralProvider><App/></ReferralProvider></AppStateProvider></BrowserRouter></React.StrictMode>);
