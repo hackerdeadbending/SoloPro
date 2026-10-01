@@ -288,3 +288,22 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     font-variant-numeric:tabular-nums;
   }
 }
+/* Mobile drawer: remove the stray separator under the active Settings item. */
+@media(max-width:760px){
+  .mobile-drawer nav,
+  .mobile-drawer nav::before,
+  .mobile-drawer nav::after,
+  .mobile-drawer .nav-link-settings,
+  .mobile-drawer .nav-link-settings::before,
+  .mobile-drawer .nav-link-settings::after{
+    border:0!important;
+    border-top:0!important;
+    border-bottom:0!important;
+    box-shadow:none!important;
+    outline:0!important;
+  }
+  .mobile-drawer nav::before,
+  .mobile-drawer nav::after,
+  .mobile-drawer .nav-link-settings::before,
+  .mobile-drawer .nav-link-settings::after{content:none!important;display:none!important;}
+}
