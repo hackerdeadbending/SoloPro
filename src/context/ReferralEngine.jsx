@@ -26,7 +26,7 @@ function getReferralCode(){
 export function ReferralProvider({children}){
  const app=useApp();
  const count=Number(app.securityProfile?.referral_verified_count ?? 0);
- const invited=Number(app.referralInvites||0);
+ const invited=Math.max(Number(app.referralInvites||0),count);
  const next=count%7===0?7:7-(count%7);
  const milestones=Math.floor(count/7);
  const referralLink=useMemo(()=>{
