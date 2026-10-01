@@ -90,17 +90,13 @@ async function downloadPdf(lines){
   let offset=0;
   chunks.forEach(chunk=>{pdfBytes.set(chunk,offset);offset+=chunk.length;});
   const iosDevice=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const blob=new Blob([pdfBytes],{type:'application/pdf'});
   if(iosDevice){
-    let binary='';
-    const step=0x8000;
-    for(let i=0;i<pdfBytes.length;i+=step){
-      const slice=pdfBytes.subarray(i,Math.min(i+step,pdfBytes.length));
-      binary+=String.fromCharCode(...slice);
-    }
-    window.location.href='data:application/pdf;base64,'+btoa(binary);
+    const url=URL.createObjectURL(blob);
+    window.location.href=url;
+    setTimeout(()=>URL.revokeObjectURL(url),120000);
     return;
   }
-  const blob=new Blob([pdfBytes],{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
   const url=URL.createObjectURL(blob);
   if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
