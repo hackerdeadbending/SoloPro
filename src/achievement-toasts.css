@@ -1,6 +1,14 @@
 .achievement-toasts{position:fixed;right:20px;top:20px;z-index:9999;display:grid;gap:10px;width:min(360px,calc(100vw - 32px));pointer-events:none}
 .achievement-toast{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid rgba(236,61,152,.28);border-radius:15px;background:rgba(22,22,28,.94);box-shadow:0 14px 40px rgba(0,0,0,.28);backdrop-filter:blur(14px);animation:achievement-in .34s cubic-bezier(.2,.8,.2,1),achievement-out .45s ease 3.7s forwards}
-.achievement-toast-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:10px;background:rgba(236,61,152,.12);color:var(--pink,#ec3d98);font-size:17px}
+.achievement-toast-icon{width:36px;height:32px;flex:0 0 36px;display:grid;place-items:center;border-radius:10px;background:rgba(236,61,152,.12);color:var(--pink,#ec3d98);font-size:17px;font-weight:700;text-shadow:0 1px 8px rgba(236,61,152,.28)}
+.achievement-icon-dashboard,.achievement-icon-earnings,.achievement-icon-incomeAdded{color:#62d6a7}
+.achievement-icon-clients,.achievement-icon-clientAdded,.achievement-icon-serviceAdded{color:#7eb6ff}
+.achievement-icon-tax,.achievement-icon-expenseAdded{color:#ffb86b}
+.achievement-icon-premium{color:#eaa8ff}
+.achievement-icon-settings{color:#bfc4d4}
+.achievement-icon-notifications{color:#9ed9ff}
+.achievement-icon-referral{color:#ff91c8}
+
 .achievement-toast-copy{min-width:0;display:grid;gap:3px}
 .achievement-toast-copy strong{font-size:12px;line-height:1.3;color:#fff}
 .achievement-toast-copy span{font-size:11px;line-height:1.4;color:#b9bac3}
