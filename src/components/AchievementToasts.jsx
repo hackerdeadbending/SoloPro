@@ -70,25 +70,37 @@ const ROUTES={
  '/smart-messages':'notifications'
 };
 
+const ICONS={
+ firstLogin:'👋',dashboard:'▦',earnings:'↗',clients:'♙',tax:'▤',referral:'↗',premium:'✦',settings:'⚙',notifications:'♢',
+ clientAdded:'♙',serviceAdded:'✦',incomeAdded:'↗',expenseAdded:'↘'
+};
+
 function playChime(){
+
  try{
   const AudioContext=window.AudioContext||window.webkitAudioContext;
   if(!AudioContext)return;
   const ctx=new AudioContext();
   const now=ctx.currentTime;
-  const gain=ctx.createGain();
-  const osc=ctx.createOscillator();
-  osc.type='sine';
-  osc.frequency.setValueAtTime(660,now);
-  osc.frequency.exponentialRampToValueAtTime(880,now+0.12);
-  gain.gain.setValueAtTime(0.0001,now);
-  gain.gain.exponentialRampToValueAtTime(0.045,now+0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001,now+0.32);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(now);
-  osc.stop(now+0.33);
-  osc.addEventListener('ended',()=>{try{ctx.close()}catch{}},{once:true});
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(0.0001,now);
+  master.gain.exponentialRampToValueAtTime(0.035,now+0.025);
+  master.gain.exponentialRampToValueAtTime(0.0001,now+0.7);
+  master.connect(ctx.destination);
+  [523.25,659.25,783.99].forEach((frequency,index)=>{
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(frequency,now+index*0.055);
+    gain.gain.setValueAtTime(0.0001,now);
+    gain.gain.exponentialRampToValueAtTime(index===0?0.8:0.55,now+0.045+index*0.055);
+    gain.gain.exponentialRampToValueAtTime(0.0001,now+0.52+index*0.055);
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start(now+index*0.055);
+    osc.stop(now+0.58+index*0.055);
+  });
+  setTimeout(()=>{try{ctx.close()}catch{}},900);
  }catch{}
 }
 
@@ -148,5 +160,5 @@ export default function AchievementToasts(){
  },[queue]);
 
  if(!premium||!app.account?.authenticated||!queue.length)return null;
- return <div className="achievement-toasts" aria-live="polite">{queue.map(item=><div className="achievement-toast" key={item.key}><div className="achievement-toast-icon">✦</div><div className="achievement-toast-copy"><strong>{item.title}</strong><span>{item.body}</span></div></div>)}</div>;
+ return <div className="achievement-toasts" aria-live="polite">{queue.map(item=><div className="achievement-toast" key={item.key}><div className={`achievement-toast-icon achievement-icon-${item.key}`} aria-hidden="true">{ICONS[item.key]||'✦'}</div><div className="achievement-toast-copy"><strong>{item.title}</strong><span>{item.body}</span></div></div>)}</div>;
 }
