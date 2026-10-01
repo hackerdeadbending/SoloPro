@@ -291,12 +291,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 /* Additional income/expense dialogs: identical outer geometry. */
 .earnings-entry-modal{
-  box-sizing:border-box;
-  width:500px;
-  height:300px;
-  max-width:calc(100vw - 40px);
-  min-width:0;
-  overflow:auto;
+  box-sizing:border-box!important;
+  width:500px!important;
+  min-width:500px!important;
+  max-width:500px!important;
+  height:300px!important;
+  min-height:300px!important;
+  max-height:300px!important;
+  flex:0 0 500px!important;
+  overflow:auto!important;
 }
 .earnings-entry-modal .earnings-entry-form,
 .earnings-entry-modal .earnings-entry-form label{
@@ -310,9 +313,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 }
 @media(max-width:760px){
   .earnings-entry-modal{
-    width:calc(100vw - 40px);
-    max-width:none;
-    height:300px;
+    width:calc(100vw - 40px)!important;
+    min-width:0!important;
+    max-width:calc(100vw - 40px)!important;
+    height:300px!important;
+    min-height:300px!important;
+    max-height:300px!important;
+    flex:0 0 calc(100vw - 40px)!important;
     padding:14px;
   }
   .earnings-entry-modal .modal-head{gap:10px}
