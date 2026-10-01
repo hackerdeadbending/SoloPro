@@ -81,8 +81,9 @@ async function downloadPdf(lines,iosWindow,isIOS){
 
   const blob=new Blob(chunks,{type:'application/pdf'});
   const url=URL.createObjectURL(blob);
-  if(isIOS && iosWindow){
-    iosWindow.location.href=url;
+  const iosDevice=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(iosDevice){
+    window.location.assign(url);
     setTimeout(()=>URL.revokeObjectURL(url),120000);
     return;
   }
