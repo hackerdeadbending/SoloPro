@@ -59,12 +59,12 @@ async function downloadPdf(lines){
     pageRefs.push({pageObj,contentObj,imageObj,compressed});
   });
   objects.push(encodeAscii('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n'));
-  objects.push(encodeAscii(\`2 0 obj << /Type /Pages /Kids [\${pageRefs.map(x=>x.pageObj+' 0 R').join(' ')}] /Count \${pageRefs.length} >> endobj\n\`));
+  objects.push(encodeAscii(`2 0 obj << /Type /Pages /Kids [${pageRefs.map(x=>x.pageObj+' 0 R').join(' ')}] /Count ${pageRefs.length} >> endobj\n`));
   pageRefs.forEach(x=>{
     const stream='q 595 0 0 842 0 0 cm /Im1 Do Q\n';
-    objects.push(encodeAscii(\`\${x.pageObj} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 \${x.imageObj} 0 R >> >> /Contents \${x.contentObj} 0 R >> endobj\n\`));
-    objects.push(encodeAscii(\`\${x.contentObj} 0 obj << /Length \${stream.length} >> stream\n\${stream}endstream endobj\n\`));
-    objects.push({header:encodeAscii(\`\${x.imageObj} 0 obj << /Type /XObject /Subtype /Image /Width \${pageW} /Height \${pageH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode /Length \${x.compressed.length} >> stream\n\`),bytes:x.compressed,footer:encodeAscii('\nendstream endobj\n')});
+    objects.push(encodeAscii(`${x.pageObj} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im1 ${x.imageObj} 0 R >> >> /Contents ${x.contentObj} 0 R >> endobj\n`));
+    objects.push(encodeAscii(`${x.contentObj} 0 obj << /Length ${stream.length} >> stream\n${stream}endstream endobj\n`));
+    objects.push({header:encodeAscii(`${x.imageObj} 0 obj << /Type /XObject /Subtype /Image /Width ${pageW} /Height ${pageH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode /Length ${x.compressed.length} >> stream\n`),bytes:x.compressed,footer:encodeAscii('\nendstream endobj\n')});
   });
   const header=encodeAscii('%PDF-1.4\n');const chunks=[header];const offsets=[0];let length=header.length;
   for(const obj of objects){
@@ -72,9 +72,9 @@ async function downloadPdf(lines){
     if(obj.bytes){chunks.push(obj.header);length+=obj.header.length;chunks.push(obj.bytes);length+=obj.bytes.length;chunks.push(obj.footer);length+=obj.footer.length;}
     else{chunks.push(obj);length+=obj.length;}
   }
-  const xrefOffset=length;let xref=\`xref\n0 \${objects.length+1}\n0000000000 65535 f \n\`;
+  const xrefOffset=length;let xref=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
   for(let i=1;i<offsets.length;i++)xref+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
-  xref+=\`trailer\n<< /Size \${objects.length+1} /Root 1 0 R >>\nstartxref\n\${xrefOffset}\n%%EOF\`;
+  xref+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
   const xrefBytes=encodeAscii(xref);chunks.push(xrefBytes);length+=xrefBytes.length;
   const pdfBytes=concatBytes(chunks);const blob=new Blob([pdfBytes],{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
