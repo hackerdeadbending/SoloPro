@@ -105,7 +105,7 @@
   .mobile-menu-btn{display:inline-flex;width:36px;height:36px;align-items:center;justify-content:center;background:#1b1c22;border:1px solid #303139;color:#ddd;border-radius:9px;margin-right:9px}
   .topbar{padding:0 15px}
   .mobile-menu-backdrop{display:block;position:fixed;inset:56px 0 0;background:rgba(0,0,0,.56);z-index:90}
-  .mobile-drawer{width:min(310px,88vw);height:auto;min-height:0;box-sizing:border-box;background:#17171b;border-right:1px solid #2d2e35;box-shadow:25px 0 70px rgba(0,0,0,.4);padding:18px 14px max(18px,env(safe-area-inset-bottom)) 14px;overflow-y:auto}
+  .mobile-drawer{width:min(310px,88vw);height:100%;background:#17171b;border-right:1px solid #2d2e35;box-shadow:25px 0 70px rgba(0,0,0,.4);padding:18px 14px}
   .mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 18px}
   .mobile-drawer-head strong{font-size:20px}
   .mobile-drawer nav{display:flex;flex-direction:column;gap:4px}
@@ -286,46 +286,5 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     word-break:normal;
     overflow-wrap:normal;
     font-variant-numeric:tabular-nums;
-  }
-}
-
-
-
-/* Mobile drawer: exact layer under the 62px mobile topbar. */
-@media(max-width:760px){
-  .mobile-menu-backdrop{
-    position:fixed!important;
-    top:62px!important;
-    right:0!important;
-    bottom:0!important;
-    left:0!important;
-    width:100%!important;
-    height:auto!important;
-    min-height:0!important;
-    display:block!important;
-    overflow:hidden!important;
-    box-sizing:border-box!important;
-  }
-  .mobile-drawer{
-    position:absolute!important;
-    top:0!important;
-    right:auto!important;
-    bottom:0!important;
-    left:0!important;
-    width:min(310px,88vw)!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    box-sizing:border-box!important;
-    overflow-x:hidden!important;
-    overflow-y:auto!important;
-    padding-bottom:calc(24px + env(safe-area-inset-bottom, 0px))!important;
-    border-bottom:0!important;
-  }
-  .mobile-drawer .nav-link-settings.active{
-    border:0!important;
-    border-top:0!important;
-    border-bottom:0!important;
-    box-shadow:none!important;
   }
 }
