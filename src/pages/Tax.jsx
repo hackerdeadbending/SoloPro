@@ -178,7 +178,7 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   if(extraIncome.length)extraIncome.forEach((x,i)=>lines.push(`${i+1}. ${x.label||x.name||'—'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
   lines.push('', rc.additionalExpenses);
   if(extraExpenses.length)extraExpenses.forEach((x,i)=>lines.push(`${i+1}. ${x.label||x.name||'—'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
-  lines.push('', rc.notesSection, `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', 'DECLARATION CHECKLIST', `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', rc.disclaimer);
+  lines.push('', rc.notesSection, `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', rc.checklistSection, `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', rc.disclaimer);
   void downloadPdf(lines,app.country.language,rc.title).catch((error)=>{
     try{alert('SoloPro: не удалось создать PDF. '+(error&&error.message?error.message:'Попробуйте ещё раз.'));}catch(_){ }
   });
