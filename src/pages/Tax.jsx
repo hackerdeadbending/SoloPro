@@ -172,7 +172,7 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   if(!expenses.length&&!serviceCosts&&!fixed) lines.push(rc.noExpenses);
   services.forEach(x=>{const cost=Number(x.materialCost||0)+Number(x.extraExpense||0);if(cost)lines.push(`${new Date(x.date).toLocaleDateString(app.country.locale)} | ${x.service||'—'} | ${money(cost)}`);});
   expenses.forEach(x=>lines.push(`${new Date(x.date).toLocaleDateString(app.country.locale)} | ${x.label||'—'} | ${money(x.amount)}`));
-  lines.push('', rc.taxInfo, `${rc.taxReserve}: ${money(report.tax)}`, `${rc.reserveRate}: ${app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':rc.notApplied}`, `${rc.taxCalculationMode}: ${app.taxMode==='reserve'?rc.reservePlanning:rc.manualExpense}`, '', 'MONTHLY SERVICE DETAIL');
+  lines.push('', rc.taxInfo, `${rc.taxReserve}: ${money(report.tax)}`, `${rc.reserveRate}: ${app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':rc.notApplied}`, `${rc.taxCalculationMode}: ${app.taxMode==='reserve'?rc.reservePlanning:rc.manualExpense}`, '', rc.serviceDetail);
   if(app.monthlyServices.length){app.monthlyServices.forEach((s,i)=>lines.push(`${i+1}. ${s.service||'—'} — ${money(Number(s.amount)||0)} | ${rc.costs}: ${money((Number(s.materialCost)||0)+(Number(s.extraExpense)||0))}`));}else lines.push(rc.noNotes);
   lines.push('', rc.additionalIncome);
   if(extraIncome.length)extraIncome.forEach((x,i)=>lines.push(`${i+1}. ${x.label||x.name||'—'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
