@@ -36,9 +36,12 @@ const getReportCopy=(language)=>({...REPORT_COPY.English,...REPORT_COPY[language
 
 function pdfEscape(s){return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)').replace(/[^\x20-\x7E]/g,'?');}
 let taxPdfExportInProgress=false;
+let taxPdfLastExportAt=0;
 
 async function downloadPdf(lines,language='English',title='SoloPro tax report'){
-  if(taxPdfExportInProgress)return;
+  const nowMs=Date.now();
+  if(taxPdfExportInProgress || nowMs-taxPdfLastExportAt<2500)return;
+  taxPdfLastExportAt=nowMs;
   taxPdfExportInProgress=true;
   try{
   const decodeBase64=value=>{
@@ -48,9 +51,9 @@ async function downloadPdf(lines,language='English',title='SoloPro tax report'){
     return bytes;
   };
   const remoteFonts={
-    Chinese:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/Variable/TTF/NotoSansCJKsc-VF.ttf',
-    Japanese:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/Variable/TTF/NotoSansCJKjp-VF.ttf',
-    Korean:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/Variable/TTF/NotoSansCJKkr-VF.ttf'
+    Chinese:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf',
+    Japanese:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf',
+    Korean:'https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf'
   };
   let fontBytes;
   if(language==='Arabic')fontBytes=decodeBase64(NOTO_SANS_ARABIC_BASE64);
