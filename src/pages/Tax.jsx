@@ -81,11 +81,17 @@ async function downloadPdf(lines,iosWindow,isIOS){
 
   const blob=new Blob(chunks,{type:'application/pdf'});
   const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(isIOS){
+    window.location.href=url;
+    setTimeout(()=>URL.revokeObjectURL(url),120000);
+    return;
+  }
   const shareData={files:[file],title:'SoloPro tax report',text:'SoloPro tax report'};
   if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
     try{await navigator.share(shareData);return;}catch(error){if(error&&error.name==='AbortError')return;}
   }
-  const url=URL.createObjectURL(blob);
   try{
     const link=document.createElement('a');
     link.href=url;
