@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { FALLBACK_USD_RATES, currencyCodeFor } from '../utils/currency';
+import { getAchievementScope, recordAchievement } from '../utils/achievements';
 import {
   authConfigured,
   getStoredSession,
@@ -475,7 +476,17 @@ export function AppStateProvider({children}){
   ]);
 
   const update=patch=>
-    setState(prev=>({...prev,...patch}));
+    setState(prev=>{
+      const email=prev.account?.email||prev.user?.email;
+      const scope=getAchievementScope(email);
+      if(Array.isArray(patch.financialIncome)&&patch.financialIncome.length>0&&(prev.financialIncome||[]).length===0){
+        recordAchievement(scope,'incomeAdded');
+      }
+      if(Array.isArray(patch.financialExpenses)&&patch.financialExpenses.length>0&&(prev.financialExpenses||[]).length===0){
+        recordAchievement(scope,'expenseAdded');
+      }
+      return {...prev,...patch};
+    });
 
   function setCountry(code,auto=false){
     const next=
@@ -543,7 +554,11 @@ export function AppStateProvider({children}){
     `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
   function addClient(client){
-    setState(prev=>({
+    setState(prev=>{
+      if(prev.clients.length===0){
+        recordAchievement(getAchievementScope(prev.authenticatedEmail||prev.account?.email||prev.user?.email),'clientAdded');
+      }
+      return {
       ...prev,
       clients:[
         ...prev.clients,
@@ -554,7 +569,8 @@ export function AppStateProvider({children}){
           ...client
         }
       ]
-    }));
+    };
+    });
   }
 
   function updateClient(id,patch){
@@ -577,7 +593,11 @@ export function AppStateProvider({children}){
   }
 
   function addService(service){
-    setState(prev=>({
+    setState(prev=>{
+      if(prev.services.length===0){
+        recordAchievement(getAchievementScope(prev.account?.email||prev.user?.email),'serviceAdded');
+      }
+      return {
       ...prev,
       services:[
         ...prev.services,
@@ -587,7 +607,8 @@ export function AppStateProvider({children}){
           ...service
         }
       ]
-    }));
+    };
+    });
   }
 
   function deleteService(id){
@@ -757,6 +778,8 @@ export function AppStateProvider({children}){
       isAdmin:owner||Boolean(data.isAdmin),
       premiumActive:owner||Boolean(data.premiumActive)
     });
+
+    recordAchievement(getAchievementScope(normalized),'firstLogin');
 
     setState(prev=>({
       ...prev,
