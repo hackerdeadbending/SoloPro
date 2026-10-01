@@ -291,7 +291,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 
 
-/* Mobile drawer: fixed independently from the viewport to avoid clipping/strip artifacts. */
+/* Mobile drawer: exact layer under the 62px mobile topbar. */
 @media(max-width:760px){
   .mobile-menu-backdrop{
     position:fixed!important;
@@ -303,15 +303,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     height:auto!important;
     min-height:0!important;
     display:block!important;
-    overflow:visible!important;
+    overflow:hidden!important;
     box-sizing:border-box!important;
   }
   .mobile-drawer{
-    position:fixed!important;
-    top:62px!important;
-    left:0!important;
-    bottom:0!important;
+    position:absolute!important;
+    top:0!important;
     right:auto!important;
+    bottom:0!important;
+    left:0!important;
     width:min(310px,88vw)!important;
     height:auto!important;
     min-height:0!important;
@@ -319,7 +319,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     box-sizing:border-box!important;
     overflow-x:hidden!important;
     overflow-y:auto!important;
-    padding-bottom:max(24px, env(safe-area-inset-bottom, 0px))!important;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom, 0px))!important;
     border-bottom:0!important;
   }
   .mobile-drawer .nav-link-settings.active{
