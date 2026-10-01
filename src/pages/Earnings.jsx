@@ -94,7 +94,7 @@ export default function Earnings(){
   </div>
 
   <InviteModal open={inviteOpen} onClose={()=>setInviteOpen(false)}/>
-  <Modal open={entryOpen} onClose={()=>setEntryOpen(false)} title={`${editing?copy.edit:copy.add} ${entryType==='income'?copy.income:copy.expense}`}>
+  <Modal open={entryOpen} onClose={()=>setEntryOpen(false)} title={`${editing?copy.edit:copy.add} ${entryType==='income'?copy.income:copy.expense}`} className="earnings-entry-modal">
    <form onSubmit={saveEntry} className="form-stack earnings-entry-form"><label>{entryType==='income'?copy.incomeQuestion:copy.expenseQuestion}<input required value={entry.label} onChange={e=>setEntry({...entry,label:e.target.value})} placeholder={entryType==='income'?ENTRY_PLACEHOLDERS[app.language]||ENTRY_PLACEHOLDERS.English.income:ENTRY_PLACEHOLDERS[app.language]||ENTRY_PLACEHOLDERS.English.expense}/></label><label>{copy.amount}<input required type="number" min="0" step="0.01" value={entry.amount} onChange={e=>setEntry({...entry,amount:e.target.value})} placeholder="100"/></label><label>{copy.date}<input required type="date" value={entry.date} onChange={e=>setEntry({...entry,date:e.target.value})}/></label><button className="primary full">{editing?copy.saveService:copy.add}</button></form>
   </Modal>
   <Modal open={open} onClose={()=>setOpen(false)} title={copy.addService}>
