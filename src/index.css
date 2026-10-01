@@ -269,7 +269,18 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 /* Mobile financial stat cards: keep large localized amounts inside their cards */
 @media(max-width:760px){
   .stat-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;}
-  .stat-card{min-width:0;overflow:hidden;padding:12px;}
-  .stat-card span{min-width:0;overflow-wrap:anywhere;line-height:1.25;}
-  .stat-card strong{min-width:0;max-width:100%;font-size:clamp(14px,4.5vw,18px);line-height:1.15;overflow-wrap:anywhere;word-break:break-word;white-space:normal;}
+  .stat-card{min-width:0;overflow:visible;padding:12px;}
+  .stat-card span{min-width:0;line-height:1.25;}
+  .stat-card strong{
+    display:block;
+    min-width:0;
+    max-width:100%;
+    font-size:clamp(11px,3.4vw,15px);
+    line-height:1.15;
+    letter-spacing:-.55px;
+    white-space:nowrap;
+    word-break:normal;
+    overflow-wrap:normal;
+    font-variant-numeric:tabular-nums;
+  }
 }
