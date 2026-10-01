@@ -4,6 +4,7 @@ export default function Modal({
   title,
   children,
   wide = false,
+  className = '',
 }) {
   if (!open) return null;
 
@@ -16,7 +17,7 @@ export default function Modal({
         }
       }}
     >
-      <div className={wide ? 'modal wide' : 'modal'}>
+      <div className={['modal', wide ? 'wide' : '', className].filter(Boolean).join(' ')}>
         <div className="modal-head">
           <h3>{title}</h3>
 
