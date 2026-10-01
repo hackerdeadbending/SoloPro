@@ -121,10 +121,10 @@ async function downloadPdf(lines,language='English',title='SoloPro tax report'){
   if(isIOS && navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
     try{
       await navigator.share({files:[file],title});
-      return;
-    }catch(error){
-      if(error&&error.name==='AbortError')return;
+    }catch(_error){
+      // iOS owns the share/download flow; never fall through to a second browser download.
     }
+    return;
   }
   const url=URL.createObjectURL(blob);
   const link=document.createElement('a');
