@@ -277,11 +277,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     min-width:0;
     max-width:100%;
     box-sizing:border-box;
-    font-size:12px;
+    font-size:10px;
     line-height:1.15;
-    letter-spacing:-.65px;
+    letter-spacing:-.55px;
     white-space:nowrap;
-    overflow:hidden;
+    overflow:visible;
     text-overflow:clip;
     word-break:normal;
     overflow-wrap:normal;
