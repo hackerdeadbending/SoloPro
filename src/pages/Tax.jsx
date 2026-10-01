@@ -80,14 +80,13 @@ async function downloadPdf(lines,iosWindow,isIOS){
   addText(xref);
 
   const blob=new Blob(chunks,{type:'application/pdf'});
-  const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
   const url=URL.createObjectURL(blob);
-  const iosDevice=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  if(iosDevice){
-    window.location.href=url;
+  if(isIOS && iosWindow){
+    iosWindow.location.href=url;
     setTimeout(()=>URL.revokeObjectURL(url),120000);
     return;
   }
+  const file=new File([blob],'solopro-filled-tax-declaration.pdf',{type:'application/pdf'});
   const shareData={files:[file],title:'SoloPro tax report',text:'SoloPro tax report'};
   if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
     try{await navigator.share(shareData);return;}catch(error){if(error&&error.name==='AbortError')return;}
@@ -154,7 +153,14 @@ export default function Tax(){const app=useApp();const t=createTranslator(app.la
   lines.push('', 'ADDITIONAL EXPENSES');
   if(extraExpenses.length)extraExpenses.forEach((x,i)=>lines.push(`${i+1}. ${x.label||x.name||'—'} — ${money(Number(x.amount)||0)}`));else lines.push(rc.noNotes);
   lines.push('', 'DECLARATION NOTES', `${rc.type}: ${typeLabels[noteType]||noteType}`, notes.trim()||rc.noNotes, '', 'DECLARATION CHECKLIST', `${rc.reconciled}: ${checks.reconciled?rc.yes:rc.no}`, `${rc.expenses}: ${checks.expenses?rc.yes:rc.no}`, `${rc.receipts}: ${checks.receipts?rc.yes:rc.no}`, `${rc.deadlines}: ${checks.deadlines?rc.yes:rc.no}`, '', 'This report is a planning and record-keeping document. Verify the final figures and local filing requirements before submitting a tax return.');
-  void downloadPdf(lines).catch(()=>{
-    try{alert('SoloPro: не удалось сохранить PDF. Попробуйте ещё раз или выберите «Сохранить в Файлы» в меню iPhone.');}catch(_){ }
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const iosWindow=isIOS?window.open('about:blank','_blank'):null;
+  if(isIOS && !iosWindow){
+    try{alert('SoloPro: iPhone заблокировал открытие PDF. Разрешите всплывающие окна для сайта и повторите экспорт.');}catch(_){ }
+    return;
+  }
+  void downloadPdf(lines,iosWindow,isIOS).catch(()=>{
+    try{if(iosWindow)iosWindow.close();}catch(_){}
+    try{alert('SoloPro: не удалось создать PDF. Попробуйте ещё раз.');}catch(_){ }
   });
 };;return <div className="page"><div className="page-top"><div><div className="eyebrow">{t('tax').toUpperCase()}</div><h1>{tc('headline')}</h1><p className="sub">{app.taxMode==='reserve'?tc('planningOn'):tc('planningOff')}</p></div><button className="ghost-btn" onClick={download}><Icon name="file"/>{t('exportReport')}</button></div><section className="tax-banner"><div><span>{tc('jurisdiction')}</span><strong>{app.country.name}{app.stateProfile?` — ${app.stateProfile.name}`:''}</strong></div><div><span>{tc('reserve')}</span><strong>{app.taxMode==='reserve'?Math.round(app.taxRate*100)+'%':'OFF'}</strong></div><div><span>{tc('frequency')}</span><strong>{app.taxMode==='reserve'?tc('monthlyPlanning'):tc('manualExpense')}</strong></div></section><div className="tax-grid"><section className="panel"><div className="panel-head"><div><h2>{tc('currentMonth')}</h2><p>{tc('planningOnly')}</p></div><Icon name="chart"/></div><div className="declaration-summary"><div><span>{t('revenue')}</span><strong>{money(report.gross)}</strong></div><div><span>{tc('costs')}</span><strong>{money(report.costs)}</strong></div><div><span>{t('taxReserve')}</span><strong>{money(report.tax)}</strong></div><div><span>{t('estimatedNet')}</span><strong>{money(report.net)}</strong></div></div></section><section className="panel"><div className="panel-head"><div><h2>{tc('notesChecklist')}</h2><p>{tc('notesHelp')}</p></div></div><div className="note-type-row"><label>{tc('noteType')}<select value={noteType} onChange={e=>setNoteType(e.target.value)}><option value="general">{tc('general')}</option><option value="deductions">{tc('deductions')}</option><option value="receipts">{tc('receipts')}</option><option value="questions">{tc('questions')}</option></select></label></div><textarea className="notes" value={notes} onChange={e=>setNotes(e.target.value)} placeholder={tc('notesPlaceholder')}/><div style={{display:'flex',justifyContent:'flex-end',width:'100%',marginTop:'12px',marginLeft:'0',marginRight:'0',padding:'0'}}><div className="checklist" style={{width:'fit-content',display:'flex',flexDirection:'column',alignItems:'flex-start',margin:'0',padding:'0'}}>{[['reconciled','reconciled'],['expenses','expensesChecked'],['receipts','receipts'],['deadlines','deadlines']].map(([id,key])=><label key={id}><input type="checkbox" checked={checks[id]} onChange={e=>setChecks({...checks,[id]:e.target.checked})}/><span>{t(key)}</span></label>)}</div></div></section></div><section className="panel"><div className="panel-head"><div><h2>{tc('estimateWorks')}</h2><p>{tc('planningSupport')}</p></div></div><div className="tax-explain"><p><b>{tc('taxOn')}</b> {tc('taxOnExplain')}</p><p><b>{tc('taxOff')}</b> {tc('taxOffExplain')}</p><div className="notice"><Icon name="spark"/>{app.countryCode==='US'?t('taxInfoUS'):t('taxReservePlanningNote')}</div></div></section></div>}
